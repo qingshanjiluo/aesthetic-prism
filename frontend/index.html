@@ -350,6 +350,27 @@ footer code{color:var(--txt2)}
       </div>
       <div class="card-body">
         <div class="field">
+          <label for="model-select">训练/评分模型</label>
+          <select id="model-select" class="inp" style="flex:1;min-width:180px">
+            <option value="">加载中…</option>
+          </select>
+          <button id="model-manage-btn" class="btn ghost" type="button">管理模型</button>
+        </div>
+        <div id="model-meta" class="train-state" style="margin-bottom:14px">
+          <span>名称：<code id="m-name">-</code></span>
+          <span>分类：<code id="m-category">-</code></span>
+          <span>标签：<code id="m-tags">-</code></span>
+        </div>
+        <div id="model-manage-panel" class="train-state" hidden style="margin-bottom:14px;flex-direction:column;align-items:stretch;gap:10px">
+          <div class="field">
+            <input id="mm-name" class="inp" placeholder="模型显示名">
+            <input id="mm-category" class="inp" placeholder="分类（如 量化/蒸馏/教师）">
+            <input id="mm-tags" class="inp" placeholder="标签，逗号分隔">
+            <button id="mm-save" class="btn primary">保存</button>
+          </div>
+          <div class="mono" id="mm-list" style="font-size:12px;color:var(--txt2)"></div>
+        </div>
+        <div class="field">
           <label for="steps-input">训练步数 steps</label>
           <input id="steps-input" type="number" min="1" max="10000" value="20">
           <button id="train-btn" class="btn primary" type="button">
@@ -450,6 +471,8 @@ footer code{color:var(--txt2)}
       <option value="asc">升序</option>
     </select>
     <button id="lib-refresh" class="btn">刷新</button>
+    <button id="lib-del-sel" class="btn" style="border-color:rgba(255,93,108,.5);color:var(--red)">删除选中</button>
+    <button id="lib-add-compare" class="btn ghost">加入比对</button>
     <span class="muted" id="lib-count"></span>
   </div>
   <div id="lib-grid" class="grid"></div>
@@ -461,6 +484,7 @@ footer code{color:var(--txt2)}
     <input id="cmp-input" class="inp" type="file" multiple accept="image/*" style="flex:1">
     <button id="cmp-load" class="btn">载入选中</button>
     <button id="cmp-clear" class="btn ghost">清空</button>
+    <button id="cmp-score" class="btn primary">评分对比</button>
     <span class="muted" id="cmp-count"></span>
   </div>
   <div id="cmp-grid" class="compare-grid"></div>
@@ -473,6 +497,7 @@ footer code{color:var(--txt2)}
     <input id="sc-dir" class="inp" type="file" webkitdirectory multiple style="flex:1">
     <button id="sc-go" class="btn primary">上传并评分</button>
     <button id="sc-clear" class="btn ghost">清空</button>
+    <button id="sc-gen" class="btn">自动生成合成图</button>
     <span class="muted" id="sc-state"></span>
   </div>
   <div id="sc-progress"></div>

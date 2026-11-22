@@ -1,4 +1,4 @@
-﻿// Aesthetic Prism 增强视图主控（标签切换 + 素材库 + 多图比对 + 批量上传评分）
+// Aesthetic Prism 增强视图主控（标签切换 + 素材库 + 多图比对 + 批量上传评分）
 // 依赖 api.js；兼容现有 app.js（只操作 view-home，不冲突）。
 "use strict";
 (function () {
@@ -6,6 +6,7 @@
   var VIEWS = ["home", "library", "compare", "score"];
   var cmpPaths = [];      // 比对视图已载入路径
   var cmpPicked = [];     // 比对标记优的路径
+  var cmpScores = {};     // 比对评分缓存 {path: total}
   var libSel = {};        // 素材库多选 {path:1}
 
   function switchView(name) {
@@ -81,6 +82,30 @@
     document.body.appendChild(ov);
   }
 
+  /* ===== 素材库批量操作 ===== */
+  function selPaths() {
+    var out = [];
+    Object.keys(libSel).forEach(function (p) { if (libSel[p]) out.push(p); });
+    return out;
+  }
+  function delSelectedLibrary() {
+    var paths = selPaths();
+    if (!paths.length) { toast("请先用 Ctrl+点击 选择要删除的素材"); return; }
+    if (!confirm("确定删除 " + paths.length + " 个素材？此操作不可恢复")) return;
+    API.assetsDelete(paths).then(function (d) {
+      toast("已删除 " + d.deleted + " 个素材");
+      libSel = {};
+      loadLibrary();
+    }).catch(function (e) { toast("删除失败: " + e.message); });
+  }
+  function addSelectedToCompare() {
+    var paths = selPaths();
+    if (!paths.length) { toast("请先用 Ctrl+点击 选择要加入比对的素材"); return; }
+    addComparePaths(paths);
+    switchView("compare");
+    toast("已加入 " + paths.length + " 图到比对");
+  }
+
   /* ===== 多图比对 ===== */
   function addComparePaths(paths) {
     paths.forEach(function (p) { if (cmpPaths.indexOf(p) < 0) cmpPaths.push(p); });
@@ -95,9 +120,26 @@
       c.className = "cmp" + (cmpPicked.indexOf(p) >= 0 ? " pick" : "");
       c.style.position = "relative";
       var img = document.createElement("img"); img.src = assetUrl(p);
-      var t = document.createElement("div"); t.className = "t"; t.textContent = p.split("/").pop(); t.title = p;
+      img.style.height = "220px";
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openLightbox(p, p.split("/").pop());
+      });
+      var t = document.createElement("div"); t.className = "t"; t.textContent = (i + 1) + ". " + p.split("/").pop(); t.title = p;
       var rank = document.createElement("span"); rank.className = "rank"; rank.textContent = cmpPicked.indexOf(p) >= 0 ? (cmpPicked.indexOf(p) + 1) : (i + 1);
-      c.appendChild(img); c.appendChild(t); c.appendChild(rank);
+      var scBadge = document.createElement("span"); scBadge.className = "score";
+      if (cmpScores[p]) scBadge.textContent = cmpScores[p].toFixed(1);
+      var rm = document.createElement("button");
+      rm.textContent = "✕";
+      rm.style.cssText = "position:absolute;top:4px;right:4px;z-index:3;width:22px;height:22px;border-radius:50%;border:1px solid var(--line2);background:rgba(0,0,0,.7);color:#fff;cursor:pointer;";
+      rm.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var k = cmpPaths.indexOf(p); if (k >= 0) cmpPaths.splice(k, 1);
+        var j = cmpPicked.indexOf(p); if (j >= 0) cmpPicked.splice(j, 1);
+        renderCompare();
+      });
+      c.appendChild(rm); c.appendChild(img); c.appendChild(t); c.appendChild(rank); c.appendChild(scBadge);
       c.addEventListener("click", function () {
         var k = cmpPicked.indexOf(p);
         if (k >= 0) cmpPicked.splice(k, 1); else cmpPicked.push(p);
@@ -109,6 +151,40 @@
     if (cmpPicked.length >= 2) {
       r.innerHTML = "你标记的优先级：" + cmpPicked.map(function (p) { return "<code>" + p.split("/").pop() + "</code>"; }).join(" → ");
     } else { r.innerHTML = ""; }
+  }
+  function scoreCompare() {
+    if (cmpPaths.length < 2) { toast("比对需至少 2 图"); return; }
+    API.scoreBatch(cmpPaths).then(function (sc) {
+      cmpScores = {};
+      sc.items.forEach(function (it) {
+        if (it.total != null) cmpScores[it.path] = it.total;
+      });
+      // 排序标记优 = 按总分降序
+      var ranked = cmpPaths.slice().sort(function (a, b) {
+        return (cmpScores[b] || -1) - (cmpScores[a] || -1);
+      });
+      cmpPicked = ranked;
+      renderCompare();
+      var lines = sc.items.map(function (it) {
+        return "<div>" + (it.total != null ? it.total.toFixed(1) + "分" : it.error) + " · " + it.path.split("/").pop() + "</div>";
+      }).join("");
+      document.getElementById("cmp-result").innerHTML = "<b>评分对比（按分排序）：</b>" + lines;
+      toast("评分完成 平均 " + sc.avg_total);
+    }).catch(function (e) { toast("评分失败: " + e.message); });
+  }
+
+  function genSamples() {
+    var n = prompt("生成多少张合成训练图？(1-500)", "20");
+    if (!n) return;
+    n = parseInt(n, 10);
+    if (!n || n < 1 || n > 500) { toast("n 须在 1-500"); return; }
+    var st = document.getElementById("sc-state");
+    st.textContent = "正在生成 " + n + " 张合成图...";
+    API.samplesGenerate(n).then(function (d) {
+      st.textContent = "已生成 " + d.generated + " 张，素材库共 " + d.total + " 张";
+      toast("自动生成完成：" + d.generated + " 张");
+      loadLibrary();
+    }).catch(function (e) { st.textContent = "生成失败: " + e.message; });
   }
 
   /* ===== 批量上传评分 ===== */
@@ -151,8 +227,79 @@
     setTimeout(function () { t.remove(); }, 3200);
   }
 
+  /* ===== 模型管理 ===== */
+  var currentModel = null;
+  function loadModels() {
+    API.models().then(function (d) {
+      var sel = document.getElementById("model-select");
+      if (!sel) return;
+      sel.innerHTML = "";
+      d.items.forEach(function (it) {
+        var o = document.createElement("option");
+        o.value = it.path;
+        o.textContent = it.name + (it.category ? " · " + it.category : "") + (it.active ? " (当前)" : "");
+        if (it.active) o.selected = true;
+        sel.appendChild(o);
+      });
+      currentModel = d.active_model;
+      showModelMeta(d.items);
+      renderModelList(d.items);
+    }).catch(function (e) { toast("模型加载失败: " + e.message); });
+  }
+  function showModelMeta(items) {
+    var path = document.getElementById("model-select").value;
+    var it = null;
+    items.forEach(function (i) { if (i.path === path) it = i; });
+    if (!it) return;
+    document.getElementById("m-name").textContent = it.name;
+    document.getElementById("m-category").textContent = it.category || "-";
+    document.getElementById("m-tags").textContent = (it.tags && it.tags.length) ? it.tags.join(", ") : "-";
+    document.getElementById("mm-name").value = it.name;
+    document.getElementById("mm-category").value = it.category || "";
+    document.getElementById("mm-tags").value = (it.tags || []).join(", ");
+  }
+  function renderModelList(items) {
+    var list = document.getElementById("mm-list");
+    if (!list) return;
+    list.innerHTML = "";
+    items.forEach(function (it) {
+      var row = document.createElement("div");
+      row.textContent = it.path + "  →  " + it.name + (it.category ? " [" + it.category + "]" : "") + (it.active ? " ★" : "");
+      list.appendChild(row);
+    });
+  }
+  function initModels() {
+    loadModels();
+    var sel = document.getElementById("model-select");
+    if (sel) sel.addEventListener("change", function () {
+      // 重取当前选中模型元数据
+      API.models().then(function (d) {
+        var it = null;
+        d.items.forEach(function (i) { if (i.path === sel.value) it = i; });
+        if (it) { currentModel = it.path; showModelMeta(d.items); }
+      });
+    });
+    var mb = document.getElementById("model-manage-btn");
+    if (mb) mb.addEventListener("click", function () {
+      var p = document.getElementById("model-manage-panel");
+      p.hidden = !p.hidden;
+    });
+    var sv = document.getElementById("mm-save");
+    if (sv) sv.addEventListener("click", function () {
+      var path = document.getElementById("model-select").value;
+      var name = document.getElementById("mm-name").value;
+      var cat = document.getElementById("mm-category").value;
+      var tags = document.getElementById("mm-tags").value.split(/[,，\s]+/).filter(Boolean);
+      API.modelsMeta(path, { name: name, category: cat, tags: tags }).then(function () {
+        toast("模型元数据已保存");
+        loadModels();
+      }).catch(function (e) { toast("保存失败: " + e.message); });
+    });
+  }
+
   function init() {
     bindTabs();
+    initModels();
     var si = document.getElementById("lib-search");
     var ss = document.getElementById("lib-sort");
     var so = document.getElementById("lib-order");
@@ -160,6 +307,8 @@
     if (ss) ss.addEventListener("change", loadLibrary);
     if (so) so.addEventListener("change", loadLibrary);
     var rf = document.getElementById("lib-refresh"); if (rf) rf.addEventListener("click", loadLibrary);
+    var ds = document.getElementById("lib-del-sel"); if (ds) ds.addEventListener("click", delSelectedLibrary);
+    var ac = document.getElementById("lib-add-compare"); if (ac) ac.addEventListener("click", addSelectedToCompare);
     var cl = document.getElementById("cmp-load"); if (cl) cl.addEventListener("click", function () {
       var inp = document.getElementById("cmp-input");
       var paths = [];
@@ -169,9 +318,11 @@
       });
       if (paths.length) addComparePaths(paths);
     });
-    var cc = document.getElementById("cmp-clear"); if (cc) cc.addEventListener("click", function () { cmpPaths = []; cmpPicked = []; renderCompare(); });
+    var cc = document.getElementById("cmp-clear"); if (cc) cc.addEventListener("click", function () { cmpPaths = []; cmpPicked = []; cmpScores = {}; renderCompare(); });
+    var cs = document.getElementById("cmp-score"); if (cs) cs.addEventListener("click", scoreCompare);
     var sg = document.getElementById("sc-go"); if (sg) sg.addEventListener("click", function () { runBatch(document.getElementById("sc-dir").files); });
     var sc = document.getElementById("sc-clear"); if (sc) sc.addEventListener("click", function () { document.getElementById("sc-dir").value = ""; document.getElementById("sc-grid").innerHTML = ""; });
+    var sg2 = document.getElementById("sc-gen"); if (sg2) sg2.addEventListener("click", genSamples);
     toast("增强面板已就绪：素材库 / 多图比对 / 批量评分");
   }
 

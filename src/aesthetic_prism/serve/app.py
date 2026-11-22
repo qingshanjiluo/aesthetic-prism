@@ -594,6 +594,155 @@ async def assets_exists_route(request: Request) -> dict[str, Any]:
     return {"items": out}
 
 
+# ===== 模型管理（ENHANCE：多模型命名/分类/标记）=====
+_MODELS_META = _ROOT / "configs" / "models_meta.json"
+_model_meta: dict[str, dict[str, Any]] = {}
+
+
+def _load_model_meta() -> None:
+    if _model_meta or not _MODELS_META.is_file():
+        return
+    try:
+        _model_meta.update(json.loads(_MODELS_META.read_text(encoding="utf-8")))
+    except (OSError, ValueError):
+        pass
+
+
+def _save_model_meta() -> None:
+    _MODELS_META.parent.mkdir(parents=True, exist_ok=True)
+    _MODELS_META.write_text(json.dumps(_model_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _scan_models() -> list[Path]:
+    """扫描 models/ 与 artifacts/ 下的 .onnx/.pt 模型文件。"""
+    out: list[Path] = []
+    for d in ("models", "artifacts"):
+        dd = _ROOT / d
+        if not dd.is_dir():
+            continue
+        for p in sorted(dd.glob("*")):
+            if p.is_file() and p.suffix.lower() in (".onnx", ".pt", ".pth"):
+                out.append(p)
+    return out
+
+
+@app.get("/models")
+async def models_route() -> dict[str, Any]:
+    """GET /models：列出全部模型文件 + 元数据（name/category/tags/note）。"""
+    _load_model_meta()
+    current = Path(os.environ.get("AP_MODEL_PATH", "models/hapnet_teacher.onnx"))
+    items = []
+    for p in _scan_models():
+        rel = str(p.relative_to(_ROOT)).replace("\\", "/")
+        m = _model_meta.get(rel, {})
+        items.append({
+            "path": rel,
+            "filename": p.name,
+            "bytes": p.stat().st_size,
+            "suffix": p.suffix,
+            "name": m.get("name", p.stem),
+            "category": m.get("category", ""),
+            "tags": m.get("tags", []),
+            "note": m.get("note", ""),
+            "active": (rel == str(current).replace("\\", "/")),
+        })
+    return {"total": len(items), "items": items, "active_model": str(current).replace("\\", "/")}
+
+
+@app.post("/models/meta")
+async def models_meta_route(request: Request) -> dict[str, Any]:
+    """POST /models/meta：json {path, name?, category?, tags?, note?} 更新模型元数据。"""
+    body = await request.json()
+    src = str(body.get("path", "")) if isinstance(body, dict) else ""
+    if not src:
+        raise InvalidImageError("models/meta: path required")
+    p = (Path(src) if Path(src).is_absolute() else _ROOT / Path(src)).resolve()
+    try:
+        p.relative_to(_ROOT.resolve())
+    except ValueError:
+        raise InvalidImageError("models/meta: path out of root") from None
+    if not p.is_file():
+        raise InvalidImageError(f"models/meta: not found {src}")
+    rel = str(p.relative_to(_ROOT)).replace("\\", "/")
+    _load_model_meta()
+    m = _model_meta.get(rel, {})
+    if isinstance(body, dict):
+        if "name" in body:
+            m["name"] = str(body["name"])
+        if "category" in body:
+            m["category"] = str(body["category"])
+        if "tags" in body and isinstance(body["tags"], list):
+            m["tags"] = [str(t) for t in body["tags"]]
+        if "note" in body:
+            m["note"] = str(body["note"])
+    _model_meta[rel] = m
+    _save_model_meta()
+    return {"path": rel, "name": m.get("name", p.stem), "category": m.get("category", ""), "tags": m.get("tags", []), "note": m.get("note", "")}
+
+
+@app.post("/samples/generate")
+async def samples_generate_route(request: Request) -> dict[str, Any]:
+    """POST /samples/generate：json {n?, out?} 自动生成合成训练样本（走 data/synthetic.py）。
+
+    默认 n=20、out=data/synthetic；生成后返回数量与目录。n 上限 500。
+    """
+    n = 20
+    out = None
+    if request.headers.get("content-type", "").startswith("application/json"):
+        try:
+            body = await request.json()
+        except Exception:
+            raise InvalidImageError("samples/generate: body not valid JSON") from None
+        if isinstance(body, dict):
+            if "n" in body:
+                raw = body["n"]
+                if not isinstance(raw, int) or isinstance(raw, bool) or raw < 1 or raw > 500:
+                    raise InvalidImageError("samples/generate: n must be int in [1, 500]")
+                n = raw
+            if "out" in body:
+                out = str(body["out"])
+    from aesthetic_prism.data import synthetic as _syn
+
+    try:
+        samples = []
+        out_dir = Path(out) if out else _syn.OUT_DIR
+        if not out_dir.is_absolute():
+            out_dir = _ROOT / out_dir
+        out_dir.mkdir(parents=True, exist_ok=True)
+        # 从 index.json 读已生成的 id 集合，避免覆盖
+        existing: set[str] = set()
+        idx_file = out_dir / "index.json"
+        if idx_file.is_file():
+            try:
+                idx = json.loads(idx_file.read_text(encoding="utf-8"))
+                for s in idx.get("samples", []):
+                    existing.add(s["id"])
+            except (OSError, ValueError):
+                pass
+        nxt = 1
+        while len(samples) < n and nxt <= 200000:
+            sid = f"syn_{nxt:06d}"
+            nxt += 1
+            if sid in existing:
+                continue
+            samples.append(_syn.generate(_syn.SEED, sid, out_dir))
+        # 合并进 index.json
+        if idx_file.is_file():
+            try:
+                idx = json.loads(idx_file.read_text(encoding="utf-8"))
+                idx["samples"] = idx.get("samples", []) + samples
+                idx["meta"]["n"] = len(idx["samples"])
+            except (OSError, ValueError):
+                idx = {"meta": {"n": len(samples), "seed": _syn.SEED, "gen_version": "rw-s2-03", "labels": list(_syn.KEYS)}, "samples": samples}
+        else:
+            idx = {"meta": {"n": len(samples), "seed": _syn.SEED, "gen_version": "rw-s2-03", "labels": list(_syn.KEYS)}, "samples": samples}
+        idx_file.write_text(json.dumps(idx, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        return {"generated": len(samples), "total": idx["meta"]["n"], "dir": str(out_dir.relative_to(_ROOT)).replace("\\", "/")}
+    except Exception as exc:
+        log.exception("samples generate failed")
+        raise InvalidImageError(f"samples/generate failed: {type(exc).__name__}") from None
+
+
 # ---- 六档错误映射（ApiError 子类 → 400/404/413/415/429/500 统一 {"error":{code,message}}）----
 @app.exception_handler(ApiError)
 async def _api_error(_r: Request, exc: ApiError) -> JSONResponse:

@@ -1,4 +1,4 @@
-﻿// Aesthetic Prism 前端 API 封装（原生 JS 零依赖，同源 fetch）
+// Aesthetic Prism 前端 API 封装（原生 JS 零依赖，同源 fetch）
 // 统一错误体 {"error":{code,message}}；所有请求返回 Promise。
 "use strict";
 var API = (function () {
@@ -63,6 +63,18 @@ var API = (function () {
     },
     assetsExists: function (paths) {
       return http("/assets/exists", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paths: paths }) });
+    },
+    models: function () { return http("/models"); },
+    modelsMeta: function (path, data) {
+      var body = { path: path };
+      if (data.name !== undefined) body.name = data.name;
+      if (data.category !== undefined) body.category = data.category;
+      if (data.tags) body.tags = data.tags;
+      if (data.note !== undefined) body.note = data.note;
+      return http("/models/meta", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    },
+    samplesGenerate: function (n) {
+      return http("/samples/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ n: n }) });
     }
   };
 })();
