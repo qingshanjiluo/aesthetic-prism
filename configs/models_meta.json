@@ -1,11 +1,14 @@
 {
   "artifacts/student.onnx": {
     "name": "轻量学生模型",
-    "category": "量化",
+    "category": "锁验证",
     "tags": [
       "int8",
       "部署"
     ],
     "note": "用于端侧推理"
+  },
+  "models/_smoke_teacher.onnx": {
+    "category": "测试类"
   }
 }

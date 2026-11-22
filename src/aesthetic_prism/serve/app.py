@@ -355,9 +355,14 @@ def _load_meta() -> None:
         pass
 
 
+_META_LOCK = __import__("threading").Lock()
+
 def _save_meta() -> None:
     _ASSETS_META.parent.mkdir(parents=True, exist_ok=True)
-    _ASSETS_META.write_text(json.dumps(_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    with _META_LOCK:
+        tmp = _ASSETS_META.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(_ASSETS_META)
 
 
 def _is_image_path(p: Path) -> bool:
@@ -610,7 +615,10 @@ def _load_model_meta() -> None:
 
 def _save_model_meta() -> None:
     _MODELS_META.parent.mkdir(parents=True, exist_ok=True)
-    _MODELS_META.write_text(json.dumps(_model_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    with _META_LOCK:
+        tmp = _MODELS_META.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(_model_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(_MODELS_META)
 
 
 def _scan_models() -> list[Path]:

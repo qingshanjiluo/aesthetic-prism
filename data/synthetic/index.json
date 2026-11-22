@@ -1,6 +1,6 @@
 {
  "meta": {
-  "n": 8,
+  "n": 200,
   "seed": 42,
   "gen_version": "rw-s2-03",
   "labels": [
@@ -140,6 +140,3078 @@
     "light": 81.0,
     "creativity": 46.8,
     "story": 55.3
+   }
+  },
+  {
+   "id": "syn_000004",
+   "image_path": "data/synthetic/syn_000004.png",
+   "image_sha256": "a03ccb36f606c3c991532cbd0fb2dd00d273efa8077545a1e5904c5eea9b5755",
+   "bytes": 349181,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.0,
+    "composition": 37.8,
+    "light": 50.5,
+    "creativity": 79.9,
+    "story": 82.9
+   }
+  },
+  {
+   "id": "syn_000005",
+   "image_path": "data/synthetic/syn_000005.png",
+   "image_sha256": "caeffa527b27c72340314b2ad9f7466b25688ddec22352f7b265c6c877e5839b",
+   "bytes": 247011,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 71.3,
+    "composition": 84.2,
+    "light": 82.2,
+    "creativity": 52.4,
+    "story": 54.7
+   }
+  },
+  {
+   "id": "syn_000006",
+   "image_path": "data/synthetic/syn_000006.png",
+   "image_sha256": "b7370a5113e3283aaf9edbb325ca49817500bc27ee49757fa9e0c42f42592bc4",
+   "bytes": 231223,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.4,
+    "composition": 55.9,
+    "light": 35.8,
+    "creativity": 57.7,
+    "story": 72.0
+   }
+  },
+  {
+   "id": "syn_000007",
+   "image_path": "data/synthetic/syn_000007.png",
+   "image_sha256": "39f60874ee1bb4e21b2a999c89c4c79198f91828c6273583b80a53b39d3ae3b7",
+   "bytes": 1055448,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 65.3,
+    "composition": 74.0,
+    "light": 57.3,
+    "creativity": 73.9,
+    "story": 55.6
+   }
+  },
+  {
+   "id": "syn_000008",
+   "image_path": "data/synthetic/syn_000008.png",
+   "image_sha256": "c4c2fddc5768d22b1b1ef438a62441a343becdf5de1acf09e5682dac62b02ed4",
+   "bytes": 453271,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.7,
+    "composition": 77.5,
+    "light": 46.2,
+    "creativity": 33.0,
+    "story": 45.1
+   }
+  },
+  {
+   "id": "syn_000009",
+   "image_path": "data/synthetic/syn_000009.png",
+   "image_sha256": "cca63f83f9ea952aa861ffcd9f3206555d43d4535c303156ef4679d9d09818a2",
+   "bytes": 245915,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 36.1,
+    "composition": 43.2,
+    "light": 20.0,
+    "creativity": 34.4,
+    "story": 51.3
+   }
+  },
+  {
+   "id": "syn_000010",
+   "image_path": "data/synthetic/syn_000010.png",
+   "image_sha256": "4185323caaf8be099a9a23a153477939988462b30487a6660c399f0fa5552d28",
+   "bytes": 1298011,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.2,
+    "composition": 30.8,
+    "light": 35.4,
+    "creativity": 70.0,
+    "story": 61.8
+   }
+  },
+  {
+   "id": "syn_000011",
+   "image_path": "data/synthetic/syn_000011.png",
+   "image_sha256": "a2ae5ce7c7f066ff22e9f2a8edd599edb5bd7dabc920587ee62eae4cee0ce1f8",
+   "bytes": 58049,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.5,
+    "composition": 54.1,
+    "light": 65.7,
+    "creativity": 72.7,
+    "story": 55.2
+   }
+  },
+  {
+   "id": "syn_000012",
+   "image_path": "data/synthetic/syn_000012.png",
+   "image_sha256": "a75d23bfab2caa7801999cb16aeb43947c948c89330f9e7724d4712bc6cc140d",
+   "bytes": 328677,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 66.5,
+    "composition": 73.4,
+    "light": 55.3,
+    "creativity": 83.9,
+    "story": 55.8
+   }
+  },
+  {
+   "id": "syn_000013",
+   "image_path": "data/synthetic/syn_000013.png",
+   "image_sha256": "3441ce7056faeef7fef9c4594a9a0ada29b6139f9fb6cf7e25bee85d2151b81c",
+   "bytes": 235155,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 72.0,
+    "composition": 71.2,
+    "light": 57.8,
+    "creativity": 95.1,
+    "story": 71.3
+   }
+  },
+  {
+   "id": "syn_000014",
+   "image_path": "data/synthetic/syn_000014.png",
+   "image_sha256": "0040fc0aa8db2a49f4c1631bd7b4ced313816bbb8d6c8750ff456754e973cadf",
+   "bytes": 102833,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.9,
+    "composition": 39.5,
+    "light": 49.0,
+    "creativity": 60.5,
+    "story": 66.3
+   }
+  },
+  {
+   "id": "syn_000015",
+   "image_path": "data/synthetic/syn_000015.png",
+   "image_sha256": "fb980a123e66a4260e7c5b1d1656ad184cf5302887da811eb3c27b9b73ccf228",
+   "bytes": 1031700,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.0,
+    "composition": 69.3,
+    "light": 38.1,
+    "creativity": 72.1,
+    "story": 61.9
+   }
+  },
+  {
+   "id": "syn_000016",
+   "image_path": "data/synthetic/syn_000016.png",
+   "image_sha256": "95c540dafe615bc34cb9c53a6c39e1c2d17a3a576763891a7f4f58ab7f6d3863",
+   "bytes": 587331,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 35.3,
+    "composition": 46.0,
+    "light": 20.4,
+    "creativity": 46.3,
+    "story": 30.6
+   }
+  },
+  {
+   "id": "syn_000017",
+   "image_path": "data/synthetic/syn_000017.png",
+   "image_sha256": "e8e0a16d1824d4390bb7d67b4f4f99b394b65ce5d99dc88a4465b3d935b829ef",
+   "bytes": 477999,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.6,
+    "composition": 49.3,
+    "light": 69.9,
+    "creativity": 57.3,
+    "story": 52.1
+   }
+  },
+  {
+   "id": "syn_000018",
+   "image_path": "data/synthetic/syn_000018.png",
+   "image_sha256": "c73b1796f81aa505285059cebc390bf0373e0eb1dba68a6c685be2a65c3f8e29",
+   "bytes": 1070152,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.3,
+    "composition": 62.0,
+    "light": 38.7,
+    "creativity": 40.8,
+    "story": 64.7
+   }
+  },
+  {
+   "id": "syn_000019",
+   "image_path": "data/synthetic/syn_000019.png",
+   "image_sha256": "e6e6906ef42dd946ab0faa025f593c95f25782e58da09c091328b463ad9763ec",
+   "bytes": 488890,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 62.8,
+    "composition": 72.4,
+    "light": 53.5,
+    "creativity": 56.4,
+    "story": 68.7
+   }
+  },
+  {
+   "id": "syn_000020",
+   "image_path": "data/synthetic/syn_000020.png",
+   "image_sha256": "a6ff498db62ff559097c54c12c018f76d62c8924c431ffcaf6fc81c2d8232ea4",
+   "bytes": 1358676,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.5,
+    "composition": 47.8,
+    "light": 46.1,
+    "creativity": 61.5,
+    "story": 80.4
+   }
+  },
+  {
+   "id": "syn_000021",
+   "image_path": "data/synthetic/syn_000021.png",
+   "image_sha256": "fcbe636612ae8c8b1eaf49358cf1d5966b47d01b6fdf21e41e2b10ce455bbe64",
+   "bytes": 113632,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.2,
+    "composition": 56.6,
+    "light": 36.3,
+    "creativity": 88.2,
+    "story": 63.4
+   }
+  },
+  {
+   "id": "syn_000022",
+   "image_path": "data/synthetic/syn_000022.png",
+   "image_sha256": "a1d6706510736d51873300d15f792cc6b02beb1fd40055484e38952fde43a2bf",
+   "bytes": 989861,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 31.7,
+    "composition": 27.3,
+    "light": 27.0,
+    "creativity": 32.6,
+    "story": 44.3
+   }
+  },
+  {
+   "id": "syn_000023",
+   "image_path": "data/synthetic/syn_000023.png",
+   "image_sha256": "5baf9db4d5ba7b4e8312364c7e8547b8934fbd4564db5ab637b2d18faf19e85a",
+   "bytes": 58707,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.7,
+    "composition": 51.3,
+    "light": 46.4,
+    "creativity": 70.0,
+    "story": 52.0
+   }
+  },
+  {
+   "id": "syn_000024",
+   "image_path": "data/synthetic/syn_000024.png",
+   "image_sha256": "abf71b32a386cc57127d8a313cdf9fe76823df31708eff8d5f627b809b917d84",
+   "bytes": 168503,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.6,
+    "composition": 60.5,
+    "light": 54.9,
+    "creativity": 75.1,
+    "story": 74.9
+   }
+  },
+  {
+   "id": "syn_000025",
+   "image_path": "data/synthetic/syn_000025.png",
+   "image_sha256": "eaa82baf35a39651ef4ccd765d855d39560fcfff47ceaec1d200e6ad3ec3d8ad",
+   "bytes": 576496,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 41.1,
+    "composition": 29.2,
+    "light": 53.8,
+    "creativity": 19.5,
+    "story": 61.7
+   }
+  },
+  {
+   "id": "syn_000026",
+   "image_path": "data/synthetic/syn_000026.png",
+   "image_sha256": "b99237aa9b780e349f0fbd8619b001f78e853c351a891a41d133f94cf1d5a0f2",
+   "bytes": 744936,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.5,
+    "composition": 26.1,
+    "light": 50.2,
+    "creativity": 46.3,
+    "story": 71.8
+   }
+  },
+  {
+   "id": "syn_000027",
+   "image_path": "data/synthetic/syn_000027.png",
+   "image_sha256": "b7788f0a0006364f862a8bd8e261cab08ceba0a4897cdaf88523cee017ea383d",
+   "bytes": 72721,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.7,
+    "composition": 40.1,
+    "light": 43.2,
+    "creativity": 63.0,
+    "story": 35.3
+   }
+  },
+  {
+   "id": "syn_000028",
+   "image_path": "data/synthetic/syn_000028.png",
+   "image_sha256": "0c842db3d91bfbba27244a693a094a802bfdd701376ad9c0685cf6f0425bc10d",
+   "bytes": 591801,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 65.7,
+    "composition": 67.2,
+    "light": 60.7,
+    "creativity": 70.2,
+    "story": 66.4
+   }
+  },
+  {
+   "id": "syn_000029",
+   "image_path": "data/synthetic/syn_000029.png",
+   "image_sha256": "f72e5e2a74eadde6d46017c9112b148c9925fdf496cdae3f96b6adb1c0f13a4c",
+   "bytes": 1066972,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.5,
+    "composition": 66.7,
+    "light": 54.4,
+    "creativity": 15.0,
+    "story": 65.7
+   }
+  },
+  {
+   "id": "syn_000030",
+   "image_path": "data/synthetic/syn_000030.png",
+   "image_sha256": "0f7a67ee4ed6388fe28290d2a5219d45a15fff58a37fcd0161bd5a2311415fda",
+   "bytes": 58637,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 41.8,
+    "composition": 42.2,
+    "light": 39.0,
+    "creativity": 44.4,
+    "story": 42.9
+   }
+  },
+  {
+   "id": "syn_000031",
+   "image_path": "data/synthetic/syn_000031.png",
+   "image_sha256": "e29d0639672775e991dbbb67c1de2c31cbc0952ef5227a7c12021a9441cb9451",
+   "bytes": 373641,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.1,
+    "composition": 38.2,
+    "light": 42.5,
+    "creativity": 78.0,
+    "story": 71.3
+   }
+  },
+  {
+   "id": "syn_000032",
+   "image_path": "data/synthetic/syn_000032.png",
+   "image_sha256": "ae0f42aaeca196958b5558a86cfcd607464772324fac43486c2c645a05c98f51",
+   "bytes": 865601,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.2,
+    "composition": 67.1,
+    "light": 18.2,
+    "creativity": 62.0,
+    "story": 60.9
+   }
+  },
+  {
+   "id": "syn_000033",
+   "image_path": "data/synthetic/syn_000033.png",
+   "image_sha256": "fc8dda64a9195734f1d4f5cce27e7e6e2acd6b8d8f3687c15439d897e961fd22",
+   "bytes": 1055782,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 43.9,
+    "composition": 50.3,
+    "light": 47.4,
+    "creativity": 38.9,
+    "story": 34.3
+   }
+  },
+  {
+   "id": "syn_000034",
+   "image_path": "data/synthetic/syn_000034.png",
+   "image_sha256": "bdca591c5ce6f1240a0a172aa50f6922f81bd4cd60f212395a390eefac3886f3",
+   "bytes": 105895,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.3,
+    "composition": 72.1,
+    "light": 36.7,
+    "creativity": 61.6,
+    "story": 56.9
+   }
+  },
+  {
+   "id": "syn_000035",
+   "image_path": "data/synthetic/syn_000035.png",
+   "image_sha256": "0115324f3fbdc8867a7e70e5c4106999d0c93ca745fdc1178467c727fa836e69",
+   "bytes": 115461,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.3,
+    "composition": 30.3,
+    "light": 48.0,
+    "creativity": 81.0,
+    "story": 73.3
+   }
+  },
+  {
+   "id": "syn_000036",
+   "image_path": "data/synthetic/syn_000036.png",
+   "image_sha256": "a32b0f094cdf90d7a8da558ec321907670f6280315ba79893910271ccd43f25b",
+   "bytes": 288731,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.1,
+    "composition": 46.8,
+    "light": 52.6,
+    "creativity": 23.2,
+    "story": 48.2
+   }
+  },
+  {
+   "id": "syn_000037",
+   "image_path": "data/synthetic/syn_000037.png",
+   "image_sha256": "547dcf4d5685dc3c1fa70de3fa59dfeea5b08f367213f514e9e20e1952448059",
+   "bytes": 51705,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.5,
+    "composition": 50.0,
+    "light": 64.0,
+    "creativity": 32.4,
+    "story": 94.0
+   }
+  },
+  {
+   "id": "syn_000038",
+   "image_path": "data/synthetic/syn_000038.png",
+   "image_sha256": "a504f897cdba955f721c4a891e1ffbdbc13d4477a0e66dfcdec8099e4f2de3a9",
+   "bytes": 99074,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 37.3,
+    "composition": 40.2,
+    "light": 13.4,
+    "creativity": 49.8,
+    "story": 56.5
+   }
+  },
+  {
+   "id": "syn_000039",
+   "image_path": "data/synthetic/syn_000039.png",
+   "image_sha256": "4f08be563d6b9d3d8b10ecba5869b20007eff9a4f711a588cbe93d5fdea36bcf",
+   "bytes": 776773,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.7,
+    "composition": 52.7,
+    "light": 54.0,
+    "creativity": 87.0,
+    "story": 76.5
+   }
+  },
+  {
+   "id": "syn_000040",
+   "image_path": "data/synthetic/syn_000040.png",
+   "image_sha256": "caa526146968177b86be589d621b122349d6aac7a43cd3717ac4d16b61777823",
+   "bytes": 303795,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.7,
+    "composition": 48.8,
+    "light": 34.1,
+    "creativity": 72.0,
+    "story": 47.2
+   }
+  },
+  {
+   "id": "syn_000041",
+   "image_path": "data/synthetic/syn_000041.png",
+   "image_sha256": "e76955860c2f10fd16225184a6d4a6a9f7c2a68846c4c1e08a8a3739973028f7",
+   "bytes": 523426,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.1,
+    "composition": 54.5,
+    "light": 40.8,
+    "creativity": 55.6,
+    "story": 87.2
+   }
+  },
+  {
+   "id": "syn_000042",
+   "image_path": "data/synthetic/syn_000042.png",
+   "image_sha256": "beac1098bbe23dcc9b23e5785515c41edd6619bea100e8d9c4bf15ab65ccc566",
+   "bytes": 102028,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.5,
+    "composition": 41.6,
+    "light": 44.6,
+    "creativity": 39.9,
+    "story": 73.5
+   }
+  },
+  {
+   "id": "syn_000043",
+   "image_path": "data/synthetic/syn_000043.png",
+   "image_sha256": "f343b007df74d16e23aea0f8357dddcd60b15fe6f3bbdff9858f022753b801f7",
+   "bytes": 421920,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 37.5,
+    "composition": 8.9,
+    "light": 42.3,
+    "creativity": 54.5,
+    "story": 56.2
+   }
+  },
+  {
+   "id": "syn_000044",
+   "image_path": "data/synthetic/syn_000044.png",
+   "image_sha256": "06c3143c10babb1b4ef4c30d905998407a4b4868cfb13a52e98959ca398ce8bd",
+   "bytes": 404857,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.7,
+    "composition": 35.5,
+    "light": 65.4,
+    "creativity": 59.0,
+    "story": 78.2
+   }
+  },
+  {
+   "id": "syn_000045",
+   "image_path": "data/synthetic/syn_000045.png",
+   "image_sha256": "e3245425118f8df8243fcc193f8e774bbcf86a4df7d97dbee11453ea7b40d2a5",
+   "bytes": 1030479,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.0,
+    "composition": 47.3,
+    "light": 41.0,
+    "creativity": 60.6,
+    "story": 81.8
+   }
+  },
+  {
+   "id": "syn_000046",
+   "image_path": "data/synthetic/syn_000046.png",
+   "image_sha256": "fa7292d4d144ea78839604e1032921f2aa25bb70d9769dce19d277f58e2e9182",
+   "bytes": 575945,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 45.1,
+    "composition": 30.8,
+    "light": 17.4,
+    "creativity": 68.0,
+    "story": 85.0
+   }
+  },
+  {
+   "id": "syn_000047",
+   "image_path": "data/synthetic/syn_000047.png",
+   "image_sha256": "5532b5202ed697dcdce42e2dc437675a03fd7853c55d57ea66b6ab69469b87ea",
+   "bytes": 105842,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 60.3,
+    "composition": 74.0,
+    "light": 38.0,
+    "creativity": 51.0,
+    "story": 82.5
+   }
+  },
+  {
+   "id": "syn_000048",
+   "image_path": "data/synthetic/syn_000048.png",
+   "image_sha256": "182d11c259676d104d4eab07ef62b78c196d47542cdb02fae4735a28b14ea81a",
+   "bytes": 71755,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.8,
+    "composition": 67.6,
+    "light": 35.0,
+    "creativity": 58.2,
+    "story": 46.7
+   }
+  },
+  {
+   "id": "syn_000049",
+   "image_path": "data/synthetic/syn_000049.png",
+   "image_sha256": "2cc84ee141ccde0b8d4779822d51eaa7f49b2a57807399cb8218b310e98421de",
+   "bytes": 117240,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.5,
+    "composition": 65.1,
+    "light": 19.1,
+    "creativity": 42.1,
+    "story": 64.2
+   }
+  },
+  {
+   "id": "syn_000050",
+   "image_path": "data/synthetic/syn_000050.png",
+   "image_sha256": "17c6642020c7fb0db35e866abb0ac6353b6849970090967090003ed827fa41ef",
+   "bytes": 1070475,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 67.5,
+    "composition": 69.4,
+    "light": 74.9,
+    "creativity": 48.1,
+    "story": 72.9
+   }
+  },
+  {
+   "id": "syn_000051",
+   "image_path": "data/synthetic/syn_000051.png",
+   "image_sha256": "424569322a351565426f89a57e2e6a9fecdd1a7e7e2405e7452f7c9a8ad66533",
+   "bytes": 308477,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.6,
+    "composition": 43.0,
+    "light": 28.1,
+    "creativity": 55.8,
+    "story": 60.8
+   }
+  },
+  {
+   "id": "syn_000052",
+   "image_path": "data/synthetic/syn_000052.png",
+   "image_sha256": "00f22ff4987051ca984095c36b90ec2ddbc367e5e2a0568a6da1b023e45ddd78",
+   "bytes": 257144,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.0,
+    "composition": 61.5,
+    "light": 41.8,
+    "creativity": 60.6,
+    "story": 74.5
+   }
+  },
+  {
+   "id": "syn_000053",
+   "image_path": "data/synthetic/syn_000053.png",
+   "image_sha256": "d801649bed34413cfdda9c7e270c1c336cf7ced4bc3082223cf0dcf8c3d87da1",
+   "bytes": 1149765,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.4,
+    "composition": 58.4,
+    "light": 62.5,
+    "creativity": 79.6,
+    "story": 46.0
+   }
+  },
+  {
+   "id": "syn_000054",
+   "image_path": "data/synthetic/syn_000054.png",
+   "image_sha256": "455cf19f899004224ebf7d5ce0e783a845c596ab3da239d025d2e52b3b3d2670",
+   "bytes": 183038,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.2,
+    "composition": 47.0,
+    "light": 79.2,
+    "creativity": 80.9,
+    "story": 35.9
+   }
+  },
+  {
+   "id": "syn_000055",
+   "image_path": "data/synthetic/syn_000055.png",
+   "image_sha256": "b6915b6553fbe0062ae20a1c18bd6622903bf61612ba3bd615e329585ff3cd62",
+   "bytes": 1123503,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.9,
+    "composition": 72.4,
+    "light": 41.5,
+    "creativity": 38.1,
+    "story": 45.4
+   }
+  },
+  {
+   "id": "syn_000056",
+   "image_path": "data/synthetic/syn_000056.png",
+   "image_sha256": "3c0c4bcd84e3570e185d5f001c7d34916d0151c782c89df727367a79be4aef23",
+   "bytes": 256826,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 34.5,
+    "composition": 11.3,
+    "light": 46.6,
+    "creativity": 57.3,
+    "story": 28.5
+   }
+  },
+  {
+   "id": "syn_000057",
+   "image_path": "data/synthetic/syn_000057.png",
+   "image_sha256": "c6d354362fe42cf7c4a27e4b1e3c73d9108d41759383b9cfc744f4f99138bd24",
+   "bytes": 107564,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.5,
+    "composition": 51.1,
+    "light": 47.8,
+    "creativity": 44.7,
+    "story": 39.7
+   }
+  },
+  {
+   "id": "syn_000058",
+   "image_path": "data/synthetic/syn_000058.png",
+   "image_sha256": "5a7be6bd5b95e5b3e9a2b20f75daf6cf3621666b327f047a78bd9e451a29ff4f",
+   "bytes": 348044,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 63.7,
+    "composition": 73.4,
+    "light": 37.1,
+    "creativity": 67.4,
+    "story": 85.4
+   }
+  },
+  {
+   "id": "syn_000059",
+   "image_path": "data/synthetic/syn_000059.png",
+   "image_sha256": "5e812f08f6523bb7d5ceae7d939d9bb1ec93cd187d9f5340ec7479735b707a77",
+   "bytes": 1339529,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.1,
+    "composition": 69.9,
+    "light": 62.3,
+    "creativity": 53.2,
+    "story": 69.1
+   }
+  },
+  {
+   "id": "syn_000060",
+   "image_path": "data/synthetic/syn_000060.png",
+   "image_sha256": "536f15ec9d9832a425fff6e71dc373dcc7f536a0b17c6cfd2e826242371c507d",
+   "bytes": 113964,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 33.9,
+    "composition": 4.6,
+    "light": 33.2,
+    "creativity": 42.6,
+    "story": 70.4
+   }
+  },
+  {
+   "id": "syn_000061",
+   "image_path": "data/synthetic/syn_000061.png",
+   "image_sha256": "767d0601a42c04207615e665ebe5d8cc2dd2f6976f7c89290641456e5c5064db",
+   "bytes": 264717,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.8,
+    "composition": 68.9,
+    "light": 23.4,
+    "creativity": 43.5,
+    "story": 87.1
+   }
+  },
+  {
+   "id": "syn_000062",
+   "image_path": "data/synthetic/syn_000062.png",
+   "image_sha256": "1fefde5cb773d2d410e0c7961215c031c41d697b7123ff4256bc7426f8f859b0",
+   "bytes": 246622,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.7,
+    "composition": 67.7,
+    "light": 27.7,
+    "creativity": 68.4,
+    "story": 57.1
+   }
+  },
+  {
+   "id": "syn_000063",
+   "image_path": "data/synthetic/syn_000063.png",
+   "image_sha256": "76fa32582bd3edd3c9706f59c4540141371d14b7086ee88d204311048991547c",
+   "bytes": 243384,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 68.1,
+    "composition": 81.4,
+    "light": 62.1,
+    "creativity": 70.4,
+    "story": 54.8
+   }
+  },
+  {
+   "id": "syn_000064",
+   "image_path": "data/synthetic/syn_000064.png",
+   "image_sha256": "fd1f67c262028c9e419f07d46b838b505c2a21720712396def545eb1bb6d6200",
+   "bytes": 544681,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 38.0,
+    "composition": 48.7,
+    "light": 14.8,
+    "creativity": 28.5,
+    "story": 66.1
+   }
+  },
+  {
+   "id": "syn_000065",
+   "image_path": "data/synthetic/syn_000065.png",
+   "image_sha256": "81371fc3fe1b1794e8e99eedfcaa106a575961313586c5ff8ead0faba68102cc",
+   "bytes": 39360,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 37.7,
+    "composition": 60.8,
+    "light": 50.7,
+    "creativity": 14.2,
+    "story": 7.2
+   }
+  },
+  {
+   "id": "syn_000066",
+   "image_path": "data/synthetic/syn_000066.png",
+   "image_sha256": "33c1b96540c61b811af093f853840f41f67fe899c60d15eeb17cf6821e005005",
+   "bytes": 878777,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.7,
+    "composition": 54.6,
+    "light": 53.7,
+    "creativity": 70.3,
+    "story": 75.6
+   }
+  },
+  {
+   "id": "syn_000067",
+   "image_path": "data/synthetic/syn_000067.png",
+   "image_sha256": "3f27c9bd71565953d561472506e2ab9b2ed9413ebef826f0a71aff134d420303",
+   "bytes": 839656,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.9,
+    "composition": 47.2,
+    "light": 62.2,
+    "creativity": 45.1,
+    "story": 55.2
+   }
+  },
+  {
+   "id": "syn_000068",
+   "image_path": "data/synthetic/syn_000068.png",
+   "image_sha256": "d4143aadb0bb88c88e140c9c9a4a145cff6ac9c151180750d278e727cfcf045e",
+   "bytes": 230058,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.0,
+    "composition": 75.8,
+    "light": 41.5,
+    "creativity": 49.3,
+    "story": 35.0
+   }
+  },
+  {
+   "id": "syn_000069",
+   "image_path": "data/synthetic/syn_000069.png",
+   "image_sha256": "458d768100c947a78ea8c68b03710dfc1c7f57d3865cf83f56f1017d1910a785",
+   "bytes": 82978,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.4,
+    "composition": 44.8,
+    "light": 46.7,
+    "creativity": 40.8,
+    "story": 79.1
+   }
+  },
+  {
+   "id": "syn_000070",
+   "image_path": "data/synthetic/syn_000070.png",
+   "image_sha256": "954d13631cdf0f757a1100b87096ed2e402fe85cface64884f5c06c80091d617",
+   "bytes": 83858,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.2,
+    "composition": 57.1,
+    "light": 63.7,
+    "creativity": 59.5,
+    "story": 50.2
+   }
+  },
+  {
+   "id": "syn_000071",
+   "image_path": "data/synthetic/syn_000071.png",
+   "image_sha256": "889c03b6d5329856c5d309fd2c108a440aed07626034eaad9cebb11ea6c72bd8",
+   "bytes": 875499,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.0,
+    "composition": 53.5,
+    "light": 52.1,
+    "creativity": 44.1,
+    "story": 72.5
+   }
+  },
+  {
+   "id": "syn_000072",
+   "image_path": "data/synthetic/syn_000072.png",
+   "image_sha256": "8577923d3978521ff4b8b8493346babdd8ac5bbbfbe250d566aad4bf83695d6f",
+   "bytes": 552680,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 47.9,
+    "composition": 21.6,
+    "light": 48.0,
+    "creativity": 63.2,
+    "story": 72.0
+   }
+  },
+  {
+   "id": "syn_000073",
+   "image_path": "data/synthetic/syn_000073.png",
+   "image_sha256": "90b285de4f04c4b018680869137c63320b2250630cc988b753763b95f5af3958",
+   "bytes": 826390,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 45.3,
+    "composition": 30.6,
+    "light": 44.3,
+    "creativity": 77.2,
+    "story": 37.1
+   }
+  },
+  {
+   "id": "syn_000074",
+   "image_path": "data/synthetic/syn_000074.png",
+   "image_sha256": "160deeb1b9662f4316f367534b0470462339af58e264c266e15517785be66083",
+   "bytes": 95917,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 75.6,
+    "composition": 56.2,
+    "light": 68.4,
+    "creativity": 91.8,
+    "story": 99.2
+   }
+  },
+  {
+   "id": "syn_000075",
+   "image_path": "data/synthetic/syn_000075.png",
+   "image_sha256": "ddbcb51f67d68211169cd4663031c9c7c3969e1e0e642be6437f21628cdf34c2",
+   "bytes": 503164,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 40.1,
+    "composition": 36.0,
+    "light": 19.6,
+    "creativity": 50.4,
+    "story": 66.5
+   }
+  },
+  {
+   "id": "syn_000076",
+   "image_path": "data/synthetic/syn_000076.png",
+   "image_sha256": "4fa881cf75ae4c5d5829a5bf51dab8c7519799ca6671ff9b2acefbf2c00069c1",
+   "bytes": 595777,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.8,
+    "composition": 79.7,
+    "light": 64.5,
+    "creativity": 41.7,
+    "story": 41.1
+   }
+  },
+  {
+   "id": "syn_000077",
+   "image_path": "data/synthetic/syn_000077.png",
+   "image_sha256": "33fd74c2e58bdc096674ef095e011ce7dd4b16788764c06f0014733f0c90234d",
+   "bytes": 61567,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 67.9,
+    "composition": 59.7,
+    "light": 63.7,
+    "creativity": 62.4,
+    "story": 92.1
+   }
+  },
+  {
+   "id": "syn_000078",
+   "image_path": "data/synthetic/syn_000078.png",
+   "image_sha256": "ece601d395a406ca6e3a96483266b9d41bc299ca7fff5d284d1afd2a5303e260",
+   "bytes": 430998,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 73.2,
+    "composition": 80.0,
+    "light": 70.1,
+    "creativity": 62.6,
+    "story": 78.3
+   }
+  },
+  {
+   "id": "syn_000079",
+   "image_path": "data/synthetic/syn_000079.png",
+   "image_sha256": "c37eef15d38f7599e60c56ad4b79f07ba4c293ec914920eaece4582eb7b5e77b",
+   "bytes": 92599,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.9,
+    "composition": 14.7,
+    "light": 60.7,
+    "creativity": 43.8,
+    "story": 77.4
+   }
+  },
+  {
+   "id": "syn_000080",
+   "image_path": "data/synthetic/syn_000080.png",
+   "image_sha256": "7e8f7b78c4d1cb578c29f1b192971160bc12c426ddcb52c4fdbd98fc0e5180e4",
+   "bytes": 1274563,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 37.8,
+    "composition": 16.7,
+    "light": 39.5,
+    "creativity": 61.9,
+    "story": 42.7
+   }
+  },
+  {
+   "id": "syn_000081",
+   "image_path": "data/synthetic/syn_000081.png",
+   "image_sha256": "c03099b09cfb896db212a19346b9ea7b79a691bd0b5ec06ebffc06d69581106b",
+   "bytes": 56995,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.6,
+    "composition": 29.4,
+    "light": 71.8,
+    "creativity": 28.6,
+    "story": 52.7
+   }
+  },
+  {
+   "id": "syn_000082",
+   "image_path": "data/synthetic/syn_000082.png",
+   "image_sha256": "e2124a30ef96cecb8b89dac91d0851606abc7fff5e7a0213277f93bf5c8a42fe",
+   "bytes": 323325,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.4,
+    "composition": 58.6,
+    "light": 49.8,
+    "creativity": 72.0,
+    "story": 87.2
+   }
+  },
+  {
+   "id": "syn_000083",
+   "image_path": "data/synthetic/syn_000083.png",
+   "image_sha256": "e9a03a7b1be0e811271353b3b1b74fe2d646a07056481ddeb096a101a62a81f2",
+   "bytes": 475019,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 43.9,
+    "composition": 37.3,
+    "light": 49.3,
+    "creativity": 49.8,
+    "story": 39.6
+   }
+  },
+  {
+   "id": "syn_000084",
+   "image_path": "data/synthetic/syn_000084.png",
+   "image_sha256": "aa513a25e02f4991d0ee25c2c2e01c4763f78263aee3baa3c0bc78c7d4368115",
+   "bytes": 413136,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.2,
+    "composition": 66.0,
+    "light": 61.0,
+    "creativity": 59.3,
+    "story": 31.0
+   }
+  },
+  {
+   "id": "syn_000085",
+   "image_path": "data/synthetic/syn_000085.png",
+   "image_sha256": "9846e9acf9f68e5fa3d82a4854856c9349e17605ff3b91671bd04a58da3b3403",
+   "bytes": 476976,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 43.5,
+    "composition": 67.0,
+    "light": 35.9,
+    "creativity": 31.3,
+    "story": 32.0
+   }
+  },
+  {
+   "id": "syn_000086",
+   "image_path": "data/synthetic/syn_000086.png",
+   "image_sha256": "623710d9fbfd530aec8668323c7b4df2dd21cdb1df0a4dd26f729258acde7aa0",
+   "bytes": 580178,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 47.6,
+    "composition": 47.4,
+    "light": 47.1,
+    "creativity": 50.5,
+    "story": 45.5
+   }
+  },
+  {
+   "id": "syn_000087",
+   "image_path": "data/synthetic/syn_000087.png",
+   "image_sha256": "ad6e7b8bdbc83ad2cb3378166b19e4c0591e0b5e38e2df6b508713a50c989099",
+   "bytes": 504059,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 63.5,
+    "composition": 69.5,
+    "light": 48.4,
+    "creativity": 65.6,
+    "story": 75.1
+   }
+  },
+  {
+   "id": "syn_000088",
+   "image_path": "data/synthetic/syn_000088.png",
+   "image_sha256": "636cd3c772e6ef05d7d264a2e5fbbc70e3469220f57cee41fac798bf58331797",
+   "bytes": 420110,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.2,
+    "composition": 64.9,
+    "light": 44.2,
+    "creativity": 18.8,
+    "story": 58.5
+   }
+  },
+  {
+   "id": "syn_000089",
+   "image_path": "data/synthetic/syn_000089.png",
+   "image_sha256": "708e27b0eec5813150de5d7735ba4b8031bb52e7d6f270ea87d7f92e446bfa16",
+   "bytes": 849399,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 49.1,
+    "composition": 62.2,
+    "light": 32.2,
+    "creativity": 40.1,
+    "story": 63.9
+   }
+  },
+  {
+   "id": "syn_000090",
+   "image_path": "data/synthetic/syn_000090.png",
+   "image_sha256": "3c70ce28e0761b11d6f74312c91c201965720482632aa7c45e49fb1b12a58178",
+   "bytes": 560938,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 45.1,
+    "composition": 81.5,
+    "light": 27.1,
+    "creativity": 34.1,
+    "story": 28.4
+   }
+  },
+  {
+   "id": "syn_000091",
+   "image_path": "data/synthetic/syn_000091.png",
+   "image_sha256": "b4d1a40b26ac2648d6d09a84162ef4596d40a1ca66e159d50b40f8087d2c6562",
+   "bytes": 535036,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.5,
+    "composition": 74.8,
+    "light": 27.7,
+    "creativity": 50.5,
+    "story": 53.4
+   }
+  },
+  {
+   "id": "syn_000092",
+   "image_path": "data/synthetic/syn_000092.png",
+   "image_sha256": "4a7ab450f9a4e8a1cae4531a982b9088f7f1db79c8d571f9a58c83dd53ed1922",
+   "bytes": 43903,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.3,
+    "composition": 38.8,
+    "light": 76.3,
+    "creativity": 53.1,
+    "story": 45.7
+   }
+  },
+  {
+   "id": "syn_000093",
+   "image_path": "data/synthetic/syn_000093.png",
+   "image_sha256": "adcab7c84608f4d1257a9343e4d0a8c30ecabff851d5c21b04cc90a8579c6d37",
+   "bytes": 1115912,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.7,
+    "composition": 72.2,
+    "light": 23.0,
+    "creativity": 59.2,
+    "story": 66.7
+   }
+  },
+  {
+   "id": "syn_000094",
+   "image_path": "data/synthetic/syn_000094.png",
+   "image_sha256": "e8520ca0d9ccf79bd26cc0d6d49e946f4e999f575b18cd0b50a66c19ce37f9f4",
+   "bytes": 112347,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.6,
+    "composition": 64.6,
+    "light": 52.4,
+    "creativity": 51.1,
+    "story": 61.2
+   }
+  },
+  {
+   "id": "syn_000095",
+   "image_path": "data/synthetic/syn_000095.png",
+   "image_sha256": "a9f317055148a85d35488aaa03c5421b0946408ee9a906017566a8c5e3cf6bd6",
+   "bytes": 295472,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 69.5,
+    "composition": 80.3,
+    "light": 71.2,
+    "creativity": 72.2,
+    "story": 48.3
+   }
+  },
+  {
+   "id": "syn_000096",
+   "image_path": "data/synthetic/syn_000096.png",
+   "image_sha256": "d486ed1925d48d261e2cce1b89ace7591ae312b72da5b9b1891b55075f8e9356",
+   "bytes": 1109488,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 67.5,
+    "composition": 80.4,
+    "light": 56.2,
+    "creativity": 72.4,
+    "story": 60.4
+   }
+  },
+  {
+   "id": "syn_000097",
+   "image_path": "data/synthetic/syn_000097.png",
+   "image_sha256": "07ba094e4c8febe51ce17a652d07306585fca5df6bc979e827ae65c35cc6689e",
+   "bytes": 51068,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.6,
+    "composition": 48.5,
+    "light": 76.9,
+    "creativity": 58.1,
+    "story": 61.7
+   }
+  },
+  {
+   "id": "syn_000098",
+   "image_path": "data/synthetic/syn_000098.png",
+   "image_sha256": "db2b81fd0f9612add61d2ae026bae24751e2aa7f1fb7cd564dd10ca61cecc138",
+   "bytes": 135113,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.6,
+    "composition": 66.1,
+    "light": 81.5,
+    "creativity": 46.3,
+    "story": 40.5
+   }
+  },
+  {
+   "id": "syn_000099",
+   "image_path": "data/synthetic/syn_000099.png",
+   "image_sha256": "2db6499292432677639acf6455a3bd0e424082a6ade8b4a72ed9407df289531e",
+   "bytes": 1033002,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.9,
+    "composition": 56.4,
+    "light": 60.0,
+    "creativity": 61.7,
+    "story": 73.3
+   }
+  },
+  {
+   "id": "syn_000100",
+   "image_path": "data/synthetic/syn_000100.png",
+   "image_sha256": "4a873ea864cf186e509e619e4ed5ab439f0041fdc95ec5289d49d2672495da33",
+   "bytes": 1241059,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.6,
+    "composition": 54.4,
+    "light": 30.4,
+    "creativity": 60.1,
+    "story": 75.7
+   }
+  },
+  {
+   "id": "syn_000101",
+   "image_path": "data/synthetic/syn_000101.png",
+   "image_sha256": "aa8c9c1129fe9e9b470fb2f458a2680d7dbf141ac5cce2529973c35e9eeb63b8",
+   "bytes": 219987,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.7,
+    "composition": 44.5,
+    "light": 41.8,
+    "creativity": 75.4,
+    "story": 78.6
+   }
+  },
+  {
+   "id": "syn_000102",
+   "image_path": "data/synthetic/syn_000102.png",
+   "image_sha256": "b866133b49a24c94fb7cc868330e60104500d2761d6c01329dccb55ca323513b",
+   "bytes": 251314,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.9,
+    "composition": 56.9,
+    "light": 47.0,
+    "creativity": 63.6,
+    "story": 35.2
+   }
+  },
+  {
+   "id": "syn_000103",
+   "image_path": "data/synthetic/syn_000103.png",
+   "image_sha256": "fefe69d332275adc052504828c09a0660412fea48f2d401f25c4dabb6286fb87",
+   "bytes": 535582,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 34.7,
+    "composition": 26.2,
+    "light": 29.5,
+    "creativity": 61.6,
+    "story": 28.1
+   }
+  },
+  {
+   "id": "syn_000104",
+   "image_path": "data/synthetic/syn_000104.png",
+   "image_sha256": "528bce016fe38d8a294b11e563d7250c7b1e8ba9d39ce2ae5f0a8b8e2ce18fd4",
+   "bytes": 365745,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 60.2,
+    "composition": 58.9,
+    "light": 50.9,
+    "creativity": 77.0,
+    "story": 59.1
+   }
+  },
+  {
+   "id": "syn_000105",
+   "image_path": "data/synthetic/syn_000105.png",
+   "image_sha256": "60afb92c10ac3bd0e0a00e298e006e118ec24f836bad5be0a9500b49026d5e02",
+   "bytes": 295727,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 62.4,
+    "composition": 76.3,
+    "light": 43.4,
+    "creativity": 59.2,
+    "story": 73.0
+   }
+  },
+  {
+   "id": "syn_000106",
+   "image_path": "data/synthetic/syn_000106.png",
+   "image_sha256": "e9094f17de959024d88e998110afcd20e48894d09d7eb29d7738de1de83b7903",
+   "bytes": 380766,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 38.2,
+    "composition": 26.7,
+    "light": 31.3,
+    "creativity": 37.7,
+    "story": 66.4
+   }
+  },
+  {
+   "id": "syn_000107",
+   "image_path": "data/synthetic/syn_000107.png",
+   "image_sha256": "a5e21cedf08274d6e4bd231accadd0bbebc89ab3117a43ea11257f35c951a36c",
+   "bytes": 116560,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 47.9,
+    "composition": 60.2,
+    "light": 36.7,
+    "creativity": 52.9,
+    "story": 41.1
+   }
+  },
+  {
+   "id": "syn_000108",
+   "image_path": "data/synthetic/syn_000108.png",
+   "image_sha256": "41ae1c5320121d82b727e0d96651f4460edd46d05cb9345bd1afad6f8450fe92",
+   "bytes": 114406,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.8,
+    "composition": 58.4,
+    "light": 46.5,
+    "creativity": 60.6,
+    "story": 81.1
+   }
+  },
+  {
+   "id": "syn_000109",
+   "image_path": "data/synthetic/syn_000109.png",
+   "image_sha256": "876d0f8bcfd02c0d9c58be3576a15c16d80fe895cf0043d101a8ad4ebb501bfc",
+   "bytes": 512156,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 69.2,
+    "composition": 75.9,
+    "light": 49.6,
+    "creativity": 77.1,
+    "story": 80.4
+   }
+  },
+  {
+   "id": "syn_000110",
+   "image_path": "data/synthetic/syn_000110.png",
+   "image_sha256": "4c156c35eba3cf3e6faaf564886316745ceb47878d1fad892beee200686b9b97",
+   "bytes": 485982,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.1,
+    "composition": 59.6,
+    "light": 59.4,
+    "creativity": 38.3,
+    "story": 78.6
+   }
+  },
+  {
+   "id": "syn_000111",
+   "image_path": "data/synthetic/syn_000111.png",
+   "image_sha256": "f9ec962823477bef531c10c7b3628c553352610fca106cf245a7aaf3a768f074",
+   "bytes": 332476,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 38.6,
+    "composition": 45.7,
+    "light": 20.2,
+    "creativity": 24.9,
+    "story": 69.3
+   }
+  },
+  {
+   "id": "syn_000112",
+   "image_path": "data/synthetic/syn_000112.png",
+   "image_sha256": "ff6b4731ae3870c4bf55acd3fd5c26a1b3a50b45cafbcae45f3ba143a868afed",
+   "bytes": 80345,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.9,
+    "composition": 62.8,
+    "light": 77.5,
+    "creativity": 44.0,
+    "story": 44.8
+   }
+  },
+  {
+   "id": "syn_000113",
+   "image_path": "data/synthetic/syn_000113.png",
+   "image_sha256": "dca924ad220b10d0bcb12766df96f4db35aa2e3b94b12e2cf41009ccc0146fea",
+   "bytes": 120215,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 36.5,
+    "composition": 28.9,
+    "light": 40.0,
+    "creativity": 30.2,
+    "story": 48.9
+   }
+  },
+  {
+   "id": "syn_000114",
+   "image_path": "data/synthetic/syn_000114.png",
+   "image_sha256": "e1323ead35710aa5d32efc6bbf5f9bbfd6c87b985deffdb726be244e17a96c30",
+   "bytes": 72707,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.1,
+    "composition": 39.6,
+    "light": 53.1,
+    "creativity": 67.9,
+    "story": 48.5
+   }
+  },
+  {
+   "id": "syn_000115",
+   "image_path": "data/synthetic/syn_000115.png",
+   "image_sha256": "f4b695a9830eb10194c67412a90b0df55033fc8254628dfc90da519646d21273",
+   "bytes": 484457,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.2,
+    "composition": 62.1,
+    "light": 60.4,
+    "creativity": 43.8,
+    "story": 38.6
+   }
+  },
+  {
+   "id": "syn_000116",
+   "image_path": "data/synthetic/syn_000116.png",
+   "image_sha256": "11c0ef44455826b32e783eee44d424feb37f8a0290c4fe03e64bb5c63b8136d3",
+   "bytes": 87636,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.5,
+    "composition": 52.1,
+    "light": 62.3,
+    "creativity": 37.4,
+    "story": 43.6
+   }
+  },
+  {
+   "id": "syn_000117",
+   "image_path": "data/synthetic/syn_000117.png",
+   "image_sha256": "905c66db07816ae3c5d2f294ba2af80b47f604d5c8ecd62464f968eb1e675ad9",
+   "bytes": 86810,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.0,
+    "composition": 46.6,
+    "light": 49.7,
+    "creativity": 45.8,
+    "story": 59.6
+   }
+  },
+  {
+   "id": "syn_000118",
+   "image_path": "data/synthetic/syn_000118.png",
+   "image_sha256": "8653350f74ba20accdb7c9c41af2449ca01073a57f6c9ea518b19b5840aca023",
+   "bytes": 337281,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.9,
+    "composition": 78.5,
+    "light": 28.3,
+    "creativity": 68.2,
+    "story": 66.1
+   }
+  },
+  {
+   "id": "syn_000119",
+   "image_path": "data/synthetic/syn_000119.png",
+   "image_sha256": "b35ff6c58d6cac514a165c1667e2599f1330dac649af45f47ded19041a6698a3",
+   "bytes": 92890,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 49.2,
+    "composition": 60.0,
+    "light": 29.7,
+    "creativity": 77.3,
+    "story": 34.3
+   }
+  },
+  {
+   "id": "syn_000120",
+   "image_path": "data/synthetic/syn_000120.png",
+   "image_sha256": "4f275ce27df5a3f7190f6635e6f669822a63eff28da5c6f373b83f9feee527c2",
+   "bytes": 225204,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.4,
+    "composition": 27.6,
+    "light": 58.5,
+    "creativity": 88.3,
+    "story": 59.4
+   }
+  },
+  {
+   "id": "syn_000121",
+   "image_path": "data/synthetic/syn_000121.png",
+   "image_sha256": "e81a72f78ceb994b7e39dbfa39ba4a5f076052fbc5b024f006d92494656c12f4",
+   "bytes": 243104,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 43.6,
+    "composition": 39.5,
+    "light": 45.9,
+    "creativity": 31.6,
+    "story": 58.4
+   }
+  },
+  {
+   "id": "syn_000122",
+   "image_path": "data/synthetic/syn_000122.png",
+   "image_sha256": "ae2030cf15df0bbbb9f8ecd951a426422a790f4ecdffcca3475cd20727d896b5",
+   "bytes": 578272,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.1,
+    "composition": 41.4,
+    "light": 50.6,
+    "creativity": 93.1,
+    "story": 44.4
+   }
+  },
+  {
+   "id": "syn_000123",
+   "image_path": "data/synthetic/syn_000123.png",
+   "image_sha256": "497351616690098b3fb470d9047760f2e3a1cf825b907b6b81413ba400c8dcb7",
+   "bytes": 80857,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.6,
+    "composition": 26.0,
+    "light": 53.0,
+    "creativity": 87.7,
+    "story": 36.6
+   }
+  },
+  {
+   "id": "syn_000124",
+   "image_path": "data/synthetic/syn_000124.png",
+   "image_sha256": "5a0d54191e92e238491450eaa284ad258d71885f5d911332dbe841467dba8893",
+   "bytes": 776717,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.6,
+    "composition": 53.4,
+    "light": 38.0,
+    "creativity": 52.6,
+    "story": 53.2
+   }
+  },
+  {
+   "id": "syn_000125",
+   "image_path": "data/synthetic/syn_000125.png",
+   "image_sha256": "e5164ed5e145ee6d3a3c7d439b692872ceb4ba2e7ca43943a593d372bf7d18ee",
+   "bytes": 317634,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.2,
+    "composition": 58.5,
+    "light": 54.7,
+    "creativity": 39.7,
+    "story": 66.3
+   }
+  },
+  {
+   "id": "syn_000126",
+   "image_path": "data/synthetic/syn_000126.png",
+   "image_sha256": "c9a5bcfb4c13a10a6d9ef280dcae73cd46ff1e29b6fb0a6bdb833d8446f5d1bf",
+   "bytes": 338950,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.2,
+    "composition": 55.8,
+    "light": 45.5,
+    "creativity": 37.0,
+    "story": 67.1
+   }
+  },
+  {
+   "id": "syn_000127",
+   "image_path": "data/synthetic/syn_000127.png",
+   "image_sha256": "414c76cfbce2dba8e6412f14793a06b6f14d234f3f6581486eacce54ade0c1c8",
+   "bytes": 531028,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 41.7,
+    "composition": 29.6,
+    "light": 54.9,
+    "creativity": 21.5,
+    "story": 60.3
+   }
+  },
+  {
+   "id": "syn_000128",
+   "image_path": "data/synthetic/syn_000128.png",
+   "image_sha256": "f59a665f915968d9238e78789dcecae09b0c32119f644b58396b4c0662d0336f",
+   "bytes": 577737,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.9,
+    "composition": 67.2,
+    "light": 64.8,
+    "creativity": 57.9,
+    "story": 43.6
+   }
+  },
+  {
+   "id": "syn_000129",
+   "image_path": "data/synthetic/syn_000129.png",
+   "image_sha256": "1069d7a0d227880ce95c4dd951daad8afffb95bd63b58e2050efa39be382c4c7",
+   "bytes": 363969,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 42.8,
+    "composition": 21.6,
+    "light": 29.6,
+    "creativity": 67.8,
+    "story": 69.3
+   }
+  },
+  {
+   "id": "syn_000130",
+   "image_path": "data/synthetic/syn_000130.png",
+   "image_sha256": "d2e7db95f01bbb1d2eb40f8f4d8639056b72e7f1b691292d03a58ddfbd0c3014",
+   "bytes": 431779,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.6,
+    "composition": 39.3,
+    "light": 62.0,
+    "creativity": 49.1,
+    "story": 41.9
+   }
+  },
+  {
+   "id": "syn_000131",
+   "image_path": "data/synthetic/syn_000131.png",
+   "image_sha256": "1a0e31cecf345f04d1110da3ebe5b6bb7b4433a5e3f615315df5da26d83e82d7",
+   "bytes": 261656,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.8,
+    "composition": 67.3,
+    "light": 44.0,
+    "creativity": 78.2,
+    "story": 79.0
+   }
+  },
+  {
+   "id": "syn_000132",
+   "image_path": "data/synthetic/syn_000132.png",
+   "image_sha256": "cdf7a9713c7123215b271c2a37aa638d49b05e8cc7e7b927d350f7d0b59738f2",
+   "bytes": 1120408,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.9,
+    "composition": 61.0,
+    "light": 39.8,
+    "creativity": 63.9,
+    "story": 84.3
+   }
+  },
+  {
+   "id": "syn_000133",
+   "image_path": "data/synthetic/syn_000133.png",
+   "image_sha256": "6d9aaaa0ca6f7b190c658b4c5a8935a2c065cb3a6a4e511724f38249dec651ad",
+   "bytes": 585537,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.9,
+    "composition": 60.7,
+    "light": 35.2,
+    "creativity": 66.9,
+    "story": 78.8
+   }
+  },
+  {
+   "id": "syn_000134",
+   "image_path": "data/synthetic/syn_000134.png",
+   "image_sha256": "f63141021ecf0392575cdc78d68909d8a1f8b625cf48d08206d3ca4baa29cca7",
+   "bytes": 1125928,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.2,
+    "composition": 58.1,
+    "light": 48.5,
+    "creativity": 40.4,
+    "story": 50.5
+   }
+  },
+  {
+   "id": "syn_000135",
+   "image_path": "data/synthetic/syn_000135.png",
+   "image_sha256": "80fd0d59cbe0f10f3a2b75dee3896280e89e3de4afe1ba28d921db3b33894599",
+   "bytes": 289968,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.8,
+    "composition": 20.8,
+    "light": 48.9,
+    "creativity": 81.2,
+    "story": 83.3
+   }
+  },
+  {
+   "id": "syn_000136",
+   "image_path": "data/synthetic/syn_000136.png",
+   "image_sha256": "0602c276b056a192afc469846c60f173598e0c93689fc6c1c9f2585c3e928a67",
+   "bytes": 857157,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.5,
+    "composition": 28.1,
+    "light": 45.1,
+    "creativity": 39.7,
+    "story": 83.1
+   }
+  },
+  {
+   "id": "syn_000137",
+   "image_path": "data/synthetic/syn_000137.png",
+   "image_sha256": "f80aa3b344e93d94ccfe92c9777d0c10b28b7e24122d5c06e160c3b4835a20f1",
+   "bytes": 234780,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.1,
+    "composition": 49.3,
+    "light": 65.0,
+    "creativity": 38.1,
+    "story": 86.0
+   }
+  },
+  {
+   "id": "syn_000138",
+   "image_path": "data/synthetic/syn_000138.png",
+   "image_sha256": "a7ffd4e1275f004d1e9ad40505d21409d945d14b778efcc0629ec72de6e8f987",
+   "bytes": 352141,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 47.6,
+    "composition": 67.3,
+    "light": 45.2,
+    "creativity": 43.7,
+    "story": 25.3
+   }
+  },
+  {
+   "id": "syn_000139",
+   "image_path": "data/synthetic/syn_000139.png",
+   "image_sha256": "bc9e24b1fbb0773fa4db1a81b6ffc76e9781af12d38ba7341d3a99b7a826a0af",
+   "bytes": 232948,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.7,
+    "composition": 47.1,
+    "light": 19.5,
+    "creativity": 79.6,
+    "story": 44.2
+   }
+  },
+  {
+   "id": "syn_000140",
+   "image_path": "data/synthetic/syn_000140.png",
+   "image_sha256": "4f840afea95f1926c6e5e9e8be9a042515c8ddb44c0a73dd6dc63f12ecfb1a25",
+   "bytes": 305892,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.6,
+    "composition": 62.2,
+    "light": 60.7,
+    "creativity": 57.8,
+    "story": 40.9
+   }
+  },
+  {
+   "id": "syn_000141",
+   "image_path": "data/synthetic/syn_000141.png",
+   "image_sha256": "6c8e0bf91f54d6e3ce10267506548c9371f30de02205669b500e69129e75bcca",
+   "bytes": 225128,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 68.2,
+    "composition": 66.9,
+    "light": 61.8,
+    "creativity": 70.0,
+    "story": 78.1
+   }
+  },
+  {
+   "id": "syn_000142",
+   "image_path": "data/synthetic/syn_000142.png",
+   "image_sha256": "072167b6df35d16172a15f8ef94b7a970f40b95ae75fa4bd3e7fa9192c34070e",
+   "bytes": 63503,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 43.5,
+    "composition": 24.9,
+    "light": 37.6,
+    "creativity": 37.8,
+    "story": 86.2
+   }
+  },
+  {
+   "id": "syn_000143",
+   "image_path": "data/synthetic/syn_000143.png",
+   "image_sha256": "fa570df759c24a006a712ab27faa875db2057c2ba1e9ea3b93cbb67b1911fc59",
+   "bytes": 548086,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.1,
+    "composition": 90.3,
+    "light": 39.9,
+    "creativity": 39.6,
+    "story": 60.7
+   }
+  },
+  {
+   "id": "syn_000144",
+   "image_path": "data/synthetic/syn_000144.png",
+   "image_sha256": "b56c05a6c94698000c4784bb778414186fe95815e18737bb416b1c021e7742ec",
+   "bytes": 328161,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 38.7,
+    "composition": 27.1,
+    "light": 35.4,
+    "creativity": 49.5,
+    "story": 50.3
+   }
+  },
+  {
+   "id": "syn_000145",
+   "image_path": "data/synthetic/syn_000145.png",
+   "image_sha256": "59a202e2458476c7ceb66528e4081dacf0cd54487e25eb4fca5a5593b17cafde",
+   "bytes": 517582,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 38.6,
+    "composition": 34.1,
+    "light": 40.8,
+    "creativity": 60.5,
+    "story": 20.2
+   }
+  },
+  {
+   "id": "syn_000146",
+   "image_path": "data/synthetic/syn_000146.png",
+   "image_sha256": "c6f9c2e9dc0600f5a1d62c04484c34d200aeae1be78a67746d4e32e3f524c026",
+   "bytes": 1234936,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 48.3,
+    "composition": 59.4,
+    "light": 33.9,
+    "creativity": 26.4,
+    "story": 75.0
+   }
+  },
+  {
+   "id": "syn_000147",
+   "image_path": "data/synthetic/syn_000147.png",
+   "image_sha256": "a1b11516ba4f70ea4c9e507b86bec1505a6326c9284592f89579febd501c3aeb",
+   "bytes": 99101,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 62.1,
+    "composition": 76.8,
+    "light": 47.0,
+    "creativity": 42.5,
+    "story": 82.5
+   }
+  },
+  {
+   "id": "syn_000148",
+   "image_path": "data/synthetic/syn_000148.png",
+   "image_sha256": "9d3680203c194d9f1c2e6a569dd1431a989752746bd153c364b50a41a823a741",
+   "bytes": 66339,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 60.9,
+    "composition": 54.6,
+    "light": 38.5,
+    "creativity": 70.0,
+    "story": 95.0
+   }
+  },
+  {
+   "id": "syn_000149",
+   "image_path": "data/synthetic/syn_000149.png",
+   "image_sha256": "dd6d3179eda655fbacbde458d9bafbf494cab95a792d4776efc8ce7a1ffe1af5",
+   "bytes": 327803,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 51.1,
+    "composition": 34.4,
+    "light": 43.9,
+    "creativity": 55.1,
+    "story": 82.8
+   }
+  },
+  {
+   "id": "syn_000150",
+   "image_path": "data/synthetic/syn_000150.png",
+   "image_sha256": "63a6b45abbdb1d519568cdceedf07179d91145be601c217cb9dfd21b641427aa",
+   "bytes": 289460,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.8,
+    "composition": 79.1,
+    "light": 41.0,
+    "creativity": 31.5,
+    "story": 87.2
+   }
+  },
+  {
+   "id": "syn_000151",
+   "image_path": "data/synthetic/syn_000151.png",
+   "image_sha256": "41743852a8c6684dcb1cde5161ae64db5362dede0140cca9e613e3ac2148420a",
+   "bytes": 500516,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.7,
+    "composition": 45.0,
+    "light": 70.7,
+    "creativity": 49.2,
+    "story": 50.7
+   }
+  },
+  {
+   "id": "syn_000152",
+   "image_path": "data/synthetic/syn_000152.png",
+   "image_sha256": "a289f4a8f3d2b6ae55710c44471da1ebf35eef0ff43f0b28fbbc1371927e2d76",
+   "bytes": 420082,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 41.3,
+    "composition": 32.6,
+    "light": 39.0,
+    "creativity": 42.6,
+    "story": 56.4
+   }
+  },
+  {
+   "id": "syn_000153",
+   "image_path": "data/synthetic/syn_000153.png",
+   "image_sha256": "d078c7bc01e5cfbdde9392adda34c9e9e87cbe1488fa6b48201a5fdeb49be2f4",
+   "bytes": 416973,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.2,
+    "composition": 40.4,
+    "light": 44.2,
+    "creativity": 66.3,
+    "story": 78.0
+   }
+  },
+  {
+   "id": "syn_000154",
+   "image_path": "data/synthetic/syn_000154.png",
+   "image_sha256": "eb96126ebf93c1b2be5ac68d5c205c2d8fc764d1b7cee002d7b06408e0465886",
+   "bytes": 331132,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.3,
+    "composition": 59.0,
+    "light": 19.2,
+    "creativity": 71.5,
+    "story": 62.9
+   }
+  },
+  {
+   "id": "syn_000155",
+   "image_path": "data/synthetic/syn_000155.png",
+   "image_sha256": "d76c71648be9fce1f77f1f3edede03383e5e6b08499c231dbf0a5d56c8323fd4",
+   "bytes": 94473,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.2,
+    "composition": 76.0,
+    "light": 63.8,
+    "creativity": 40.6,
+    "story": 40.6
+   }
+  },
+  {
+   "id": "syn_000156",
+   "image_path": "data/synthetic/syn_000156.png",
+   "image_sha256": "3e4ab9b658553b438d0a3dcda0103ba1fb17c1837ced4bc8563d8f6c287d7ddc",
+   "bytes": 1189555,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 34.6,
+    "composition": 13.3,
+    "light": 48.4,
+    "creativity": 20.2,
+    "story": 60.1
+   }
+  },
+  {
+   "id": "syn_000157",
+   "image_path": "data/synthetic/syn_000157.png",
+   "image_sha256": "ed5f99bd50e65398560e05c371d35acd967f7a14ad43bd5cfb6b7f319d7089ce",
+   "bytes": 91703,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.8,
+    "composition": 79.5,
+    "light": 54.8,
+    "creativity": 76.2,
+    "story": 46.3
+   }
+  },
+  {
+   "id": "syn_000158",
+   "image_path": "data/synthetic/syn_000158.png",
+   "image_sha256": "80795491fe3685475e5aef7c0d69ffabe1c816b4f427a3d08b097d789d5c4a51",
+   "bytes": 303594,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.4,
+    "composition": 77.0,
+    "light": 24.3,
+    "creativity": 53.0,
+    "story": 67.2
+   }
+  },
+  {
+   "id": "syn_000159",
+   "image_path": "data/synthetic/syn_000159.png",
+   "image_sha256": "017bf9f55c26e29c9bc59b0038a535af8497fed42e440050729fc5db77e8528f",
+   "bytes": 1307610,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 42.9,
+    "composition": 65.4,
+    "light": 24.3,
+    "creativity": 38.2,
+    "story": 41.7
+   }
+  },
+  {
+   "id": "syn_000160",
+   "image_path": "data/synthetic/syn_000160.png",
+   "image_sha256": "43d507d2da0a0c933f0241b03d45fdcfbf22cb6d22ace831f4cd168eae78269c",
+   "bytes": 31451,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.7,
+    "composition": 62.5,
+    "light": 59.3,
+    "creativity": 57.7,
+    "story": 53.2
+   }
+  },
+  {
+   "id": "syn_000161",
+   "image_path": "data/synthetic/syn_000161.png",
+   "image_sha256": "5e46e81e7c88b17540840c480c97d0b76be747a451b9df817c193c73e5217c50",
+   "bytes": 909354,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 57.6,
+    "composition": 66.3,
+    "light": 38.6,
+    "creativity": 52.5,
+    "story": 78.2
+   }
+  },
+  {
+   "id": "syn_000162",
+   "image_path": "data/synthetic/syn_000162.png",
+   "image_sha256": "f2ac9f7e0ebc674e61941fa2dcc56b911f29257a6c4d6d5e68815655734d088c",
+   "bytes": 332716,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.4,
+    "composition": 37.0,
+    "light": 87.2,
+    "creativity": 55.0,
+    "story": 55.9
+   }
+  },
+  {
+   "id": "syn_000163",
+   "image_path": "data/synthetic/syn_000163.png",
+   "image_sha256": "574a802203cf21bb2f423192665f5d259331cea386bad67e054fce560c78f74f",
+   "bytes": 167285,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 67.6,
+    "composition": 30.0,
+    "light": 81.7,
+    "creativity": 72.0,
+    "story": 98.3
+   }
+  },
+  {
+   "id": "syn_000164",
+   "image_path": "data/synthetic/syn_000164.png",
+   "image_sha256": "1a76af3a3e3dcf5e692326d933391baf215b40d3684cc809988343b0a33a2e04",
+   "bytes": 161084,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 47.2,
+    "composition": 49.1,
+    "light": 54.1,
+    "creativity": 13.9,
+    "story": 67.3
+   }
+  },
+  {
+   "id": "syn_000165",
+   "image_path": "data/synthetic/syn_000165.png",
+   "image_sha256": "7185233ab05939a0cc3781119caf9ecb2973eea0a1277438fc9d7774f5b021dc",
+   "bytes": 607871,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.2,
+    "composition": 45.2,
+    "light": 30.7,
+    "creativity": 91.9,
+    "story": 85.0
+   }
+  },
+  {
+   "id": "syn_000166",
+   "image_path": "data/synthetic/syn_000166.png",
+   "image_sha256": "3f287638d9d8ebdc03ad576ce3e8779d8a77e903266edd28a27672dd835a0cf1",
+   "bytes": 677222,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 49.7,
+    "composition": 37.7,
+    "light": 41.7,
+    "creativity": 65.0,
+    "story": 64.2
+   }
+  },
+  {
+   "id": "syn_000167",
+   "image_path": "data/synthetic/syn_000167.png",
+   "image_sha256": "16f8e62be83b8bd9723fc7c6cdf0cc522f6b035889aa97da20d32dc5075fbf27",
+   "bytes": 1168429,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 63.1,
+    "composition": 68.1,
+    "light": 45.3,
+    "creativity": 61.8,
+    "story": 83.5
+   }
+  },
+  {
+   "id": "syn_000168",
+   "image_path": "data/synthetic/syn_000168.png",
+   "image_sha256": "b7432b29c5e87c18987068ee07741ee03492bb5d39fe4de73667ab1cab71bb1a",
+   "bytes": 276250,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.1,
+    "composition": 17.9,
+    "light": 60.0,
+    "creativity": 31.2,
+    "story": 72.7
+   }
+  },
+  {
+   "id": "syn_000169",
+   "image_path": "data/synthetic/syn_000169.png",
+   "image_sha256": "96aaddbe5eb4d3784d71066b740b89cad0eda4eb5c367183f5d4133bc2ddc396",
+   "bytes": 1245111,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 65.3,
+    "composition": 74.9,
+    "light": 51.4,
+    "creativity": 50.9,
+    "story": 86.3
+   }
+  },
+  {
+   "id": "syn_000170",
+   "image_path": "data/synthetic/syn_000170.png",
+   "image_sha256": "1d3b244fd07a2c90c32949efb4632b2454ebb76ea9c937660aefcdd142227990",
+   "bytes": 480445,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 71.4,
+    "composition": 61.0,
+    "light": 63.0,
+    "creativity": 73.2,
+    "story": 97.9
+   }
+  },
+  {
+   "id": "syn_000171",
+   "image_path": "data/synthetic/syn_000171.png",
+   "image_sha256": "1d76074a361220221ca97a2a96eae6328be9a31f72abd2dbe386e5db49d9a9d7",
+   "bytes": 936770,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 64.5,
+    "composition": 79.7,
+    "light": 51.9,
+    "creativity": 69.3,
+    "story": 55.9
+   }
+  },
+  {
+   "id": "syn_000172",
+   "image_path": "data/synthetic/syn_000172.png",
+   "image_sha256": "5dfcf3577dc8bdc107d26f16a02ff5766eb20d2cd922498341ece94de9ca4113",
+   "bytes": 283834,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 63.3,
+    "composition": 87.6,
+    "light": 59.1,
+    "creativity": 40.2,
+    "story": 56.2
+   }
+  },
+  {
+   "id": "syn_000173",
+   "image_path": "data/synthetic/syn_000173.png",
+   "image_sha256": "b668e90e47ff5575ea1b1cc5f5be70cce6838b21695048b6e79e563afc046151",
+   "bytes": 829999,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 70.4,
+    "composition": 59.3,
+    "light": 60.3,
+    "creativity": 79.5,
+    "story": 93.0
+   }
+  },
+  {
+   "id": "syn_000174",
+   "image_path": "data/synthetic/syn_000174.png",
+   "image_sha256": "5701b8ebc662a31727fc56021b58d00baffbb0593f82f9b13e54fc8b22b8d507",
+   "bytes": 320748,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 70.5,
+    "composition": 69.5,
+    "light": 64.8,
+    "creativity": 82.8,
+    "story": 68.4
+   }
+  },
+  {
+   "id": "syn_000175",
+   "image_path": "data/synthetic/syn_000175.png",
+   "image_sha256": "85a42666a27a8d7b95aa34cdb16101083938960c1feb1f98e8fa64aeede60600",
+   "bytes": 402585,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 54.0,
+    "composition": 39.9,
+    "light": 66.1,
+    "creativity": 42.3,
+    "story": 68.8
+   }
+  },
+  {
+   "id": "syn_000176",
+   "image_path": "data/synthetic/syn_000176.png",
+   "image_sha256": "dbf1a67ed6ea33af7003a8f69f2bd08a4ac3eb0bf20bc1ad356c4909e1fad0e3",
+   "bytes": 69424,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 33.5,
+    "composition": 16.1,
+    "light": 40.5,
+    "creativity": 51.5,
+    "story": 31.2
+   }
+  },
+  {
+   "id": "syn_000177",
+   "image_path": "data/synthetic/syn_000177.png",
+   "image_sha256": "f96d2a11614dd0bdd6801846254b7a227838cd733cbef6fb88da6f242fca80ed",
+   "bytes": 587082,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 42.5,
+    "composition": 53.4,
+    "light": 22.4,
+    "creativity": 40.1,
+    "story": 58.8
+   }
+  },
+  {
+   "id": "syn_000178",
+   "image_path": "data/synthetic/syn_000178.png",
+   "image_sha256": "eef6358c7516ef10a40134aed02baa67f9eb30d9652c8a38f089f7d3504a3c2e",
+   "bytes": 529620,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.6,
+    "composition": 10.9,
+    "light": 59.8,
+    "creativity": 33.5,
+    "story": 93.4
+   }
+  },
+  {
+   "id": "syn_000179",
+   "image_path": "data/synthetic/syn_000179.png",
+   "image_sha256": "1052b5333d24acbe1117750ebb7847528e154fc2dfcf1682a224a79a22b49dd9",
+   "bytes": 1317652,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 50.6,
+    "composition": 63.8,
+    "light": 33.9,
+    "creativity": 68.3,
+    "story": 38.4
+   }
+  },
+  {
+   "id": "syn_000180",
+   "image_path": "data/synthetic/syn_000180.png",
+   "image_sha256": "17556a7561dc5d307bd56194da3deb76ce1b328b3de2796a014d26a3b4861e41",
+   "bytes": 105614,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 66.7,
+    "composition": 71.9,
+    "light": 75.7,
+    "creativity": 69.0,
+    "story": 43.2
+   }
+  },
+  {
+   "id": "syn_000181",
+   "image_path": "data/synthetic/syn_000181.png",
+   "image_sha256": "95779c111542da2a9436ba90afd3e3bac05b6b343a06ef1265f0937820553797",
+   "bytes": 449714,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 53.9,
+    "composition": 68.5,
+    "light": 42.0,
+    "creativity": 48.3,
+    "story": 55.6
+   }
+  },
+  {
+   "id": "syn_000182",
+   "image_path": "data/synthetic/syn_000182.png",
+   "image_sha256": "dca2d17461f5ee2af2fc6af633e13c3e1cdaf1d7e23ab872453ff5769445424b",
+   "bytes": 914364,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.7,
+    "composition": 57.2,
+    "light": 42.0,
+    "creativity": 69.2,
+    "story": 60.3
+   }
+  },
+  {
+   "id": "syn_000183",
+   "image_path": "data/synthetic/syn_000183.png",
+   "image_sha256": "226311533c5095b302074d6f082c56605f22a200fedb8723d830940c759088c2",
+   "bytes": 1000712,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 58.4,
+    "composition": 73.7,
+    "light": 33.6,
+    "creativity": 53.9,
+    "story": 76.9
+   }
+  },
+  {
+   "id": "syn_000184",
+   "image_path": "data/synthetic/syn_000184.png",
+   "image_sha256": "149f183b4757123c3a1adc40b233e05dd07477c6cdc1bcb3f6fea23e5bf6eb4e",
+   "bytes": 260657,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.2,
+    "composition": 47.8,
+    "light": 40.4,
+    "creativity": 39.6,
+    "story": 49.1
+   }
+  },
+  {
+   "id": "syn_000185",
+   "image_path": "data/synthetic/syn_000185.png",
+   "image_sha256": "955f1e2fcc31d6f8e63550c1b24349fa96d1d4a72fe5c76ba987ba6ad2d132af",
+   "bytes": 243771,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 59.7,
+    "composition": 66.5,
+    "light": 64.5,
+    "creativity": 49.0,
+    "story": 52.9
+   }
+  },
+  {
+   "id": "syn_000186",
+   "image_path": "data/synthetic/syn_000186.png",
+   "image_sha256": "44617069be8a08116d8027d256e950bfb230a1ace36434c79bffe5f69ceadc1b",
+   "bytes": 64880,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 55.3,
+    "composition": 50.9,
+    "light": 38.1,
+    "creativity": 69.9,
+    "story": 73.0
+   }
+  },
+  {
+   "id": "syn_000187",
+   "image_path": "data/synthetic/syn_000187.png",
+   "image_sha256": "d385432b434f4ba54af73a4cd04c620b895d5e97564d835ae87a30349eb3a8c7",
+   "bytes": 326819,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 56.4,
+    "composition": 60.1,
+    "light": 46.1,
+    "creativity": 39.4,
+    "story": 83.1
+   }
+  },
+  {
+   "id": "syn_000188",
+   "image_path": "data/synthetic/syn_000188.png",
+   "image_sha256": "23151c73ad6e874fc7ceb6eea9e344c9b702a250a7c4586d8cc9dca618b275b1",
+   "bytes": 207185,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.9,
+    "composition": 61.0,
+    "light": 50.5,
+    "creativity": 56.9,
+    "story": 10.2
+   }
+  },
+  {
+   "id": "syn_000189",
+   "image_path": "data/synthetic/syn_000189.png",
+   "image_sha256": "2a4aef2549fccbf732c9bf71728e02d7e5b9ff64cd2125aff2908bc43ed6ff3c",
+   "bytes": 149084,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 52.9,
+    "composition": 36.7,
+    "light": 61.6,
+    "creativity": 37.6,
+    "story": 79.6
+   }
+  },
+  {
+   "id": "syn_000190",
+   "image_path": "data/synthetic/syn_000190.png",
+   "image_sha256": "d852a866a49403d06d2d97535f948d911332acf6f35de0c09c9e64ebd07c7c32",
+   "bytes": 116901,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 45.7,
+    "composition": 16.9,
+    "light": 39.6,
+    "creativity": 87.1,
+    "story": 56.5
+   }
+  },
+  {
+   "id": "syn_000191",
+   "image_path": "data/synthetic/syn_000191.png",
+   "image_sha256": "36f5039b5a99e596eea6e4a34cfe617a4c60d9783695a9a17a316aa20ee099e0",
+   "bytes": 92690,
+   "width": 224,
+   "height": 224,
+   "source": "synthetic",
+   "labels": {
+    "total": 61.7,
+    "composition": 68.1,
+    "light": 51.6,
+    "creativity": 43.4,
+    "story": 85.7
+   }
+  },
+  {
+   "id": "syn_000192",
+   "image_path": "data/synthetic/syn_000192.png",
+   "image_sha256": "8d21ea9df733e82679fd50e8dc0652041c39112e9c1163f35775faf4405ce6d5",
+   "bytes": 1107241,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 46.9,
+    "composition": 42.7,
+    "light": 40.7,
+    "creativity": 34.7,
+    "story": 74.6
+   }
+  },
+  {
+   "id": "syn_000193",
+   "image_path": "data/synthetic/syn_000193.png",
+   "image_sha256": "9bced491a8e5565da9acf49d81a48435a1ce620a2e43c6ec568aad1909607db4",
+   "bytes": 495299,
+   "width": 512,
+   "height": 512,
+   "source": "synthetic",
+   "labels": {
+    "total": 68.2,
+    "composition": 38.9,
+    "light": 80.1,
+    "creativity": 72.6,
+    "story": 90.0
+   }
+  },
+  {
+   "id": "syn_000194",
+   "image_path": "data/synthetic/syn_000194.png",
+   "image_sha256": "1e0247d547f0b2ff20c8aa0ebb6c1c51ea3570bc06db1661eb2400d0d0cdd5aa",
+   "bytes": 827862,
+   "width": 768,
+   "height": 768,
+   "source": "synthetic",
+   "labels": {
+    "total": 68.1,
+    "composition": 78.5,
+    "light": 44.9,
+    "creativity": 79.7,
+    "story": 75.5
+   }
+  },
+  {
+   "id": "syn_000195",
+   "image_path": "data/synthetic/syn_000195.png",
+   "image_sha256": "3beb96be9d7367330a1cc4928445837be392dbcfdbcb148620e358a53092f14d",
+   "bytes": 301088,
+   "width": 384,
+   "height": 384,
+   "source": "synthetic",
+   "labels": {
+    "total": 44.3,
+    "composition": 31.5,
+    "light": 46.2,
+    "creativity": 54.9,
+    "story": 50.1
    }
   }
  ]

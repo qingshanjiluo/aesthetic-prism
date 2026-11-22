@@ -229,6 +229,17 @@ footer code{color:var(--txt2)}
 .compare-grid .cmp .rank{position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:var(--grad);color:#fff;font:bold 12px var(--mono);display:grid;place-items:center}
 #cmp-result{margin-top:16px}
 #sc-progress{margin-bottom:14px;font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+
+/* ---------- 自定义 modal ---------- */
+#ap-modal[hidden]{display:none}
+#ap-modal{position:fixed;inset:0;z-index:10020;display:flex;align-items:center;justify-content:center}
+.ap-modal-mask{position:absolute;inset:0;background:rgba(5,7,11,.66);backdrop-filter:blur(3px)}
+.ap-modal-box{position:relative;width:min(420px,90vw);padding:20px 22px;border-radius:14px;background:var(--panel2,#171c27);border:1px solid var(--line2,#2d3549);box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.ap-modal-box h3{margin:0 0 14px;font-size:16px;font-weight:650;color:var(--accent,#6c8cff)}
+.ap-modal-box .ap-modal-body{font-size:14px;line-height:1.7;color:var(--txt2,#aab3c7);margin-bottom:18px}
+.ap-modal-box input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2,#0e1118);color:var(--txt);font:14px var(--sans);outline:none;margin-bottom:10px}
+.ap-modal-box input:focus{border-color:var(--accent)}
+.ap-modal-actions{display:flex;justify-content:flex-end;gap:10px}
 </style>
 </head>
 <body>
@@ -512,5 +523,18 @@ footer code{color:var(--txt2)}
 <script src="/frontend/app.js" defer></script>
 <script src="/frontend/tutorial.js" defer></script>
 <script src="/frontend/app2.js" defer></script>
+
+<!-- 自定义 modal（替换原生 prompt/confirm）-->
+<div id="ap-modal" hidden>
+  <div class="ap-modal-mask"></div>
+  <div class="ap-modal-box">
+    <h3 id="ap-modal-title"></h3>
+    <div id="ap-modal-body"></div>
+    <div class="ap-modal-actions">
+      <button id="ap-modal-cancel" class="btn">取消</button>
+      <button id="ap-modal-ok" class="btn primary">确定</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

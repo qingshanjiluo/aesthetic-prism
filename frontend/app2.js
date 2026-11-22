@@ -91,12 +91,14 @@
   function delSelectedLibrary() {
     var paths = selPaths();
     if (!paths.length) { toast("请先用 Ctrl+点击 选择要删除的素材"); return; }
-    if (!confirm("确定删除 " + paths.length + " 个素材？此操作不可恢复")) return;
-    API.assetsDelete(paths).then(function (d) {
-      toast("已删除 " + d.deleted + " 个素材");
-      libSel = {};
-      loadLibrary();
-    }).catch(function (e) { toast("删除失败: " + e.message); });
+    confirmDialog("确定删除 " + paths.length + " 个素材？此操作不可恢复").then(function (ok) {
+      if (!ok) return;
+      API.assetsDelete(paths).then(function (d) {
+        toast("已删除 " + d.deleted + " 个素材");
+        libSel = {};
+        loadLibrary();
+      }).catch(function (e) { toast("删除失败: " + e.message); });
+    });
   }
   function addSelectedToCompare() {
     var paths = selPaths();
@@ -174,17 +176,18 @@
   }
 
   function genSamples() {
-    var n = prompt("生成多少张合成训练图？(1-500)", "20");
-    if (!n) return;
-    n = parseInt(n, 10);
-    if (!n || n < 1 || n > 500) { toast("n 须在 1-500"); return; }
-    var st = document.getElementById("sc-state");
-    st.textContent = "正在生成 " + n + " 张合成图...";
-    API.samplesGenerate(n).then(function (d) {
-      st.textContent = "已生成 " + d.generated + " 张，素材库共 " + d.total + " 张";
-      toast("自动生成完成：" + d.generated + " 张");
-      loadLibrary();
-    }).catch(function (e) { st.textContent = "生成失败: " + e.message; });
+    inputDialog("自动生成合成图", "生成多少张合成训练图？(1-500)", "20").then(function (r) {
+      if (!r.ok) return;
+      var n = parseInt(r.value, 10);
+      if (!n || n < 1 || n > 500) { toast("n 须在 1-500"); return; }
+      var st = document.getElementById("sc-state");
+      st.textContent = "正在生成 " + n + " 张合成图...";
+      API.samplesGenerate(n).then(function (d) {
+        st.textContent = "已生成 " + d.generated + " 张，素材库共 " + d.total + " 张";
+        toast("自动生成完成：" + d.generated + " 张");
+        loadLibrary();
+      }).catch(function (e) { st.textContent = "生成失败: " + e.message; });
+    });
   }
 
   /* ===== 批量上传评分 ===== */
@@ -193,7 +196,15 @@
     var st = document.getElementById("sc-state");
     var prog = document.getElementById("sc-progress");
     var grid = document.getElementById("sc-grid");
+    var go = document.getElementById("sc-go");
     grid.innerHTML = "";
+    var running = false;
+    function setBusy(b) {
+      running = b;
+      if (go) go.disabled = b;
+      if (go) go.textContent = b ? "处理中..." : "上传并评分";
+    }
+    setBusy(true);
     st.textContent = "上传 " + files.length + " 文件...";
     API.assetsUploadBatch(files).then(function (up) {
       prog.textContent = "上传完成 ok=" + up.ok + " fail=" + up.fail;
@@ -215,7 +226,8 @@
         c.appendChild(img); c.appendChild(m); c.appendChild(sc2);
         grid.appendChild(c);
       });
-    }).catch(function (e) { st.textContent = e.code + ": " + e.message; });
+    }).catch(function (e) { st.textContent = e.code + ": " + e.message; })
+    .then(function () { setBusy(false); });
   }
 
   /* ===== toast ===== */
@@ -225,6 +237,51 @@
     t.style.cssText = "position:fixed;bottom:18px;right:18px;z-index:10001;padding:10px 16px;border-radius:8px;background:#1a1f2c;border:1px solid var(--red);color:#ffc2c8;font-size:13px;max-width:420px;";
     document.body.appendChild(t);
     setTimeout(function () { t.remove(); }, 3200);
+  }
+
+  /* ===== 自定义 modal ===== */
+  // modal(opts): {title, body, ok, cancel, value} 返回 Promise<{ok:bool, value?:string}>
+  function modal(opts) {
+    var m = document.getElementById("ap-modal");
+    if (!m) { return Promise.resolve({ ok: true }); }
+    document.getElementById("ap-modal-title").textContent = opts.title || "";
+    var body = document.getElementById("ap-modal-body");
+    body.innerHTML = "";
+    if (opts.message) {
+      var p = document.createElement("div");
+      p.textContent = opts.message;
+      body.appendChild(p);
+    }
+    var input = null;
+    if (opts.value !== undefined) {
+      input = document.createElement("input");
+      input.type = "text";
+      input.value = opts.value;
+      body.appendChild(input);
+    }
+    var okBtn = document.getElementById("ap-modal-ok");
+    var cancelBtn = document.getElementById("ap-modal-cancel");
+    okBtn.textContent = opts.ok || "确定";
+    cancelBtn.textContent = opts.cancel || "取消";
+    if (opts.okOnly) cancelBtn.style.display = "none"; else cancelBtn.style.display = "";
+    m.hidden = false;
+    if (input) setTimeout(function () { input.focus(); input.select(); }, 20);
+    return new Promise(function (resolve) {
+      function done(ok) {
+        m.hidden = true;
+        okBtn.onclick = null; cancelBtn.onclick = null;
+        resolve({ ok: ok, value: input ? input.value : undefined });
+      }
+      okBtn.onclick = function () { done(true); };
+      cancelBtn.onclick = function () { done(false); };
+      m.querySelector(".ap-modal-mask").onclick = function () { done(false); };
+    });
+  }
+  function confirmDialog(msg) {
+    return modal({ title: "确认", message: msg, ok: "确定", cancel: "取消" }).then(function (r) { return r.ok; });
+  }
+  function inputDialog(title, msg, def) {
+    return modal({ title: title, message: msg, value: def, ok: "确定", cancel: "取消" }).then(function (r) { return r; });
   }
 
   /* ===== 模型管理 ===== */
@@ -311,12 +368,15 @@
     var ac = document.getElementById("lib-add-compare"); if (ac) ac.addEventListener("click", addSelectedToCompare);
     var cl = document.getElementById("cmp-load"); if (cl) cl.addEventListener("click", function () {
       var inp = document.getElementById("cmp-input");
-      var paths = [];
-      Array.prototype.forEach.call(inp.files, function (f) {
-        var p = prompt("该文件已本地，需先上传以参与比对。输入已存在素材路径或留空跳上传：");
-        if (p) paths.push(p);
-      });
-      if (paths.length) addComparePaths(paths);
+      if (!inp.files || !inp.files.length) { toast("请先选择要加入比对的图片"); return; }
+      toast("正在上传 " + inp.files.length + " 图到素材库...");
+      API.assetsUploadBatch(inp.files).then(function (up) {
+        var paths = up.results.filter(function (r) { return r.ok; }).map(function (r) { return r.path; });
+        if (!paths.length) { toast("上传失败：" + up.fail + " 个文件无效"); return; }
+        addComparePaths(paths);
+        inp.value = "";
+        toast("已上传并加入 " + paths.length + " 图到比对");
+      }).catch(function (e) { toast("上传失败: " + e.message); });
     });
     var cc = document.getElementById("cmp-clear"); if (cc) cc.addEventListener("click", function () { cmpPaths = []; cmpPicked = []; cmpScores = {}; renderCompare(); });
     var cs = document.getElementById("cmp-score"); if (cs) cs.addEventListener("click", scoreCompare);

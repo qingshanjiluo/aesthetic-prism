@@ -25,6 +25,7 @@ data/synthetic/*.png
 data/synthetic/index.json.bak_r11
 data/synthetic/index_200_backup.json
 data/synthetic/learnability_probe.json
+data/tmp_*/
 checkpoints/
 artifacts/
 models/*.onnx
