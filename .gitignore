@@ -52,4 +52,7 @@ reports/*.py
 # OS
 Thumbs.db
 Desktop.ini
-.DS_Store
+.DS_Storedata/*.db
+data/*.db-shm
+data/*.db-wal
+auth.db

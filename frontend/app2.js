@@ -3,7 +3,7 @@
 "use strict";
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var VIEWS = ["home", "library", "compare", "score"];
+  var VIEWS = ["home", "library", "compare", "score", "wallet", "shop", "space", "compute"];
   var cmpPaths = [];      // 比对视图已载入路径
   var cmpPicked = [];     // 比对标记优的路径
   var cmpScores = {};     // 比对评分缓存 {path: total}
@@ -20,6 +20,10 @@
     });
     if (name === "library") loadLibrary();
     if (name === "compare") renderCompare();
+    if (name === "wallet") renderWallet();
+    if (name === "shop") renderShop();
+    if (name === "space") renderSpace();
+    if (name === "compute") renderCompute();
   }
 
   function bindTabs() {
@@ -354,7 +358,122 @@
     });
   }
 
+  /* ===== 认证 ===== */
+  function initAuth() {
+    var lv = document.getElementById("login-view");
+    if (!lv) return;
+    // 模式切换
+    var tabL = document.getElementById("tab-login");
+    var tabR = document.getElementById("tab-register");
+    var btn = document.getElementById("login-btn");
+    var err = document.getElementById("login-err");
+    var mode = "login";
+    function showErr(m) { err.textContent = m; err.classList.add("show"); }
+    function hideErr() { err.classList.remove("show"); }
+    function setMode(m) {
+      mode = m;
+      if (tabL) tabL.classList.toggle("active", m === "login");
+      if (tabR) tabR.classList.toggle("active", m === "register");
+      if (btn) btn.textContent = m === "login" ? "登录" : "注册";
+      hideErr();
+    }
+    if (tabL) tabL.addEventListener("click", function () { setMode("login"); });
+    if (tabR) tabR.addEventListener("click", function () { setMode("register"); });
+    if (btn) btn.addEventListener("click", function () {
+      var u = document.getElementById("login-username").value.trim();
+      var p = document.getElementById("login-password").value;
+      if (!u || u.length < 3) { showErr("用户名至少 3 个字符"); return; }
+      if (!p || p.length < 6) { showErr("密码至少 6 个字符"); return; }
+      var call = mode === "login" ? API.login(u, p) : API.register(u, p);
+      call.then(function (r) {
+        if (mode === "login") {
+          AUTH.setToken(r.token);
+          hideErr();
+          lv.hidden = true;
+          refreshBalance();
+        } else {
+          setMode("login");
+          showErr("注册成功，请登录");
+        }
+      }).catch(function (e) { showErr(e.message || e.code); });
+    });
+    // 已登录则隐藏登录页
+    if (AUTH.isAuthed()) { lv.hidden = true; refreshBalance(); }
+    // 登出按钮
+    var lo = document.getElementById("logout-btn");
+    if (lo) lo.addEventListener("click", function () { AUTH.clear(); location.reload(); });
+  }
+  function refreshBalance() {
+    if (!AUTH.isAuthed()) return;
+    API.wallet().then(function (w) {
+      var b = document.getElementById("balance-badge");
+      if (b) b.textContent = "积分 " + w.balance + " · 空间 " + fmtSize(w.space_bytes);
+    }).catch(function () {});
+  }
+
+  function renderWallet() {
+    if (!AUTH.isAuthed()) { toast("请先登录"); return; }
+    API.wallet().then(function (w) {
+      document.getElementById("wal-bal").textContent = w.balance;
+      document.getElementById("wal-space").textContent = fmtSize(w.space_bytes);
+    }).catch(function (e) { toast(e.message); });
+    API.ledger(30).then(function (d) {
+      var el = document.getElementById("wal-ledger-list");
+      el.innerHTML = (d.items || []).map(function (r) {
+        return "<div>" + (r.amount > 0 ? "+" : "") + r.amount + " · " + r.kind + " · " + r.item + " · " + r.ts + "</div>";
+      }).join("") || "暂无流水";
+    }).catch(function () {});
+  }
+  function renderShop() {
+    if (!AUTH.isAuthed()) { toast("请先登录"); return; }
+    API.shop().then(function (d) {
+      var g = document.getElementById("shop-grid");
+      g.innerHTML = "";
+      (d.items || []).forEach(function (it) {
+        var c = document.createElement("div"); c.className = "card";
+        var t = document.createElement("b"); t.textContent = it.model_id.split("/").pop(); t.style.display = "block";
+        var p = document.createElement("div"); p.className = "meta"; p.textContent = it.model_id + " · " + it.price + " 积分";
+        var b = document.createElement("button"); b.className = "btn primary"; b.textContent = it.owned ? "已拥有" : "购买 " + it.price;
+        b.disabled = it.owned;
+        b.style.cssText = "margin:10px;width:calc(100% - 20px)";
+        b.addEventListener("click", function () {
+          API.buy(it.model_id).then(function (r) { toast(r.already ? "已拥有" : "购买成功，扣 " + it.price + " 积分"); renderShop(); refreshBalance(); }).catch(function (e) { toast(e.message); });
+        });
+        c.appendChild(t); c.appendChild(p); c.appendChild(b);
+        g.appendChild(c);
+      });
+    }).catch(function (e) { toast(e.message); });
+  }
+  function renderSpace() {
+    if (!AUTH.isAuthed()) { toast("请先登录"); return; }
+    API.wallet().then(function (w) { document.getElementById("space-now").textContent = fmtSize(w.space_bytes); }).catch(function (e) { toast(e.message); });
+  }
+  function renderCompute() {
+    if (!AUTH.isAuthed()) { toast("请先登录"); return; }
+  }
+  function bindCommercial() {
+    var wr = document.getElementById("wal-recharge-btn");
+    if (wr) wr.addEventListener("click", function () {
+      var a = parseInt(document.getElementById("wal-recharge-amt").value, 10);
+      if (!a || a <= 0) { toast("输入有效积分"); return; }
+      API.recharge(a).then(function (r) { toast("充值成功，余额 " + r.balance); renderWallet(); refreshBalance(); }).catch(function (e) { toast(e.message); });
+    });
+    var se = document.getElementById("space-expand-btn");
+    if (se) se.addEventListener("click", function () {
+      var gb = parseInt(document.getElementById("space-gb").value, 10);
+      if (!gb || gb < 1) { toast("输入有效 GB"); return; }
+      API.spaceExpand(gb).then(function (r) { toast("扩容成功，空间 " + fmtSize(r.space_bytes)); renderSpace(); refreshBalance(); }).catch(function (e) { toast(e.message); });
+    });
+    var cg = document.getElementById("compute-go");
+    if (cg) cg.addEventListener("click", function () {
+      var tier = parseInt(document.getElementById("compute-tier").value, 10);
+      API.compute(tier).then(function (r) { document.getElementById("compute-result").textContent = JSON.stringify(r, null, 2); refreshBalance(); }).catch(function (e) { document.getElementById("compute-result").textContent = "错误: " + e.message; });
+    });
+  }
+
   function init() {
+    initAuth();
+    bindCommercial();
     bindTabs();
     initModels();
     var si = document.getElementById("lib-search");

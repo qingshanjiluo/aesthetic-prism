@@ -32,8 +32,16 @@ from aesthetic_prism.serve.service import (
     TooManyRequestsError,
     probe_image,
 )
+from aesthetic_prism.serve import auth  # 商业化：认证 + 积分
 
 log = logging.getLogger("aesthetic_prism.serve")
+
+
+def _maybe_charge(request: Request, cost: int, kind: str, item: str) -> None:
+    """计费：带 token 则扣积分，不足 402；无 token 本地放行。"""
+    ok, _uid = auth.charge_if_authed(request.headers.get("authorization"), cost, kind, item)
+    if not ok:
+        raise _err(402, "insufficient_points", f"积分不足，需要 {cost} 积分")
 
 # ---- 段5 T-5-02：结构化 JSON 日志（stdout 一行一条 JSON）+ X-Request-ID ----
 
@@ -95,6 +103,7 @@ def build_service() -> ScoreService:
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.service = build_service()
+    auth.init_db()
     log.info("serve up mode=%s device=%s", app.state.service.mode, app.state.service.device)
     yield
 
@@ -105,6 +114,9 @@ app = FastAPI(
     lifespan=_lifespan,
     description="图片审美评分 C-SERVE-01：GET /health + POST /score",
 )
+from aesthetic_prism.serve.commercial_routes import router as commercial_router
+
+app.include_router(commercial_router)
 
 
 @app.get("/health")
@@ -143,6 +155,7 @@ async def post_score(service: ScoreService, image: UploadFile) -> dict[str, Any]
 async def score_route(
     request: Request, image: Annotated[UploadFile, File()]
 ) -> dict[str, Any]:
+    _maybe_charge(request, 10, "消费", "评分")
     # defensive fallback (main pre-check in guard)
     cl = request.headers.get("content-length")
     if cl and cl.isdigit() and int(cl) > MAX_IMAGE_BYTES:
@@ -232,6 +245,7 @@ async def upload_route(
     request: Request, image: Annotated[UploadFile, File()]
 ) -> dict[str, Any]:
     """POST /upload：multipart 收图 → 校验（probe_image 同 /score 链）→ 存 data/uploads/ → 返回相对路径+尺寸。"""
+    _maybe_charge(request, 2, "消费", "上传素材")
     cl = request.headers.get("content-length")
     if cl and cl.isdigit() and int(cl) > MAX_IMAGE_BYTES:
         from aesthetic_prism.serve.service import ImageTooLargeError
@@ -259,6 +273,7 @@ async def upload_route(
 @app.post("/train")
 async def train_route(request: Request) -> dict[str, Any]:
     """POST /train：触发 python -m src.train --steps N 后台执行，202 + job id（默认 steps=20）。"""
+    _maybe_charge(request, 100, "消费", "训练")
     steps = 20
     if request.headers.get("content-type", "").startswith("application/json"):
         try:
@@ -536,6 +551,7 @@ async def score_batch_route(request: Request) -> dict[str, Any]:
     targets = _rel_list([str(x) for x in paths])
     if not targets:
         raise InvalidImageError("score-batch: no valid image paths")
+    _maybe_charge(request, len(targets) * 5, "消费", "批量评分")
     svc: ScoreService = request.app.state.service
     scored = []
     for p in targets:
@@ -709,6 +725,7 @@ async def samples_generate_route(request: Request) -> dict[str, Any]:
                 n = raw
             if "out" in body:
                 out = str(body["out"])
+    _maybe_charge(request, n * 3, "消费", f"生成{n}张样本")
     from aesthetic_prism.data import synthetic as _syn
 
     try:

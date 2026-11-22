@@ -240,9 +240,44 @@ footer code{color:var(--txt2)}
 .ap-modal-box input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2,#0e1118);color:var(--txt);font:14px var(--sans);outline:none;margin-bottom:10px}
 .ap-modal-box input:focus{border-color:var(--accent)}
 .ap-modal-actions{display:flex;justify-content:flex-end;gap:10px}
+
+/* ---------- 登录视图 ---------- */
+#login-view{
+  position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(1000px 600px at 60% 20%,rgba(108,140,255,.12),transparent 55%),var(--bg,#0a0c11);
+}
+#login-view[hidden]{display:none}
+.login-box{width:min(360px,92vw);padding:30px 32px;border-radius:16px;background:var(--panel2,#171c27);border:1px solid var(--line2,#2d3549);box-shadow:0 26px 80px rgba(0,0,0,.6)}
+.login-box h2{margin:0 0 6px;font-size:20px;font-weight:700;color:var(--accent,#6c8cff)}
+.login-sub{margin:0 0 18px;font-size:12.5px;color:var(--muted,#6b7488)}
+#login-mode-tabs{display:flex;gap:8px;margin-bottom:16px}
+#login-mode-tabs .tab{padding:6px 16px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--txt2);cursor:pointer;font-size:13px}
+#login-mode-tabs .tab.active{background:var(--grad);border:0;color:#fff;font-weight:600}
+.login-box input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line2);background:var(--bg2,#0e1118);color:var(--txt);font:14px var(--sans);outline:none;margin-bottom:12px}
+.login-box input:focus{border-color:var(--accent)}
+.login-err{margin:0 0 14px;padding:9px 12px;border-radius:8px;background:rgba(255,93,108,.1);border:1px solid rgba(255,93,108,.4);color:#ffc2c8;font-size:13px;display:none}
+.login-err.show{display:block}
+.login-go{width:100%;padding:11px;font-size:15px}
+.login-hint{margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
+
+<!-- 登录/注册视图 -->
+<div id="login-view">
+  <div class="login-box">
+    <h2 id="login-title">Aesthetic Prism 登录</h2>
+    <p class="login-sub">新用户注册赠 100 积分</p>
+    <div id="login-mode-tabs">
+      <button id="tab-login" class="tab active">登录</button>
+      <button id="tab-register" class="tab">注册</button>
+    </div>
+    <input id="login-username" class="inp" placeholder="用户名（≥3字符）">
+    <input id="login-password" class="inp" type="password" placeholder="密码（≥6字符）">
+    <div id="login-err" class="login-err"></div>
+    <button id="login-btn" class="btn primary login-go">登录</button>
+  </div>
+</div>
 
 <header>
   <div class="brand">
@@ -269,6 +304,10 @@ footer code{color:var(--txt2)}
       </svg>
       检查状态
     </button>
+    <span id="balance-badge" class="badge">
+      <span class="dot ok"></span><span>积分 · 空间</span>
+    </span>
+    <button id="logout-btn" class="btn ghost" type="button">登出</button>
   </div>
 </header>
 
@@ -277,6 +316,10 @@ footer code{color:var(--txt2)}
   <button class="tab" data-view="library">素材库</button>
   <button class="tab" data-view="compare">多图比对</button>
   <button class="tab" data-view="score">批量上传评分</button>
+  <button class="tab" data-view="wallet">钱包</button>
+  <button class="tab" data-view="shop">模型商城</button>
+  <button class="tab" data-view="space">云端空间</button>
+  <button class="tab" data-view="compute">云端算力</button>
 </nav>
 
 <main id="view-home">
@@ -513,6 +556,57 @@ footer code{color:var(--txt2)}
   </div>
   <div id="sc-progress"></div>
   <div id="sc-grid" class="grid"></div>
+</main>
+
+<!-- 钱包 -->
+<main id="view-wallet" class="view" hidden>
+  <div class="toolbar">
+    <h2 style="margin:0">我的钱包</h2>
+    <span class="badge"><span id="wal-bal">-</span> 积分</span>
+    <span class="badge"><span id="wal-space">-</span> 空间</span>
+    <input id="wal-recharge-amt" class="inp" type="number" min="1" placeholder="充值积分" style="width:120px">
+    <button id="wal-recharge-btn" class="btn primary">充值</button>
+  </div>
+  <div id="wal-ledger" class="card" style="padding:14px">
+    <h3 style="margin:0 0 10px">消费流水</h3>
+    <div id="wal-ledger-list" class="mono" style="font-size:12.5px"></div>
+  </div>
+</main>
+
+<!-- 模型商城 -->
+<main id="view-shop" class="view" hidden>
+  <div class="toolbar"><h2 style="margin:0">模型商城</h2><span class="muted">用积分购买模型，购后下载可用</span></div>
+  <div id="shop-grid" class="grid"></div>
+</main>
+
+<!-- 云端空间 -->
+<main id="view-space" class="view" hidden>
+  <div class="toolbar"><h2 style="margin:0">云端空间</h2></div>
+  <div class="card" style="padding:16px;max-width:480px">
+    <p>当前空间：<code id="space-now">-</code></p>
+    <p>扩容 1GB 需 <code>200</code> 积分</p>
+    <div class="field">
+      <input id="space-gb" class="inp" type="number" min="1" max="100" value="1" style="width:90px">
+      <button id="space-expand-btn" class="btn primary">扩容</button>
+    </div>
+  </div>
+</main>
+
+<!-- 云端算力 -->
+<main id="view-compute" class="view" hidden>
+  <div class="toolbar"><h2 style="margin:0">云端算力 API</h2></div>
+  <div class="card" style="padding:16px;max-width:480px">
+    <p>按档调用云端推理：T1=10 / T2=20 / T3=50 积分</p>
+    <div class="field">
+      <select id="compute-tier" class="inp">
+        <option value="1">T1 · 10 积分</option>
+        <option value="2">T2 · 20 积分</option>
+        <option value="3">T3 · 50 积分</option>
+      </select>
+      <button id="compute-go" class="btn primary">调用算力</button>
+    </div>
+    <pre id="compute-result" class="mono" style="font-size:12.5px;margin-top:10px"></pre>
+  </div>
 </main>
 
 <footer>
