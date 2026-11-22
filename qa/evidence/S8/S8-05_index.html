@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aesthetic Prism · 图片审美工作台</title>
+<style>
+:root{
+  --bg:#0a0c11; --bg2:#0e1118; --panel:#12161f; --panel2:#171c27;
+  --line:#232a3a; --line2:#2d3549;
+  --txt:#e8ebf3; --txt2:#aab3c7; --muted:#6b7488;
+  --accent:#6c8cff; --accent2:#8f6cff; --cyan:#38d0e8;
+  --green:#2fd67f; --yellow:#f5b93a; --red:#ff5d6c;
+  --grad:linear-gradient(120deg,#6c8cff,#8f6cff 55%,#38d0e8);
+  --mono:"Cascadia Code",Consolas,"JetBrains Mono",monospace;
+  --sans:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.65 var(--sans);color:var(--txt);background:
+    radial-gradient(1100px 500px at 85% -10%,rgba(108,140,255,.14),transparent 60%),
+    radial-gradient(900px 480px at -10% 20%,rgba(56,208,232,.08),transparent 55%),
+    var(--bg);
+  min-height:100vh;
+}
+button{font-family:inherit}
+code,.mono{font-family:var(--mono)}
+
+/* ---------- header ---------- */
+header{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:18px 28px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(23,28,39,.92),rgba(14,17,24,.6));
+  position:sticky;top:0;backdrop-filter:blur(10px);z-index:10;
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand svg{width:34px;height:34px;flex:none}
+.brand h1{font-size:18px;margin:0;letter-spacing:.4px;font-weight:650}
+.brand p{margin:1px 0 0;font-size:12px;color:var(--muted);letter-spacing:.08em}
+.hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+  border:1px solid var(--line2);background:var(--panel2);font-size:12.5px;color:var(--txt2);
+}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.badge.ok .dot{background:var(--green);box-shadow:0 0 8px rgba(47,214,127,.8)}
+.badge.deg .dot{background:var(--yellow);box-shadow:0 0 8px rgba(245,185,58,.7)}
+.badge.bad .dot{background:var(--red);box-shadow:0 0 8px rgba(255,93,108,.7)}
+.badge .mono{font-size:11.5px;color:var(--muted)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:9px;
+  border:1px solid var(--line2);background:var(--panel2);color:var(--txt);
+  font-size:13.5px;cursor:pointer;transition:.15s;
+}
+.btn:hover{border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:var(--grad);border:0;color:#fff;font-weight:600}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.ghost{background:transparent}
+.btn svg{width:15px;height:15px}
+
+/* ---------- layout ---------- */
+main{
+  max-width:1240px;margin:0 auto;padding:26px 22px 60px;
+  display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:start;
+}
+@media (max-width:960px){main{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:20px;min-width:0}
+
+section.card{
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);
+}
+.step{
+  width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;
+  background:var(--grad);color:#fff;font-size:13px;font-weight:700;
+}
+.card-head h2{margin:0;font-size:15px;font-weight:650}
+.card-head .hint{margin-left:auto;font-size:12px;color:var(--muted)}
+.card-body{padding:18px}
+
+/* ---------- step1 upload ---------- */
+#drop-zone{
+  border:1.5px dashed var(--line2);border-radius:12px;padding:34px 18px;text-align:center;
+  color:var(--txt2);cursor:pointer;transition:.18s;background:rgba(10,12,17,.4);
+}
+#drop-zone:hover,#drop-zone.over{border-color:var(--accent);color:#fff;background:rgba(108,140,255,.07)}
+#drop-zone .ico{display:block;margin:0 auto 10px;width:40px;height:40px;color:var(--accent)}
+#drop-zone small{display:block;color:var(--muted);margin-top:6px;font-size:12px}
+#file-input{display:none}
+.preview-wrap{display:none;margin-top:14px;gap:14px;align-items:flex-start}
+.preview-wrap.show{display:flex}
+#preview{width:132px;height:132px;object-fit:cover;border-radius:10px;border:1px solid var(--line2);flex:none;background:#000}
+.meta-list{font-size:13px;color:var(--txt2);min-width:0}
+.meta-list div{margin:4px 0;word-break:break-all}
+.meta-list b{color:var(--muted);font-weight:500;margin-right:6px}
+.meta-list .mono{color:var(--cyan);font-size:12.5px}
+
+/* ---------- step2 score ---------- */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#score-empty{color:var(--muted);font-size:13.5px;text-align:center;padding:26px 0}
+#score-board{display:none}
+#score-board.show{display:block}
+.total-line{display:flex;align-items:baseline;justify-content:center;gap:12px;margin:4px 0 2px}
+#total-score{
+  font-size:72px;font-weight:750;line-height:1;letter-spacing:-2px;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-variant-numeric:tabular-nums;
+}
+.total-unit{font-size:15px;color:var(--muted)}
+#total-label{text-align:center;font-size:12.5px;color:var(--muted);letter-spacing:.12em}
+#model-badge{
+  display:block;width:max-content;max-width:100%;margin:12px auto 4px;padding:4px 12px;border-radius:999px;
+  background:var(--bg2);border:1px solid var(--line2);font-family:var(--mono);font-size:11.5px;color:var(--cyan);
+  overflow-wrap:anywhere;text-align:center;
+}
+.bars{margin-top:16px;display:flex;flex-direction:column;gap:11px}
+.bar-row{display:grid;grid-template-columns:64px 1fr 52px;gap:10px;align-items:center;font-size:13.5px}
+.bar-row .k{color:var(--txt2)}
+.bar-row .k i{display:block;font-style:normal;font-size:10.5px;color:var(--muted);letter-spacing:.06em}
+.bar-track{height:12px;border-radius:6px;background:#1b2130;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.bar-fill{
+  display:block;height:100%;width:0;border-radius:6px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  transition:width .55s cubic-bezier(.2,.7,.3,1);
+}
+.bar-row .v{text-align:right;font-family:var(--mono);font-size:13px;color:var(--txt);font-variant-numeric:tabular-nums}
+
+/* ---------- step3 train ---------- */
+.field{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.field label{font-size:13.5px;color:var(--txt2)}
+.field input{
+  width:96px;padding:7px 10px;border-radius:8px;border:1px solid var(--line2);
+  background:var(--bg2);color:var(--txt);font:14px var(--mono);outline:none;
+}
+.field input:focus{border-color:var(--accent)}
+.train-state{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--txt2);
+  padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(10,12,17,.45);
+}
+.pill{
+  padding:2px 10px;border-radius:999px;font-size:11.5px;border:1px solid var(--line2);
+  background:var(--panel2);color:var(--txt2);font-family:var(--mono);
+}
+.pill.run{border-color:rgba(56,208,232,.5);color:var(--cyan)}
+.pill.ok{border-color:rgba(47,214,127,.5);color:var(--green)}
+.pill.err{border-color:rgba(255,93,108,.5);color:var(--red)}
+.pill.idle{color:var(--muted)}
+.progress{margin-top:12px}
+.progress .p-head{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;font-family:var(--mono)}
+.p-track{height:10px;border-radius:6px;background:#1b2130;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+#p-fill{display:block;height:100%;width:0;background:var(--grad);transition:width .5s;border-radius:6px}
+#train-log{
+  margin-top:12px;max-height:150px;overflow:auto;padding:10px 12px;border-radius:10px;
+  background:#0a0d13;border:1px solid var(--line);font:12px/1.7 var(--mono);color:var(--txt2);
+  white-space:pre-wrap;word-break:break-all;
+}
+#train-log:empty{display:none}
+
+/* ---------- side: health json ---------- */
+#health-json{
+  margin:0;padding:14px 16px;background:#0a0d13;border-top:1px solid var(--line);
+  font:12.5px/1.7 var(--mono);color:var(--green);max-height:260px;overflow:auto;
+  white-space:pre-wrap;word-break:break-all;
+}
+#health-json.off{color:var(--red)}
+.kv{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px}
+.kv .cell{
+  flex:1 1 120px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:rgba(10,12,17,.5);min-width:0;
+}
+.kv .cell b{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.08em}
+.kv .cell span{display:block;font-family:var(--mono);font-size:14px;color:var(--txt);margin-top:3px;overflow-wrap:anywhere}
+
+/* ---------- error ---------- */
+#error-\boxed{
+  display:none;margin-top:14px;padding:11px 14px;border-radius:10px;
+  background:rgba(255,93,108,.09);border:1px solid rgba(255,93,108,.45);
+}
+#error-box.show{display:block}
+#error-code{color:var(--red);font-weight:700;margin-right:10px;font-family:var(--mono);font-size:13px}
+#error-message{color:#ffc2c8;font-size:13px;overflow-wrap:anywhere}
+
+footer{max-width:1240px;margin:0 auto;padding:0 22px 34px;color:var(--muted);font-size:12px}
+footer code{color:var(--txt2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M24 4 6 40h36L24 4Z" stroke="url(#g1)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M24 4v36M14 40 24 24l10 16" stroke="url(#g1)" stroke-width="1.6" opacity=".65"/>
+      <defs><linearGradient id="g1" x1="6" y1="4" x2="42" y2="40">
+        <stop stop-color="#6c8cff"/><stop offset=".55" stop-color="#8f6cff"/><stop offset="1" stop-color="#38d0e8"/>
+      </linearGradient></defs>
+    </svg>
+    <div>
+      <h1>Aesthetic Prism · 图片审美工作台</h1>
+      <p>UPLOAD · SCORE · TRAIN</p>
+    </div>
+  </div>
+  <div class="hud">
+    <span id="health-badge" class="badge">
+      <span class="dot"></span><span id="health-text">检查中</span>
+      <span class="mono" id="health-brief">/health</span>
+    </span>
+    <button id="check-btn" class="btn ghost" type="button">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <path d="M14 8a6 6 0 1 1-1.8-4.3M14 1.5V6h-4.5"/>
+      </svg>
+      检查状态
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="col">
+
+    <!-- Step 1: upload -->
+    <section class="card">
+      <div class="card-head">
+        <span class="step">1</span><h2>素材上传</h2>
+        <span class="hint">POST /upload</span>
+      </div>
+      <div class="card-body">
+        <div id="drop-zone">
+          <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 32V10m0 0-8 8m8-8 8 8"/>
+            <path d="M8 30v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6"/>
+          </svg>
+          拖入图片或点击选择
+          <small>JPEG / PNG · 单张不超过 10 MiB</small>
+        </div>
+        <input type="file" id="file-input" accept="image/jpeg,image/png">
+        <div class="preview-wrap" id="preview-wrap">
+          <img id="preview" alt="素材预览">
+          <div class="meta-list">
+            <div><b>文件</b><span class="mono" id="m-name">-</span></div>
+            <div><b>大小</b><span id="m-size">-</span></div>
+            <div><b>服务端</b><span class="mono" id="m-path">尚未上传</span></div>
+            <div><b>尺寸</b><span id="m-dim">-</span></div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:14px">
+          <button id="upload-btn" class="btn" type="button" disabled>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <path d="M8 11V3m0 0L5 6m3-3 3 3M2.5 11.5v1A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5v-1"/>
+            </svg>
+            上传素材
+          </button>
+          <span class="pill idle" id="upload-state">待选图</span>
+        </div>
+        <div id="error-box"><span id="error-code"></span><span id="error-message"></span></div>
+      </div>
+    </section>
+
+    <!-- Step 2: score -->
+    <section class="card">
+      <div class="card-head">
+        <span class="step">2</span><h2>素材处理与评分</h2>
+        <span class="hint">POST /score</span>
+      </div>
+      <div class="card-body">
+        <div class="row" style="justify-content:space-between">
+          <button id="score-btn" class="btn primary" type="button" disabled>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <path d="M2.5 13.5h11M4 11V6.5M8 11V3M12 11V8"/>
+            </svg>
+            运行评分
+          </button>
+          <span class="pill idle" id="score-state">待运行</span>
+        </div>
+
+        <div id="score-empty">上传素材后点击运行评分，五维结果展示在此处</div>
+
+        <div id="score-board">
+          <div class="total-line"><span id="total-score">--</span><span class="total-unit">/ 100</span></div>
+          <div id="total-label">TOTAL 综合总分</div>
+          <code id="model-badge">model: -</code>
+          <div class="bars">
+            <div class="bar-row"><span class="k">构图<i>composition</i></span><span class="bar-track"><span class="bar-fill" id="fill-composition"></span></span><span class="v" id="value-composition">--</span></div>
+            <div class="bar-row"><span class="k">光影<i>light</i></span><span class="bar-track"><span class="bar-fill" id="fill-light"></span></span><span class="v" id="value-light">--</span></div>
+            <div class="bar-row"><span class="k">创意<i>creativity</i></span><span class="bar-track"><span class="bar-fill" id="fill-creativity"></span></span><span class="v" id="value-creativity">--</span></div>
+            <div class="bar-row"><span class="k">故事性<i>story</i></span><span class="bar-track"><span class="bar-fill" id="fill-story"></span></span><span class="v" id="value-story">--</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: train -->
+    <section class="card">
+      <div class="card-head">
+        <span class="step">3</span><h2>训练触发</h2>
+        <span class="hint">POST /train</span>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label for="steps-input">训练步数 steps</label>
+          <input id="steps-input" type="number" min="1" max="10000" value="20">
+          <button id="train-btn" class="btn primary" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+              <path d="M4.5 3.2v9.6L13 8 4.5 3.2Z"/>
+            </svg>
+            触发训练
+          </button>
+          <button id="refresh-train-btn" class="btn" type="button">刷新进度</button>
+        </div>
+
+        <div class="train-state">
+          <span class="pill idle" id="job-pill">未触发</span>
+          <span>job：<code id="job-id">-</code></span>
+          <span>进度：<code id="job-progress">-</code></span>
+        </div>
+
+        <div class="progress">
+          <div class="p-head"><span id="p-text">0 / 0 steps</span><span id="p-pct">0%</span></div>
+          <div class="p-track"><span id="p-fill"></span></div>
+        </div>
+
+        <div id="train-log"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="col">
+
+    <!-- health detail -->
+    <section class="card">
+      <div class="card-head">
+        <span class="step">4</span><h2>服务状态</h2>
+        <span class="hint">GET /health</span>
+      </div>
+      <div class="kv">
+        <div class="cell"><b>STATUS</b><span id="kv-status">-</span></div>
+        <div class="cell"><b>MODEL</b><span id="kv-model">-</span></div>
+        <div class="cell"><b>DEVICE</b><span id="kv-device">-</span></div>
+        <div class="cell"><b>UPTIME</b><span id="kv-uptime">-</span></div>
+      </div>
+      <pre id="health-json">{}</pre>
+    </section>
+
+    <!-- flow guide -->
+    <section class="card">
+      <div class="card-head">
+        <span class="step">5</span><h2>接口速查</h2>
+        <span class="hint">C-SERVE-01</span>
+      </div>
+      <div class="card-body">
+        <div class="meta-list" style="font-size:13px">
+          <div><b>POST /upload</b><span class="mono">multipart image → path + 尺寸</span></div>
+          <div><b>POST /score</b><span class="mono">五键 + model，0–100</span></div>
+          <div><b>POST /train</b><span class="mono">steps → job_id 202</span></div>
+          <div><b>GET /train/status</b><span class="mono">loss.json 进度</span></div>
+          <div><b>GET /jobs/<id></b><span class="mono">单作业详情</span></div>
+          <div><b>GET /health</b><span class="mono">恒 200 · status/ready</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  服务绑定 <code>0.0.0.0:8000</code> · 错误体 <code>{"error":{"code","message"}}</code> · 静态页同源 <code>/frontend</code>
+</footer>
+
+<script src="/frontend/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+CFG = str(CONFIG_DIR / "launcher.json")
+CFG_DEFAULTS = {
+    "port": PORT,
+    "host": "127.0.0.1",
+    "mock_on_test": True,
+    "open_ui_after_serve": True,
+    "gate_log_tail": 60,
+}

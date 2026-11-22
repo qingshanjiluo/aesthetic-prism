@@ -1,0 +1,16 @@
+
+HERE = Path(__file__).resolve().parent
+ROOT = Path(os.environ.get("AP_ROOT") or HERE).resolve()
+SRC = ROOT / "src"
+PYPROJECT = ROOT / "pyproject.toml"
+REPORTS = ROOT / "reports"
+LOGS = ROOT / "logs"
+QA = ROOT / "qa"
+UPLOADS = ROOT / "data" / "uploads"
+SYNTHETIC = ROOT / "data" / "synthetic"
+CHECKPOINTS = ROOT / "checkpoints"
+CONFIG_DIR = ROOT / "configs"
+INDEX_JSON = SYNTHETIC / "index.json"
+GATE_LOG = ROOT / "GATE_LOG.md"
+BASE = REPORTS / "teacher_student_mae.json"
+PY = sys.executable

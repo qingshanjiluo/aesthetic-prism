@@ -1,0 +1,37 @@
+Aesthetic Prism demo: http://127.0.0.1:8000/
+python -m uvicorn --app-dir src aesthetic_prism.serve.app:app --host 127.0.0.1 --port 8000
+INFO:     Started server process [19936]
+INFO:     Waiting for application startup.
+C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py:153: UserWarning: Specified provider 'cpuExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+*************** EP Error ***************
+EP Error Unknown Provider Type: cpuExecutionProvider when using ['cpuExecutionProvider', 'CPUExecutionProvider']
+Falling back to ['CPUExecutionProvider'] and retrying.
+****************************************
+{"ts": "2026-11-18T23:37:59.462+00:00", "level": "INFO", "logger": "aesthetic_prism.serve", "msg": "serve up mode=onnx device=cpu"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49457 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49462 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49463 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49465 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49466 - "POST /score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49468 - "POST /score HTTP/1.1" 200 OK
+make: *** [Makefile:34: demo] Error 143
+Aesthetic Prism demo: http://127.0.0.1:8000/
+python -m uvicorn --app-dir src aesthetic_prism.serve.app:app --host 127.0.0.1 --port 8000
+INFO:     Started server process [7348]
+INFO:     Waiting for application startup.
+C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py:153: UserWarning: Specified provider 'cpuExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+*************** EP Error ***************
+EP Error Unknown Provider Type: cpuExecutionProvider when using ['cpuExecutionProvider', 'CPUExecutionProvider']
+Falling back to ['CPUExecutionProvider'] and retrying.
+****************************************
+{"ts": "2026-11-18T23:38:27.234+00:00", "level": "INFO", "logger": "aesthetic_prism.serve", "msg": "serve up mode=onnx device=cpu"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49528 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49529 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49531 - "POST /score HTTP/1.1" 200 OK
+make: *** [Makefile:34: demo] Error -1

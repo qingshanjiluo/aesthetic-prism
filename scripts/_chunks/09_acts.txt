@@ -1,0 +1,31 @@
+
+
+def act_demo() -> int:
+    return run([PY, "-X", "utf8", "-m", "aesthetic_prism.data.synthetic",
+                "--n", "200", "--seed", "42", "--out", str(SYNTHETIC)],
+               env_extra={"AP_MODE": "mock"})
+
+
+def act_reproduce() -> int:
+    return run([PY, "-X", "utf8", "-m", "aesthetic_prism.distill",
+                "--source", str(INDEX_JSON)],
+               env_extra={"AP_MODE": "mock"})
+
+
+def act_tests() -> int:
+    return run([PY, "-X", "utf8", "-m", "pytest", "-q"],
+               env_extra={"AP_MODE": "mock"})
+
+
+def act_lint() -> int:
+    return run([PY, "-X", "utf8", "-m", "ruff", "check", "src", "tests"])
+
+
+def act_typecheck() -> int:
+    return run([PY, "-X", "utf8", "-m", "mypy", "src"])
+
+
+def act_coverage() -> int:
+    return run([PY, "-X", "utf8", "-m", "pytest", "-q", "--cov=aesthetic_prism"],
+               env_extra={"AP_MODE": "mock"})
+

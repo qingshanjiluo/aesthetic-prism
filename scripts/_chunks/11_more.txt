@@ -1,0 +1,85 @@
+
+
+def act_search() -> int:
+    title("SEARCH")
+    pat = ask("  pattern: ").strip()
+    if not pat:
+        print(warn("empty"))
+        return 2
+    hits = 0
+    for base in (SRC, Path(ROOT) / "tests", Path(ROOT) / "scripts"):
+        if not base.is_dir():
+            continue
+        for f in sorted(base.rglob("*.py")):
+            try:
+                text = f.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            for i, ln in enumerate(text.splitlines(), 1):
+                if pat in ln:
+                    print("  " + str(f) + ":" + str(i) + " " + ln.strip())
+                    hits += 1
+    print()
+    if hits:
+        print(ok(str(hits) + " hit(s)"))
+    else:
+        print(warn("0 hit"))
+    return 0 if hits else 1
+
+
+def act_maintain() -> int:
+    title("MAINTAIN")
+    n = 0
+    for f in Path(ROOT).rglob("*"):
+        if not f.is_file():
+            continue
+        if f.suffix in (".py", ".ts", ".js", ".md", ".toml", ".json", ".bat", ".html", ".css", ".ico", ".txt"):
+            continue
+        if f.suffix in (".pyc", ".log", ".tmp", ".bak", ".bak1", ".bakdal"):
+            print("  " + str(f))
+            n += 1
+    print()
+    print(ok(str(n) + " candidate(s)"))
+    return 0
+
+
+def act_load() -> int:
+    title("LOAD")
+    cmd = ["locust", "-f", "tests/load/locustfile.py", "--headless",
+           "-u", "8", "-t", "30s", "--csv", "reports/load"]
+    return run(cmd, cwd=ROOT)
+
+
+def act_export() -> int:
+    title("EXPORT")
+    src = Path(ROOT) / "artifacts" / "student_int8.onnx"
+    if not src.is_file():
+        print(bad("artifacts/student_int8.onnx missing"))
+        return 1
+    dst = REPORTS / "student_int8.onnx"
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+    print(ok(str(dst)))
+    return 0
+
+
+def act_fill() -> int:
+    title("FILL")
+    cfg = load_cfg()
+    cfg["port"] = PORT
+    if not save_cfg(cfg):
+        return 1
+    print(ok("configs/launcher.json -> defaults"))
+    return 0
+
+
+def act_help() -> int:
+    title("HELP")
+    print("  launcher.py <subcommand>    run one action, then exit")
+    print("  launcher.py                interactive menu")
+    print()
+    print(dim("  subcommands:"))
+    for k, _n, _f in MENU:
+        print(dpad("  " + k, 14) + dim(_f.__name__))
+    return 0
+

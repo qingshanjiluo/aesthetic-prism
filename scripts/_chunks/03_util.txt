@@ -1,0 +1,55 @@
+
+
+ANSI_RE = "\\x1b\\[[0-9;]*m"
+
+
+def _strip_ansi(s: str) -> str:
+    import re
+
+    return re.sub(ANSI_RE, "", s)
+
+
+def dwidth(s: str) -> int:
+    s = _strip_ansi(str(s))
+    n = 0
+    for ch in s:
+        n += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
+    return n
+
+
+def dpad(s: str, width: int) -> str:
+    s = str(s)
+    vis = dwidth(s)
+    if vis >= width:
+        return s
+    return s + " " * (width - vis)
+
+
+def line(ch: str = "-", n: int = 64) -> str:
+    return ch * n
+
+
+def title(text: str) -> None:
+    print()
+    pad = max(0, 58 - dwidth(text))
+    print(acc(bold("  == " + text + " " + "=" * pad)))
+    print()
+
+
+def set_title(text: str) -> None:
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+
+        ctypes.windll.kernel32.SetConsoleTitleW(ctypes.c_wchar_p(str(text)))
+    except Exception:
+        pass
+
+
+def ask(prompt: str) -> str:
+    try:
+        return input(prompt)
+    except EOFError:
+        return ""
+

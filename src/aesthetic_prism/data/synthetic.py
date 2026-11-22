@@ -1,0 +1,350 @@
+"""Synthetic sample generator (RW-S2-03): params -> render -> labels, ONE rng stream.
+
+Fixes QA whitebox S2-P1: every label parameter drives real pixels (rule-of-thirds
+anchor, whitespace/weight, vignette+noise, creativity layers, story layer), then
+the FROZEN formulas of docs/02_DATA.md L55-59 turn those same params into labels.
+rng seed = int(sample_id last 6 digits) per 02_DATA section 2 literal; canvas from
+{224,384,512,768}; 6 shape kinds x 1..12 subjects; id set unchanged (split_of stable).
+CLI: --n / --seed / --out (seed kept for interface; rng derives from id per contract).
+"""
+from __future__ import annotations
+
+import argparse
+import colorsys
+import hashlib
+import json
+import math
+from pathlib import Path
+
+import numpy as np
+from numpy.random import PCG64, Generator
+from PIL import Image, ImageDraw
+
+ROOT = Path(__file__).resolve().parents[3]
+OUT_DIR = ROOT / "data" / "synthetic"
+SEED = 42
+N = 200
+CANVAS = (224, 384, 512, 768)  # 02_DATA section 2 canvas domain
+KEYS = ("total", "composition", "light", "creativity", "story")
+
+
+def _params(sample_id: str) -> tuple[Generator, dict]:
+    """Draw ALL label params first from one stream: rng_seed = int(id[-6:]) (02 literal).
+
+    SNR-fix (goal 1 round 6, reports/MAE4_ROOT_CAUSE.md): h1/h2/theta are no longer
+    independent draws. Before the fix they were 92% of the pixel variance while
+    carrying zero label information (h1 +0.35 -> 59.65 px vs d3 +0.20 -> 7.62 px,
+    S/N = 0.097). They are now DERIVED from label params, so every colour/direction
+    change in the image is a label change. Draw order is unchanged, so d3..r keep
+    their old values for a given id (labels are bit-identical to the pre-fix map).
+    """
+    rng = Generator(PCG64(int(sample_id[-6:])))
+    p = {
+        "size": int(rng.choice(CANVAS)),
+        "d3": float(rng.random()), "w": float(rng.random()),
+        "g": float(rng.uniform(0.1, 0.7)),
+        "dL": float(rng.random()),
+        "c": float(rng.uniform(0.6, 1.6)),
+        "v": float(rng.uniform(0.0, 0.8)),
+        "sigma": float(rng.uniform(0.0, 12.0)),
+        "u": float(rng.random()), "e": float(rng.random()),
+        "L": int(rng.integers(1, 5)),
+        "k": int(rng.integers(1, 13)),
+        "b": int(rng.integers(0, 2)),
+        "h": float(rng.random()),
+        "r": int(rng.integers(0, 4)),
+    }
+    return rng, p
+
+
+    return p, rng
+
+
+def _derived(p: dict) -> dict:
+    """Palette + orientation DERIVED from label params (SNR fix, no independent draws).
+
+    h1  <- d3   (composition drives base hue)
+    h2  <- d3 + 0.18 + 0.22*e   (e controls hue separation of the second stop)
+    theta <- d3*math.tau        (d3 controls gradient direction, not a free angle)
+    """
+    d3 = p["d3"]
+    return {
+        "h1": (0.04 + 0.72 * d3) % 1.0,
+        "h2": (0.04 + 0.72 * d3 + 0.18 + 0.22 * p["e"]) % 1.0,
+        "theta": d3 * math.tau,
+        # grid anchor column/row: rule-of-thirds two-way position DERIVED from d3,
+        # so the canvas anchor carries no entropy the labels cannot explain.
+        "gx": 1 / 3 if d3 < 0.5 else 2 / 3,
+        "gy": 1 / 3 if p["w"] < 0.5 else 2 / 3,
+    }
+
+
+def _anchor(p: dict) -> tuple[float, float]:
+    """Grid anchor in unit coords; pure function of the label params."""
+    d = _derived(p)
+    return d["gx"], d["gy"]
+
+
+def _labels(p: dict) -> dict[str, float]:
+    """Frozen weights: ASCII form of 02_DATA.md L55-59 (W8-fixed). Params -> scores only."""
+    d3, w, g = p["d3"], p["w"], p["g"]
+    dL, c, v, sigma = p["dL"], p["c"], p["v"], p["sigma"]
+    u, e, L = p["u"], p["e"], p["L"]
+    k, b, h, r = p["k"], p["b"], p["h"], p["r"]
+    comp = round(100 * (0.55 * d3 + 0.25 * (1 - abs(w - 0.5) * 2) + 0.20 * (1 - abs(g - 0.35) / 0.35)), 1)
+    light = round(100 * (0.40 * (1 - dL) + 0.30 * (1 - abs(c - 1.1) / 0.5) + 0.20 * (1 - v / 0.8) + 0.10 * (1 - sigma / 12)), 1)
+    creat = round(100 * (0.50 * u + 0.30 * e + 0.20 * min(L, 3) / 3), 1)
+    story = round(100 * (0.40 * min(k, 6) / 6 + 0.25 * b + 0.20 * h + 0.15 * min(r, 3) / 3), 1)
+    total = round(0.3 * comp + 0.3 * light + 0.2 * creat + 0.2 * story, 1)
+    return {"total": total, "composition": comp, "light": light, "creativity": creat, "story": story}
+
+
+def _hue_rgb(h: float, s: float, v: float) -> tuple[int, int, int]:
+    r, g, b = colorsys.hsv_to_rgb(h % 1.0, s, v)
+    return int(r * 255), int(g * 255), int(b * 255)
+
+
+def _gradient(rng: Generator, p: dict) -> np.ndarray:
+    """Bilinear gradient (two hues, direction angle) -> float array (n,n,3).
+
+    theta/h1/h2 come from _derived(p), not from independent rng draws.
+    """
+    d = _derived(p)
+    n = p["size"]
+    yy, xx = np.mgrid[0:n, 0:n].astype(np.float32) / (n - 1)
+    t = (xx - 0.5) * math.cos(d["theta"]) + (yy - 0.5) * math.sin(d["theta"])
+    t = ((t - t.min()) / (t.max() - t.min() + 1e-9))[..., None]
+    c1 = np.asarray(_hue_rgb(d["h1"], 0.65, 0.9), dtype=np.float32)
+    c2 = np.asarray(_hue_rgb(d["h2"], 0.65, 0.9), dtype=np.float32)
+    return c1 + (c2 - c1) * t
+
+
+def _r_sub(p: dict) -> float:
+    """Subject radius in px: single source of truth for draw size and jitter scale.
+
+    Bounded by the canvas, not just by the area budget. With g -> 0.1 and k small the
+    area term asks for r ~ n/2, which makes every stamp span the whole frame and get
+    clipped by the 8 px margin; the clipped area then moves with each jitter sample, so
+    the pixel residual decouples from the jitter magnitude. The cap keeps a stamp a
+    stamp, and keeps residual <= (jitter + edge step) proportional to e.
+    """
+    n = p["size"]
+    area = (1.0 - p["g"]) * n * n * 0.9
+    return max(6.0, min(0.18 * n, math.sqrt(area / max(p["k"], 1) / math.pi)))
+
+
+def _r_sub_of(p: dict) -> float:
+    return _r_sub(p)
+
+
+def _subject_xy(rng: Generator, p: dict, side: str | None) -> tuple[float, float]:
+    """composition coupling: main subject lerps center->rule-of-thirds anchor by d3.
+
+    side is None when w is a GLOBAL left/right energy split (no per-subject coin flip);
+    then the grid column is free and w only moves the mass centre, as it should.
+    """
+    gx, gy = _anchor(p)
+    if side is not None:  # side None -> column free, w moves mass centre instead
+        # mirror the anchor into the requested half of the frame
+        gx = (gx if gx < 0.5 else 1 - gx) if side == "left" else (gx if gx > 0.5 else 1 - gx)
+    n = p["size"]
+    cx, cy = 0.5 * n, 0.5 * n
+    ax, ay = gx * n, gy * n
+    x = cx + (ax - cx) * p["d3"] + rng.normal(0, p["e"] * 0.05 * _r_sub(p))
+    y = cy + (ay - cy) * p["d3"] + rng.normal(0, p["e"] * 0.05 * _r_sub(p))
+    return float(np.clip(x, 8, n - 8)), float(np.clip(y, 8, n - 8))
+
+
+def _draw_subject(d: ImageDraw.ImageDraw, sib: int, u: float, x: float, y: float,
+                  r: float, color: tuple[int, ...], rot: float) -> None:
+    """Continuous shape family indexed by u (02 section 2, de-discretised).
+
+    The original 6 class coin flip made residual sd on a 224 frame reach 2x the
+    e-jitter bound: identical labels, a different shape CLASS. u now selects the
+    family continuously; sib only spreads the k-1 siblings of one frame so a single
+    frame is not k identical stamps.
+       u in [0,0.5) : polygon, sides 3..6          (triangle -> hexagon)
+       u in [0.5,1) : regular star, points 3..6   (triangle star -> hexagon star)
+    radius and rotation stay label-driven (g,h / e); only the outline is parametric.
+    """
+    # alpha tolerant: a 3-tuple is a saturated stamp leaf, a 4-tuple is a trail that
+    # already carries its own fading alpha (trail colors must not be re-opaqued here).
+    a = color if len(color) == 4 else (*color, 230)
+    if u < 0.5:
+        sides = 3 + round(3 * (u / 0.5))  # 3,4,5,6
+        depth = 1.0
+    else:
+        sides = 3 + round(3 * ((u - 0.5) / 0.5))  # 3,4,5,6 star points
+        depth = 0.46
+    pts = []
+    for i in range(sides * 2):
+        rad = r if (i + sib) % 2 == 0 else r * depth
+        ang = rot + i * math.pi / sides
+        pts.append((x + rad * math.cos(ang), y + rad * math.sin(ang)))
+    d.polygon(pts, fill=a)
+
+
+def _render(rng: Generator, p: dict) -> np.ndarray:
+    """Full four-dim render: composition anchors, weight/whitespace, creativity layers,
+    story horizon/lead-lines/arrows/depth, then light vignette/noise/contrast."""
+    n = p["size"]
+    img = Image.fromarray(_gradient(rng, p).astype(np.uint8), "RGB")
+    d = ImageDraw.Draw(img, "RGBA")
+    k = p["k"]
+    r_sub = _r_sub(p)
+    layers = [Image.new("RGBA", (n, n), (0, 0, 0, 0)) for _ in range(p["L"])]
+    der = _derived(p)  # SNR fix: palette/orientation come from label params
+    # trail direction: the ONLY continuous seed channel left in the render. e sets how
+    # strong the motion smearing is, the seed sets WHICH WAY it smears, so a fixed id
+    # yields a fixed speed cue (label) and a seed-varying direction cue (seed entropy).
+    # e == 0 -> no draw at all -> motionless scene is seed-independent by construction.
+    trail_dir = float(rng.uniform(0.0, 2.0 * math.pi)) if p["e"] > 0.0 else 0.0
+    for i in range(k):
+        # visual weight w -> GLOBAL left/right energy split (was a per-subject coin
+        # flip whose expectation over k~6 subjects cancelled w out; measured 0.959 px)
+        # visual weight w -> left/right SUBJECT COUNT quota. A per-subject coin flip
+        # cancelled itself in expectation over k~6 draws (0.959 px); a rank cut only
+        # re-assigns which grid column each subject takes, so it covered 2.6% of the
+        # frame. A count quota moves floor/ceil(k*w) of k drawn subjects across the
+        # midline, so coverage scales with w and min(k*w, k*(1-w)) -> 0 at the poles.
+        n_left = round(k * p["w"])
+        side = "left" if i < n_left else "right"
+        x, y = _subject_xy(rng, p, side)
+        # off-centre mass: push each subject away from the midline in proportion to
+        # how lopsided the composition is, so |w-0.5| reads as imbalance (the label)
+        # rather than merely as "fewer subjects on this side".
+        imb = 2.0 * p["w"] - 1.0
+        x = float(np.clip(x + imb * 0.18 * n * (1.0 if side == "left" else -1.0), 8, n - 8))
+        # jitter magnitude tracks e (label) relative to the SUBJECT, not the canvas:
+        # scaling by n made e*0.05*n exceed r_sub proportionally at small canvases
+        # (r_sub grows as sqrt(n), jitter as n), so a 224 frame could fling the stamp
+        # clean out of its own footprint and blow the A1b residual bound.
+        jit = 0.0  # anchor jitter retired: e now drives motion TRAILS, not sub-pixel
+        # anchor wobble. Jitter only moved coverage by <= 0.05*r_sub, which cost a seed
+        # draw per subject but was far below one pixel of code difference on flat
+        # background; trails move real area and are what the seed channel pays for.
+        x = float(np.clip(x + rng.normal(0, jit), 8, n - 8))
+        y = float(np.clip(y + rng.normal(0, jit), 8, n - 8))
+        # shape family is DERIVED from (u lamps, sibling index) and nothing else: a coin
+        # flip here let two frames with identical labels differ by shape CLASS
+        # (circle vs star = ~10 px mean residual), which is semantic freedom no label
+        # pays for. Twin frames now always share the family, and u moves it smoothly.
+        sib_phase = i % 2 if k > 1 else 0
+        # rotation is a label param (e), not a fresh draw: rng.random() halved the
+        # information that e carries about this image
+        rot = p["e"] * math.tau * ((i + 0.5) / k if p["u"] > 0.5 else 1.0)
+        # radius is a label param (g -> area, h -> alternating scale), not a 0.7..1.3 draw
+        rr = r_sub * (0.82 + 0.18 * p["g"] + 0.10 * p["h"]) * (1.0 - 0.35 * p["h"] * (i % 2))
+        col = _hue_rgb(der["h1"] + 0.5 * (i / max(k, 1)), 0.8, 1.0)
+        layer = layers[i % len(layers)]
+        _draw_subject(ImageDraw.Draw(layer, "RGBA"), sib_phase, p["u"], x, y, rr, col, rot)
+        # motion trails: e is the SPEED label, the seed picks the DIRECTION. Drawn back
+        # along -trail_dir with shrinking radius and fading alpha so the streak reads as
+        # travel, not as a second subject. Count and length are pure functions of e, so
+        # two seeds can never disagree about how fast the subject is moving.
+        # continuous, not a 2/3/4 staircase: with only three trail counts, spans of
+        # 0.25 in e land on the SAME count and the residual cannot separate them at
+        # low e (measured: span(0.2)=0.57 and span(0.4)=0.73 on the 768 canvas, where
+        # the whole lower third of the e grid collapsed into one step). 10*e+[-.5,.5]
+        # gives one new trail per 0.1 of e, so resid stays a strictly rising function
+        # of e everywhere the canvas has not clipped the streak yet.
+        n_trail = 0 if p["e"] <= 0.0 else max(1, round(10.0 * p["e"]))
+        for t in range(n_trail):
+            frac = (t + 1) / (n_trail + 1.0)
+            back = p["e"] * 0.55 * rr * frac
+            tx = float(np.clip(x - back * math.cos(trail_dir), 8, n - 8))
+            ty = float(np.clip(y - back * math.sin(trail_dir), 8, n - 8))
+            talpha = round(120 * (1.0 - frac) * p["e"])
+            tcol = (int(col[0]), int(col[1]), int(col[2]), max(0, talpha))
+            _draw_subject(ImageDraw.Draw(layer, "RGBA"), sib_phase, p["u"],
+                          tx, ty, rr * (1.0 - 0.12 * frac), tcol, rot)
+        if p["b"] and i == 0:  # story: lead line (thick, visible) corner -> main subject
+            d.line((0, 0, x, y), fill=(25, 25, 25, 245), width=max(6, n // 40))
+    if p["b"]:  # story: horizon line + ground band (visible mass, not 1px hairline)
+        hy = int(n * (0.45 + 0.2 * p["h"]))
+        d.line((0, hy, n, hy), fill=(30, 30, 30, 255), width=max(5, n // 40))
+        d.rectangle((0, hy + 5, n, n), fill=(35, 40, 70, 90))  # ground tone below horizon
+    base = img.convert("RGBA")
+    for lay in layers:
+        base = Image.alpha_composite(base, lay)
+    d2 = ImageDraw.Draw(base, "RGBA")
+    if p["r"]:  # story: r relation arrows (thick shafts + big heads, measurable area)
+        for i in range(p["r"]):
+            x0 = n * (0.12 + 0.28 * i)
+            y0 = n * 0.82
+            x1, y1 = x0 + n * 0.28, y0 - n * 0.28
+            wline = max(8, n // 24)
+            d2.line((x0, y0, x1, y1), fill=(240, 240, 40, 255), width=wline)
+            hw = n * 0.09  # arrow head ~2x line width
+            d2.polygon([(x1 + hw * 0.5, y1 - hw * 0.5), (x1 - hw, y1 + hw * 0.2),
+                        (x1 + hw * 0.2, y1 + hw)], fill=(240, 240, 40, 255))
+    arr = np.asarray(base.convert("RGB"), dtype=np.float32)
+    yy, xx = np.mgrid[0:n, 0:n].astype(np.float32)
+    dist = np.sqrt((xx - p["dL"] * n) ** 2 + (yy - (1 - p["dL"]) * n) ** 2) / (n * 1.414)
+    arr *= (1.0 + 0.55 * (1.0 - dist) ** 1.5)[..., None]  # point light AT (dL*n,(1-dL)*n): dL moves it
+    arr *= (1.0 - 0.35 * p["v"] * dist ** 1.5)[..., None]  # vignette v around light dist dL
+    arr = 127.5 + (arr - 127.5) * p["c"]  # contrast c
+    if p["sigma"] > 0.0:
+        arr += rng.normal(0.0, p["sigma"], arr.shape)  # noise sigma
+    return np.clip(arr, 0, 255).astype(np.uint8)
+
+
+def generate(seed: int, sample_id: str, out_dir: Path) -> dict:
+    """Params -> render -> labels from ONE rng stream (RW-S2-03 / S2-P1 fix).
+
+    seed stays for interface compatibility; the stream itself derives from
+    int(sample_id[-6:]) per 02_DATA section 2 literal, so the id fully fixes pixels.
+    """
+    rng, p = _params(sample_id)
+    arr = _render(rng, p)                 # same stream, params already drawn -> pixels
+    labels = _labels(p)                   # same params -> labels (no second random source)
+    out_dir = Path(out_dir)
+    if not out_dir.is_absolute():
+        out_dir = Path.cwd() / out_dir  # relative dirs: anchor at cwd (RW-S2-01 fix)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    img_path = out_dir / f"{sample_id}.png"
+    Image.fromarray(arr, "RGB").save(img_path, format="PNG", optimize=False)
+    blob = img_path.read_bytes()
+    rel = img_path.resolve().relative_to(ROOT.resolve())  # abs or rel in -> ROOT-relative out
+    return {
+        "id": sample_id,
+        "image_path": str(rel).replace("\\", "/"),
+        "image_sha256": hashlib.sha256(blob).hexdigest(),
+        "bytes": len(blob),
+        "width": p["size"],
+        "height": p["size"],
+        "source": "synthetic",
+        "labels": labels,
+    }
+
+
+def main(argv: list[str] | None = None) -> None:
+    ap = argparse.ArgumentParser(description="Aesthetic Prism synthetic generator (C-DATA-01).")
+    ap.add_argument("--n", type=int, default=N, help="sample count (segment-2 gate: >=200)")
+    ap.add_argument("--seed", type=int, default=SEED, help="kept for CLI compat; rng derives from id")
+    ap.add_argument("--out", type=Path, default=OUT_DIR, help="output dir for png + index.json")
+    args = ap.parse_args(argv)
+    out_dir = args.out if args.out.is_absolute() else Path.cwd() / args.out
+    out_dir.mkdir(parents=True, exist_ok=True)
+    samples = []
+    for i in range(1, args.n + 1):
+        sid = f"syn_{i:06d}"  # id set fixed: syn_000001.. -> split_of results unchanged
+        samples.append(generate(args.seed, sid, out_dir))
+    index = {
+        "meta": {
+            "n": len(samples),
+            "seed": args.seed,
+            "gen_version": "rw-s2-03",
+            "labels": list(KEYS),
+            "total_formula": "round(0.3*composition+0.3*light+0.2*creativity+0.2*story, 1) per C-DATA-01 5.1",
+            "split": "derived by split_of(id) at read time, never stored (C-DATA-01 2.2)",
+        },
+        "samples": samples,
+    }
+    p = out_dir / "index.json"
+    p.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    print(f"n={len(samples)} index={p.stat().st_size}B dir={out_dir}")
+
+
+if __name__ == "__main__":
+    main()

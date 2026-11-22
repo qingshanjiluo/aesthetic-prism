@@ -1,0 +1,1 @@
+import json,sys;d=json.load(open("data/synthetic/learnability_probe.json",encoding="utf-8"));c=[d["label_feature_correlation"][k]["pearson_r"] for k in ("composition","light","creativity","story")];p=d["pixel_diff_pass15"];ok=(p>=14 and max(c)>=0.30 and min(c)>=0.02);print("pixel_diff_pass15",p,"max_corr",max(c),"min_corr",min(c));sys.exit(0 if ok else 1)

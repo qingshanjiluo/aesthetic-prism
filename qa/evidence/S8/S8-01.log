@@ -1,0 +1,73 @@
+Aesthetic Prism demo: http://127.0.0.1:8000/
+python -m uvicorn --app-dir src aesthetic_prism.serve.app:app --host 127.0.0.1 --port 8000
+INFO:     Started server process [21380]
+INFO:     Waiting for application startup.
+C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py:153: UserWarning: Specified provider 'cpuExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+*************** EP Error ***************
+EP Error Unknown Provider Type: cpuExecutionProvider when using ['cpuExecutionProvider', 'CPUExecutionProvider']
+Falling back to ['CPUExecutionProvider'] and retrying.
+****************************************
+{"ts": "2026-11-18T21:44:20.893+00:00", "level": "INFO", "logger": "aesthetic_prism.serve", "msg": "serve up mode=onnx device=cpu"}
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 8000): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+make: *** [Makefile:34: demo] Error 1
+200== S8-01 demo frozen command ==
+2026-11-18T22:20:41Z
+Aesthetic Prism demo: http://127.0.0.1:8000/
+python -m uvicorn --app-dir src aesthetic_prism.serve.app:app --host 127.0.0.1 --port 8000
+INFO:     Started server process [11192]
+INFO:     Waiting for application startup.
+C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py:153: UserWarning: Specified provider 'cpuExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+*************** EP Error ***************
+EP Error Unknown Provider Type: cpuExecutionProvider when using ['cpuExecutionProvider', 'CPUExecutionProvider']
+Falling back to ['CPUExecutionProvider'] and retrying.
+****************************************
+{"ts": "2026-11-18T22:20:58.187+00:00", "level": "INFO", "logger": "aesthetic_prism.serve", "msg": "serve up mode=onnx device=cpu"}
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 8000): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+make: *** [Makefile:34: demo] Error 1
+-- /health --
+health_http=200
+-- / --
+index_http=404
+-- /score --
+score_http=200
+{"total":47.5,"composition":43.5,"light":35.7,"creativity":49.0,"story":71.4,"model":"hapnet-teacher-v1"}
+after_kill_http=200
+S8-01-VERDICT: score_http=200 (expect 200)
+
+== S8-01 RERUN (clean port) ==
+2026-11-18T22:22:47Z
+Aesthetic Prism demo: http://127.0.0.1:8000/
+python -m uvicorn --app-dir src aesthetic_prism.serve.app:app --host 127.0.0.1 --port 8000
+INFO:     Started server process [13444]
+INFO:     Waiting for application startup.
+C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py:153: UserWarning: Specified provider 'cpuExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+*************** EP Error ***************
+EP Error Unknown Provider Type: cpuExecutionProvider when using ['cpuExecutionProvider', 'CPUExecutionProvider']
+Falling back to ['CPUExecutionProvider'] and retrying.
+****************************************
+{"ts": "2026-11-18T22:22:50.698+00:00", "level": "INFO", "logger": "aesthetic_prism.serve", "msg": "serve up mode=onnx device=cpu"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+-- /health --
+INFO:     127.0.0.1:54305 - "GET /health HTTP/1.1" 200 OK
+health_http=200
+-- / --
+INFO:     127.0.0.1:54306 - "GET / HTTP/1.1" 200 OK
+index_http=200
+-- /score --
+INFO:     127.0.0.1:54308 - "POST /score HTTP/1.1" 200 OK
+score_http=200
+{"total":56.8,"composition":38.6,"light":52.0,"creativity":70.1,"story":81.6,"model":"hapnet-teacher-v1"}
+make: *** [Makefile:34: demo] Error 143
+after_kill_http=000
+after_kill: server down (expected)
+S8-01-RERUN-VERDICT: score_http=200

@@ -1,0 +1,11 @@
+﻿usage: score.py [-h] [--model MODEL] images [images ...]
+
+Score image(s) with the distilled student ONNX model
+
+positional arguments:
+  images         image file path(s)
+
+options:
+  -h, --help     show this help message and exit
+  --model MODEL  ONNX model path (default: artifacts/student.onnx)
+

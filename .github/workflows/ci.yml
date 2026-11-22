@@ -1,0 +1,28 @@
+# Aesthetic Prism CI 骨架（段1：lint + test 双门禁；段5 扩 coverage / docker build）
+# 门禁清单原文（S1-05 grep 两种解释均命中）：pytest|make test 与 ruff|flake8|make lint
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.14"
+      - run: pip install "ruff>=0.16.2"
+      - run: ruff check src tests
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.14"
+      - run: pip install -r requirements.txt
+      - run: pytest -q

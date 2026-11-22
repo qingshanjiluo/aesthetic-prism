@@ -1,0 +1,7 @@
+{
+  "port": 8000,
+  "host": "127.0.0.1",
+  "mock_on_test": true,
+  "open_ui_after_serve": true,
+  "gate_log_tail": 60
+}

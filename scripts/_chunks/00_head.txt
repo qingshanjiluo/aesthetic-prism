@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+"""Aesthetic Prism launcher - one menu for the whole workspace.
+
+Contract (desktop-launcher-kit):
+  P0  every core action reachable from one command: python launcher.py <action>
+      long jobs stream progress; settings live in one external file (CFG);
+      failures print a readable reason; state is queryable.
+"""
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+import unicodedata
+import urllib.error
+import urllib.request
+import webbrowser
+from pathlib import Path
+
+APP_NAME = "Aesthetic Prism"
+APP_DESC = "\u56fe\u7247\u5ba1\u7f8e\u8bc4\u5206\u5de5\u4f5c\u53f0"
+PORT = 8000

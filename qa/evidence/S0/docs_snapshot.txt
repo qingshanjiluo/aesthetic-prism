@@ -1,0 +1,24 @@
+docs/:
+total 164
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 05:41 .
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 05:36 ..
+-rw-r--r-- 1 Administrator 197121 11667 Nov  8 05:09 00_PRD.md
+-rw-r--r-- 1 Administrator 197121  9517 Nov  8 05:12 01_ARCH.md
+-rw-r--r-- 1 Administrator 197121 13069 Nov  8 03:53 02_DATA.md
+-rw-r--r-- 1 Administrator 197121 20541 Nov  8 04:17 03_TRAINING.md
+-rw-r--r-- 1 Administrator 197121 14059 Nov  8 04:12 04_LABELING.md
+-rw-r--r-- 1 Administrator 197121 19140 Nov  8 03:58 05_DEPLOY.md
+-rw-r--r-- 1 Administrator 197121  7924 Nov  8 05:41 06_RISK.md
+-rw-r--r-- 1 Administrator 197121 16585 Nov  8 04:40 07_PLAN.md
+-rw-r--r-- 1 Administrator 197121 22949 Nov  8 02:34 08_ACCEPTANCE.md
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 04:16 contracts
+
+docs/contracts/:
+total 64
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 04:16 .
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 05:41 ..
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 02:02 assets
+-rw-r--r-- 1 Administrator 197121 11957 Nov  8 03:48 dataset_DatasetSample.md
+-rw-r--r-- 1 Administrator 197121 15830 Nov  8 04:16 model_branch_interfaces.md
+-rw-r--r-- 1 Administrator 197121 12862 Nov  8 03:48 onnx_io_names.md
+-rw-r--r-- 1 Administrator 197121 11593 Nov  8 03:48 score_api_request_response.md

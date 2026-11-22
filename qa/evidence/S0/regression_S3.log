@@ -1,0 +1,33 @@
+##### regression S0 x5 #####
+docs count=9
+S0-01_EXIT=0
+S0-02_EXIT=0 (empty-listing)
+indexed= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md', 'docs/contracts/onnx_io_names.md', 'docs/contracts/model_branch_interfaces.md'] checked= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md'] missing= []
+S0-03_EXIT=0
+bytes= 27536 lines= 157
+badchars= []
+total 48 {'0': 5, '1': 5, '2': 8, '3': 6, '4': 4, '5': 5, '6': 6, '7': 4, '8': 5} manual= 5
+OK p50_150
+OK p95_500
+OK pa_068
+OK mae_row
+OK n_test_20
+OK no_or_len_fallback
+OK s2_06
+OK s2_06_evidence
+OK s2_06_split_algo
+OK s2_07
+OK s2_08
+OK stats_seg2_8
+OK stats_seg6_6
+OK total_48
+OK stats_seg3_6
+OK s3_06_row
+OK old_100_300_gone
+OK old_pa_070_gone
+OK heading_literal
+OK sh_c
+OK s701_ge4
+SELF-CHECK PASS
+S0-04_EXIT=0
+S0-05 [人工复核·回归标注] 段3 批次 RW: S3-06 写入/S2 数据再生成/CW 阈值均已对照, 无新暂定值冲突; PASS

@@ -1,0 +1,33 @@
+
+
+def act_cfg() -> int:
+    title("CONFIG")
+    print(dim("  file " + str(CFG)))
+    cfg = load_cfg()
+    print(dim("  existing " + str(bool(cfg.get("cfg_exists")))))
+    for k in sorted(CFG_DEFAULTS.keys()):
+        cur = cfg.get(k, CFG_DEFAULTS[k])
+        dflt = CFG_DEFAULTS[k]
+        tail = ""
+        if cur != dflt:
+            tail = dim("  (default " + repr(dflt) + ")")
+        print(dpad("  " + k, 22) + repr(cur) + tail)
+    return 0
+
+
+def act_set_cfg() -> int:
+    title("CONFIG SET")
+    key = ask("  key: ").strip()
+    if key not in CFG_DEFAULTS:
+        print(warn("unknown key: " + key))
+        print(dim("  known: " + ", ".join(sorted(CFG_DEFAULTS))))
+        return 2
+    val = parse_val(ask("  value: "))
+    cfg = load_cfg()
+    cfg.pop("cfg_exists", None)
+    cfg[key] = val
+    if not save_cfg(cfg):
+        return 1
+    print(ok(key + " = " + repr(val)))
+    return 0
+

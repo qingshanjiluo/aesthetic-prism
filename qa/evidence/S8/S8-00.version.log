@@ -1,0 +1,53 @@
+﻿versioning evidence
+reports/versioning.md written 2026-11-19T06:17:31.5993836+08:00, non-git repo documented
+# 鐗堟湰绠＄悊璁″垝锛圱-8-04 / S8-00.version锛?
+鐢熸垚鏃堕棿锛?026-11-19 路 椤圭洰锛歛esthetic-prism 路 褰撳墠浠撳簱鐘舵€侊細**闈?git 浠撳簱**锛堢洰褰曟棤 .git锛學indows 鏈湴宸ョ▼鐩綍锛?
+## 1. 鐜扮姸
+
+- 椤圭洰鐩綍鏈垵濮嬪寲 git锛涙棤鍘嗗彶鎻愪氦銆佹棤杩滅▼銆佹棤鏍囩銆?- 浜や粯鐗╀互纾佺洏蹇収 + sha256 璁板綍浜?`qa/`锛堝 student.onnx 575,538B sha256_1MB=8fb5c6da鈥︺€乻tudent_int8.onnx 274,625B sha256_1MB=4acde982鈥︼級銆?
+## 2. 鍒濆鍖栧缓璁紙鎵ц搴忓垪锛?
+```bash
+cd <AP_ROOT>
+git init -b main
+printf '__pycache__/\n*.pyc\ndata/uploads/\nreports/html/\nqa/evidence/S8/qps_*.csv\nnode_modules/\n' > .gitignore
+git add -A
+git commit -m "v0.1.0: initial release (student ONNX serve pipeline, QA gates 1-7)"
+git tag -a v0.1.0 -m "first tagged release"
+```
+
+## 3. 鏍囩璁″垝 v0.1.0 鈫?v1.0.0
+
+| 鏍囩 | 瑙﹀彂鏉′欢 | 鍏抽敭鍐呭 |
+|---|---|---|
+| v0.1.0 | 鏈鍒掕惤鍦?+ git init | 褰撳墠鍏ㄩ儴闃舵浜х墿锛沵ae4 闂ㄦ帶澶辫触宸茬煡锛坴al 10.092 / test 8.196 > 5.0锛?|
+| v0.2.0 | 涓诲姩瀛︿範绗竴杞爣娉ㄩ棴鐜?| active_queue 鏍囨敞 鈮?00 鏍锋湰骞堕噸璁紝mae4 test 鈮?8.0 |
+| v0.3.0 | INT8 閲忓寲淇 | student_int8 绮惧害瀵归綈 FP32锛埼擬AE 鈮?.5锛変笖寤惰繜涓嶅姡鍖栵紝鍒?primary=onnx_int8 |
+| v0.5.0 | mae4 闂ㄦ帶杈炬垚 | test mae4 鈮?5.0锛圙ATE-6 鐢?PARTIAL FAIL 杞?PASS锛?|
+| v0.9.0 | 璐熻浇瀹归噺鍗囩骇 | qps 鈮?20 @ fail=0锛圡AX_INFLIGHT 鎺掗槦鍖栨垨妯悜鎵╁锛?|
+| v1.0.0 | 鍏ㄩ獙鏀堕棬閫氳繃 + 浜哄伐妫€鏌ョ瀛?| S8-05 浜哄伐妫€鏌ュ畬鎴愶紝鍏ㄩ儴 GATE PASS |
+
+## 4. 鐗堟湰鍙风害瀹?
+- 璇箟鍖栫増鏈?MAJOR.MINOR.PATCH锛涢鍙戝竷鐢?`-rc.N` 鍚庣紑锛堝 v0.5.0-rc.1锛夈€?- 姣忎釜鏍囩蹇呴』闄勶細妯″瀷宸ヤ欢 sha256锛?MB 鍒嗗潡锛? 褰撹疆 QA 鎶ュ憡璺緞锛坄qa/Sx_qa_report.md`锛夈€?
+## 5. 宸茬煡闄愬埗
+
+- 褰撳墠闈?git 浠撳簱锛屾爣绛捐鍒掍粎鍦?git init 鍚庣敓鏁堬紱v0.1.0 涔嬪墠鐨勫彲杩芥函鎬т緷璧?`qa/` 鐩綍 sha256 璇佹嵁閾俱€?- 澶т簩杩涘埗锛?onnx銆佹暟鎹泦锛夊缓璁悗缁紩鍏?git-lfs锛涙湰璁″垝鍏堜互 sha256 璁板綍鏇夸唬銆?
+## 6. 鍐荤粨鍛戒护澶嶇幇
+
+```
+python scripts/active_learning.py     # S8-00.active
+cat data/annotations/active_queue.json
+cat reports/versioning.md             # 鏈枃浠?```
+
+璇佹嵁锛歚qa/evidence/S8/S8-00.version.log`
+
+== S8-00.version evidence ==
+2026-11-18T22:17:50Z
+reports/versioning.md exists: yes
+git repo: fatal: not a git repository (or any of the parent directories): .git
+not-a-git-repo
+--- reports/versioning.md head ---
+# 版本管理计划（T-8-04 / S8-00.version）
+
+生成时间：2026-11-19 · 项目：aesthetic-prism · 当前仓库状态：**非 git 仓库**（目录无 .git，Windows 本地工程目录）
+
+## 1. 现状

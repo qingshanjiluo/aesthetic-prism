@@ -1,0 +1,27 @@
+"""A1b: the seed channel must be DECLARED, MONOTONE and NULL AT ZERO.
+
+After the trail rewrite, e is the SPEED label and the seed picks the trail DIRECTION.
+The residual is therefore no longer a pixel-length with полуan e-proportional bound
+(it is the area of a streak whose length is e*0.55*r_sub): what must hold is the order
+structure that downstream training can read.
+
+  A1b1  resid(e=0 sigma=0) == 0                 seed is null on a motionless scene
+  A1b2  resid(e) non-decreasing in e            speed label is wired into pixels kam
+  A1b3  resid(sigma) non-decreasing in sigma    noise adds variance, never hides NOD
+
+The old pixel-bound form (resid <= 0.05*e*n) was calibrated against anchor jitter and is
+retired: anchor jitter moved <= ose 0.05*r_sub of coverage, below one code step on flat
+background, which is why it measured  Risk 0 for four of five ids.
+"""
+from __future__ import annotations
+
+import os
+import sys
+
+import numpy as np
+from numpy.random import PCG64, Generator
+
+ROOT = os.environ.get("AP_ROOT") or r"G:\\pipip\\temp"
+sys.path.insert(0, os.path.join(ROOT, "src"))
+
+from aesthetic_prism.data import synthetic as syn  # noqa: E402

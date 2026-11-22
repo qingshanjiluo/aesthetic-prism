@@ -1,0 +1,20 @@
+﻿api-1  |     return import_from_string(self.app)
+api-1  |   File "/usr/local/lib/python3.13/site-packages/uvicorn/importer.py", line 22, in import_from_string
+api-1  |     raise exc from None
+api-1  |   File "/usr/local/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
+api-1  |     module = importlib.import_module(module_str)
+api-1  |   File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+api-1  |     return _bootstrap._gcd_import(name[level:], package, level)
+api-1  |            ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+api-1  |   File "<frozen importlib._bootstrap>", line 1404, in _gcd_import
+api-1  |   File "<frozen importlib._bootstrap>", line 1369, in _find_and_load
+api-1  |   File "<frozen importlib._bootstrap>", line 1312, in _find_and_load_unlocked
+api-1  |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+api-1  |   File "<frozen importlib._bootstrap>", line 1404, in _gcd_import
+api-1  |   File "<frozen importlib._bootstrap>", line 1369, in _find_and_load
+api-1  |   File "<frozen importlib._bootstrap>", line 1312, in _find_and_load_unlocked
+api-1  |   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+api-1  |   File "<frozen importlib._bootstrap>", line 1404, in _gcd_import
+api-1  |   File "<frozen importlib._bootstrap>", line 1369, in _find_and_load
+api-1  |   File "<frozen importlib._bootstrap>", line 1333, in _find_and_load_unlocked
+api-1  | ModuleNotFoundError: No module named 'aesthetic_prism'

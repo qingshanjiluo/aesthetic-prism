@@ -1,0 +1,8 @@
+# 服务配置（加载与校验：src/aesthetic_prism/serve/config.py，坏配置启动即拒 fail-fast）
+# 契约端口 8000（C-SERVE-01）；环境变量 AP_MODE / AP_MODEL_PATH / AP_DEVICE / AP_PORT 可覆盖。
+mode: auto            # auto | mock | onnx；auto = 有模型文件走 onnx，缺失走 mock（docs/05_DEPLOY §1.3）
+model_path: models/hapnet_teacher.onnx
+device: cpu           # cpu | cuda
+host: 127.0.0.1
+port: 8000
+log_level: info

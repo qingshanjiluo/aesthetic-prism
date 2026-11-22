@@ -1,0 +1,20 @@
+# configs/repro — 复现管线常量（段7 T-7-07；SDC 缺失时按此冻结口径执行）
+# 数据
+data_dir = data/synthetic
+index_json = data/synthetic/index.json
+n_total = 200
+split_rule = sha256(id).hex[:8] int % 20  # test<2, val<4, else train
+split_frozen = {test: idx0..19, val: idx20..39, train: idx40..199}
+# 预处理
+resize = 224x224 BILINEAR
+normalize = ImageNet mean(0.485,0.456,0.406) std(0.229,0.224,0.225) /255 CHW float32
+# 评估
+model = artifacts/student.onnx
+seed = 42
+metrics = pairwise_accuracy_total / pearson_total / mae4
+compare_against = reports/metric_recheck.json
+tolerance = 1e-6
+# 门限（03 §5.3）
+pairwise_min = 0.68
+pearson_min = 0.70
+mae4_max = 5.0

@@ -1,0 +1,12 @@
+﻿{
+    "paths":  [
+                  "/health",
+                  "/score",
+                  "/upload",
+                  "/train",
+                  "/train/status",
+                  "/jobs/{job_id}"
+              ],
+    "title":  "Aesthetic Prism",
+    "version":  "1.0.0"
+}

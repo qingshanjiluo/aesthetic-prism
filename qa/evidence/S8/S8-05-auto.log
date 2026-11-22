@@ -1,0 +1,72 @@
+== S8-05 人工复核 · 自动化侧证据补齐 ==
+2026-11-18T23:37:50Z
+
+--- 步骤② 自有图片上传：用 data/uploads 内既有真实上传件（非 assets/sample.png） ---
+own_image=data/uploads/my_pic-23fbfb8e.png bytes=156 sha256_1MB=562ead61aac5bbb3b8679beb1634a853b7452354e97128907f58332740396373
+
+--- 步骤① 打开演示页面/接口 ---
+GET / -> 200 bytes=17229
+{"status":"ok","ready":true,"model":"hapnet-teacher-v1","device":"cpu","uptime_s":18.4}
+GET /health -> 200
+
+--- 步骤② 上传自有图片 ---
+POST /score (own image) -> 200
+{"total":31.7,"composition":21.6,"light":25.3,"creativity":24.5,"story":63.6,"model":"hapnet-teacher-v1"}
+
+--- 步骤③ 评分合理性判定依据 ---
+[a] 五字段齐全且落在 0-100：见上行 JSON
+[b] total 与四维加权一致（契约 total=0.3c+0.3l+0.2cr+0.2s，容差 0.6）：
+    total_reported=31.7 total_expected=31.69 delta=0.010
+    CONSISTENT
+[c] 同一图片重复 3 次确定性（同权重同输入必须同输出，容差 1e-6）：
+{"total":31.7,"composition":21.6,"light":25.3,"creativity":24.5,"story":63.6,"model":"hapnet-teacher-v1"}
+{"total":31.7,"composition":21.6,"light":25.3,"creativity":24.5,"story":63.6,"model":"hapnet-teacher-v1"}
+{"total":31.7,"composition":21.6,"light":25.3,"creativity":24.5,"story":63.6,"model":"hapnet-teacher-v1"}
+[d] 与离线 ONNX 直推结果对比（服务链路 vs 离线权重一致性，容差 1e-4）：
+
+--- 步骤④ 重启后功能验证 ---
+����ǰ kill �� GET /health -> 000 (���� 000)
+重启前 kill 后 GET /health -> 000 (期望 000)
+������ GET /health -> 200
+������ GET / -> 200
+������ POST /score -> 200
+{"total":31.7,"composition":21.6,"light":25.3,"creativity":24.5,"story":63.6,"model":"hapnet-teacher-v1"}
+重启前后评分一致性（容差 1e-6）：
+    max_delta=0.000000000 -> IDENTICAL
+
+S8-05-AUTO-END
+
+== S8-05 人工复核 · 自动化侧证据（v2，用真实自有图片）==
+2026-11-19T02:49:14Z
+own_image=qa/evidence/S8/S8-05_own_image.png bytes=2802 sha256=ab4e7c347f4b0ed3ad0270ff120784fcb689b95a0c950395ccd2ea0be3f9bd35
+说明：该图由 make_own_image.py 用 PIL 直接绘制（深色底 + 三分点圆形主体 + 地平线 + 前景带 + 引导线），
+      不来自 data/synthetic 生成器，也不是 assets/sample.png，用于步骤②的'自有图片'入参。
+
+--- ① 打开演示页面/接口 ---
+GET / -> 200 bytes=17229
+{"status":"ok","ready":true,"model":"hapnet-teacher-v1","device":"cpu","uptime_s":17.0}
+GET /health -> 200
+
+--- ② 上传自有图片 ---
+POST /score (own) -> 200
+{"total":43.3,"composition":49.4,"light":11.5,"creativity":40.4,"story":92.0,"model":"hapnet-teacher-v1"}
+
+--- ③ 评分合理性判定依据 ---
+[a] 五字段齐全、全部落在 0-100
+[b] total 与四维加权一致（契约 total=0.3c+0.3l+0.2cr+0.2s，容差 0.6）
+[c] 同图重复 3 次确定性（容差 1e-6）
+{"total":43.3,"composition":49.4,"light":11.5,"creativity":40.4,"story":92.0,"model":"hapnet-teacher-v1"}
+{"total":43.3,"composition":49.4,"light":11.5,"creativity":40.4,"story":92.0,"model":"hapnet-teacher-v1"}
+{"total":43.3,"composition":49.4,"light":11.5,"creativity":40.4,"story":92.0,"model":"hapnet-teacher-v1"}
+    fields_missing=none  all_in_0_100=True
+    total=43.3  expected=44.75  delta=1.450  -> INCONSISTENT
+
+--- ④ 重启后功能验证 ---
+kill �� GET /health -> 000 (���� 000)
+kill 后 GET /health -> 000 (期望 000)
+������ GET /health -> 200
+������ GET / -> 200
+������ POST /score -> 200
+{"total":43.3,"composition":49.4,"light":11.5,"creativity":40.4,"story":92.0,"model":"hapnet-teacher-v1"}
+    ����ǰ�� max_delta=0.000000000 -> IDENTICAL
+S8-05-AUTO-v2-END

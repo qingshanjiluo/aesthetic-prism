@@ -1,0 +1,26 @@
+docs count=9
+indexed= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md', 'docs/contracts/onnx_io_names.md', 'docs/contracts/model_branch_interfaces.md'] checked= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md'] missing= []
+bytes= 26388 lines= 156
+badchars= []
+total 47 {'0': 5, '1': 5, '2': 8, '3': 5, '4': 4, '5': 5, '6': 6, '7': 4, '8': 5} manual= 5
+OK p50_150
+OK p95_500
+OK pa_068
+OK mae_row
+OK n_test_20
+OK no_or_len_fallback
+OK s2_06
+OK s2_06_evidence
+OK s2_06_split_algo
+OK s2_07
+OK s2_08
+OK stats_seg2_8
+OK stats_seg6_6
+OK total_47
+OK old_100_300_gone
+OK old_pa_070_gone
+OK heading_literal
+OK sh_c
+OK s701_ge4
+SELF-CHECK PASS
+S0-05 段2 修订已对照：CW-S1-01 六档/05_DEPLOY/00_PRD 无新暂定值冲突；08 自改 RW-S2-QA-01(S2-08 语法) 不改阈值语义；PASS

@@ -1,0 +1,21 @@
+== S8-00 quality gates (final, after fix) ==
+2026-11-18T22:44:35Z
+--- ruff ---
+All checks passed!
+ruff_exit=0
+--- mypy ---
+Success: no issues found in 35 source files
+mypy_exit=0
+--- pytest (AP_MODE=mock) ---
+...............................................................          [100%]
+pytest_exit=0
+--- coverage ---
+TOTAL                                         883    172    81%
+== final re-verify after bench/ refactor (post ruff/mypy fix) ==
+2026-11-18T22:47:30Z
+--- S8-03 ---
+REPORT-OK
+--- S8-04 ---
+limitations= 7
+--- bench scripts still run (import-level smoke) ---
+AST-OK 10 files

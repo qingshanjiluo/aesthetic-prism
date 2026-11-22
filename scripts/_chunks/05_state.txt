@@ -1,0 +1,56 @@
+
+
+def read_json(path):
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    except Exception:
+        return None
+
+
+def cfg_snapshot() -> dict:
+    cfg = load_cfg()
+    return {
+        "cfg": CFG,
+        "cfg_exists": Path(CFG).is_file(),
+        "port": cfg.get("port", PORT),
+        "host": cfg.get("host", "127.0.0.1"),
+        "mock_on_test": cfg.get("mock_on_test"),
+        "open_ui_after_serve": cfg.get("open_ui_after_serve"),
+        "gate_log_tail": cfg.get("gate_log_tail"),
+        "root": str(ROOT),
+        "src": str(SRC),
+        "python": PY,
+    }
+
+
+def dataset_count():
+    idx = read_json(INDEX_JSON)
+    if isinstance(idx, dict):
+        items = idx.get("items")
+        if isinstance(items, list):
+            return len(items)
+        n = idx.get("n")
+        if isinstance(n, int):
+            return n
+    if SYNTHETIC.is_dir():
+        return len([f for f in SYNTHETIC.iterdir() if f.suffix.lower() == ".png"])
+    return 0
+
+
+def checkpoint_rows():
+    rows = []
+    if not CHECKPOINTS.is_dir():
+        return rows
+    for p in sorted(CHECKPOINTS.rglob("*.pt")):
+        if p.is_file():
+            rows.append((str(p.relative_to(ROOT)), p.stat().st_size))
+    return rows
+
+
+def onnx_paths() -> list:
+    out = []
+    for base in (ROOT / "artifacts", ROOT / "models"):
+        if base.is_dir():
+            for p in sorted(base.rglob("*.onnx")):
+                out.append((str(p.relative_to(ROOT)), p.stat().st_size))
+    return out

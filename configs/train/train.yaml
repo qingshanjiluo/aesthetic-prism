@@ -1,0 +1,4 @@
+# 训练配置骨架（训练超参归 MODEL 所有，SERVE 不改；此处仅占位供段3 填充）
+seed: 42
+metrics_out: reports/train_metrics.json
+loss_log: reports/loss.json

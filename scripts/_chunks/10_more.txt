@@ -1,0 +1,81 @@
+
+
+def act_checkenv() -> int:
+    import platform
+
+    title("ENV")
+    print(dpad("  python", 16) + platform.python_version())
+    print(dpad("  exe", 16) + PY)
+    print(dpad("  platform", 16) + platform.platform())
+    for mod in ("torch", "onnxruntime", "fastapi", "uvicorn", "pytest", "PIL", "numpy"):
+        try:
+            m = __import__(mod)
+        except Exception as exc:
+            print(dpad("  " + mod, 16) + bad(type(exc).__name__))
+            continue
+        ver = getattr(m, "__version__", "?")
+        print(dpad("  " + mod, 16) + ok(str(ver)))
+    return 0
+
+
+def act_health() -> int:
+    title("HEALTH")
+    port = int(load_cfg().get("port") or PORT)
+    if not port_up(port):
+        print(warn("service down - run serve first"))
+        return 1
+    data = api("/healthz")
+    if data is None:
+        print(bad("/healthz no response"))
+        return 1
+    print(ok("/healthz"))
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    return 0
+
+
+def act_learn() -> int:
+    title("LEARN")
+    rows = [
+        ("serve", "start the FastAPI service on PORT"),
+        ("stop", "kill the uvicorn worker for this project"),
+        ("score", "score one image or a whole directory"),
+        ("demo", "regenerate the 200-sample synthetic set (seed 42)"),
+        ("reproduce", "rerun distillation against data/synthetic/index.json"),
+        ("tests", "pytest -q with AP_MODE=mock"),
+        ("lint", "ruff check src tests"),
+        ("typecheck", "mypy src"),
+        ("coverage", "pytest with --cov=aesthetic_prism"),
+        ("status", "ports, dataset, artifacts, stale workers"),
+        ("selfcheck", "verify file layout and toolchain"),
+        ("gate_log", "append one line to GATE_LOG.md"),
+    ]
+    for k, v in rows:
+        print(dpad("  " + k, 14) + dim(v))
+    return 0
+
+
+def act_log() -> int:
+    title("GATE_LOG")
+    if not Path(GATE_LOG).is_file():
+        print(warn("GATE_LOG.md missing"))
+        return 1
+    lines = Path(GATE_LOG).read_text(encoding="utf-8-sig").splitlines()
+    n = int(load_cfg().get("gate_log_tail") or 60)
+    print(dim("  " + str(len(lines)) + " lines, tail " + str(n)))
+    for ln in lines[-n:]:
+        print("  " + ln)
+    return 0
+
+
+def act_gate_log() -> int:
+    title("GATE_LOG APPEND")
+    msg = ask("  entry: ").strip()
+    if not msg:
+        print(warn("empty - nothing appended"))
+        return 2
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(GATE_LOG, "a", encoding="utf-8") as fh:
+        fh.write("- " + stamp + " " + msg + chr(10))
+    print(ok("appended"))
+    return 0
+

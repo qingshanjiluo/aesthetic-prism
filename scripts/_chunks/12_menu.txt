@@ -1,0 +1,99 @@
+
+
+def act_quit() -> int:
+    return 0
+
+
+MENU = [
+    ("1", "serve", act_serve),
+    ("2", "stop", act_stop),
+    ("3", "score", act_score),
+    ("4", "demo", act_demo),
+    ("5", "reproduce", act_reproduce),
+    ("6", "status", act_status),
+    ("7", "selfcheck", act_selfcheck),
+    ("8", "open ui", act_open_ui),
+    ("9", "open dir", act_open_dir),
+    ("c", "config", act_cfg),
+    ("l", "log", act_log),
+    ("t", "tests", act_tests),
+    ("k", "lint", act_lint),
+    ("y", "typecheck", act_typecheck),
+    ("v", "coverage", act_coverage),
+    ("d", "check env", act_checkenv),
+    ("h", "help", act_help),
+    ("g", "gate log", act_gate_log),
+    ("o", "open logs", act_open_logs),
+    ("e", "export", act_export),
+    ("f", "fill cfg", act_fill),
+    ("s", "search", act_search),
+    ("m", "maintain", act_maintain),
+    ("w", "load", act_load),
+    ("x", "health", act_health),
+    ("n", "learn", act_learn),
+    ("q", "quit", act_quit),
+]
+
+GROUPS = [
+    ("SERVICE", ["1", "2", "8", "9", "o"]),
+    ("CHECK", ["3", "4", "5", "6", "7", "x", "w", "m"]),
+    ("BUILD", ["t", "k", "y", "v", "e", "f"]),
+    ("TOOL", ["c", "l", "g", "d", "h", "n", "s", "q"]),
+]
+
+
+def _status_line() -> str:
+    port = int(load_cfg().get("port") or PORT)
+    if port_up(port):
+        return ok("  " + chr(9679) + " service up") + dim("  :" + str(port))
+    return warn("  " + chr(9675) + " service down") + dim("  :" + str(port))
+
+
+def render_menu() -> None:
+    idx = {k: (k, name) for k, name, _f in MENU}
+    for gname, keys in GROUPS:
+        print()
+        print(acc(bold("  " + gname)))
+        for k in keys:
+            item = idx.get(k)
+            if item is None:
+                continue
+            print("   " + warn("[" + k + "]") + " " + item[1])
+    print()
+    print(dim("  q)" ) + " " + dim("quit"))
+    print()
+
+
+def _dispatch(key: str) -> int:
+    for k, _name, fn in MENU:
+        if k == key:
+            return int(fn() or 0)
+    print(warn("  unknown key: " + key))
+    return 2
+
+
+def main(argv: list) -> int:
+    set_title(APP_NAME)
+    if len(argv) > 0:
+        want = str(argv[0]).strip()
+        for k, _name, fn in MENU:
+            if k == want:
+                return int(fn() or 0)
+        print(warn("unknown subcommand: " + want))
+        return 2
+    while True:
+        print()
+        print(acc(bold("  " + APP_NAME)) + dim("  " + APP_DESC))
+        print(_status_line())
+        render_menu()
+        key = ask("  > ").strip()
+        if key in ("", "q", "quit", "exit"):
+            return 0
+        rc = _dispatch(key)
+        print()
+        print(dim("  rc=" + str(rc)))
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
+

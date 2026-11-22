@@ -1,0 +1,10 @@
+task_rows= 43
+syntax_ok= 43 syntax_fail= 0
+--- focus: e7 5 rows + T-0-01/02 ---
+  FOCUS T-2-01 syntax= OK
+  FOCUS T-2-03 syntax= OK
+  FOCUS T-2-05 syntax= OK
+  FOCUS T-6-01 syntax= OK
+  FOCUS T-6-02 syntax= OK
+  FOCUS T-0-01 syntax= OK
+  FOCUS T-0-02 syntax= OK

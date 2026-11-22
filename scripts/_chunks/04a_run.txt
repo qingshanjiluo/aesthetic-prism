@@ -1,0 +1,30 @@
+
+
+def run(cmd, cwd=None, env_extra=None) -> int:
+    env = dict(os.environ)
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONPATH"] = str(SRC)
+    env["AP_ROOT"] = str(ROOT)
+    if env_extra:
+        env.update(env_extra)
+    print(dim("  $ " + " ".join(str(x) for x in cmd)))
+    try:
+        p = subprocess.Popen(cmd, cwd=str(cwd or ROOT), env=env)
+    except FileNotFoundError:
+        print(bad("command not found: " + str(cmd[0])))
+        return 127
+    except PermissionError:
+        print(bad("not executable: " + str(cmd[0])))
+        return 126
+    rc = p.wait()
+    print(ok("done rc=0") if rc == 0 else bad("failed rc=" + str(rc)))
+    return rc
+
+
+def port_up(port: int = PORT) -> bool:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.4)
+    try:
+        return s.connect_ex(("127.0.0.1", port)) == 0
+    finally:
+        s.close()

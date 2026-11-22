@@ -1,0 +1,7 @@
+# 模型配置骨架（结构与超参归 MODEL 所有，SERVE 不改；此处仅占位供段2-4 填充）
+name: hapnet
+input_size: 224
+onnx_out: artifacts/model.onnx
+opset: 17
+teacher_ckpt: checkpoints/teacher.pt
+student_ckpt: checkpoints/student.pt

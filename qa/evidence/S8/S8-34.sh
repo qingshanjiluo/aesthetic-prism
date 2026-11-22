@@ -1,0 +1,4 @@
+test -f qa/reports/FINAL_ACCEPTANCE.md && grep -q "## 验收结论" qa/reports/FINAL_ACCEPTANCE.md && grep -q "## 已知限制" qa/reports/FINAL_ACCEPTANCE.md && grep -q "## 遗留风险" qa/reports/FINAL_ACCEPTANCE.md && echo REPORT-OK | tee qa/evidence/S8/S8-03.log
+python -c "import re,sys;t=open('qa/reports/FINAL_ACCEPTANCE.md',encoding='utf-8').read();sec=re.search(r'## 已知限制(.+?)(?=\n## |\Z)',t,re.S).group(1);items=[l for l in sec.splitlines() if re.match(r'\s*([-*]|\d+\.)\s+\S',l)];print('limitations=',len(items));sys.exit(0 if len(items)>=5 else 1)" 2>&1 | tee qa/evidence/S8/S8-04.log
+echo "S8-04-exit=$?"
+grep -c "runA qps=" qa/evidence/S8/S8-02.log

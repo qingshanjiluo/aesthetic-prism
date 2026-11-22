@@ -1,0 +1,17 @@
+# 数据配置骨架（字段 schema 归 ARCH T-1-01；段2 DATA 填充，SERVE 只落最小骨架）
+root: data
+synthetic_index: data/synthetic/index.json
+annotations_dir: data/annotations
+export_glob: data/annotations/export_*.json
+exports_dir: data/exports
+split_seed: 42
+
+# 切分期望：由契约 C-DATA-01 section 2.2 派生
+#   split_of(id) = int(sha256(id)[:8], 16) % 20  ->  <16 train / <18 val / else test
+# 此处登记实测计数，供 data_audit 回归期检测样本集静默增删（SPLIT-COUNT-DRIFT）。
+# 增删样本 / 换 gen_version 后必须同步更新本段，否则 reproduce 第一步即失败。
+# 省略或留空 = 只做自洽校验（各切分之和 == 样本数、两两不交、并集覆盖全集）。
+split_expect:
+  train: 1603
+  val: 208
+  test: 189

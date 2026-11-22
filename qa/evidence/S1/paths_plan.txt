@@ -1,0 +1,2 @@
+qa/evidence/S2/S2-07.log
+qa/evidence/S2/S2-08.log

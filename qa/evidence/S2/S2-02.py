@@ -1,0 +1,1 @@
+import json,glob,sys;fs=glob.glob("data/annotations/export_*.json");d=[json.load(open(f)) for f in fs];cnt=lambda x: len(x) if isinstance(x,list) else sum(len(v) for v in x.values() if isinstance(v,list));tot=sum(cnt(x) for x in d);print("files=",len(fs),"entries=",tot);sys.exit(0 if len(fs)>=1 and tot>=10 else 1)

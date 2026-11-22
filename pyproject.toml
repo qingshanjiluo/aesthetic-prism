@@ -1,0 +1,91 @@
+# 项目级工具配置（pytest / mypy / ruff / coverage）；段1 SERVE 落地
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.13"
+mypy_path = "src"
+
+# onnxruntime 官方 wheel 不随包提供 py.typed / 类型存根，import 无法被静态分析；
+# 仅对这两个第三方模块关闭 import 追踪，本项目自身代码仍全量强类型检查。
+[[tool.mypy.overrides]]
+module = ["onnxruntime", "onnxruntime.*"]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+src = ["src", "tests"]
+# 门禁范围 = src/ + tests/ + launcher.py；
+# scripts/ 是一次性探查与修复脚本（外部闭包变量、行内分号属脚本风格），
+# qa/evidence/ 是历史证据快照（必须逐字保持当时状态，不可回改），
+# labeling/ 是独立标注小工具，logs/ 是运行时抓取产物，
+# fix_*.py / make_own_image.py 是一次性迁移脚本 —— 均不进 lint 门禁。
+extend-exclude = [
+    "scripts",
+    "qa/evidence",
+    "labeling",
+    "logs",
+    "fix_mypy1.py",
+    "fix_mypy2.py",
+    "fix_ruff.py",
+    "fix_split.py",
+    "fix_unused.py",
+    "make_own_image.py",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# 门禁规则集：E/F 语法与未用、I 导入序、UP 旧写法、B bugbear、SIM 化简、RUF ruff 自带
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "E501",   # 行宽由 line-length 控制，中文注释多次折算易误判
+    "RUF001", # 中英混排全角标点属文案，不是标识符混淆
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# 启动器外壳：交互层刻意吞异常（Ctrl-C / 子进程编码 / 配置文件损坏），不引入日志依赖；
+# B007 = 显示时只需条数不需值，UP009 = 文件已声明 encoding 说明符为可读提示
+"launcher.py" = ["S110", "BLE001", "PLW1510", "B007", "UP009"]
+
+# bench/ 是一次性基准测量脚本：必须先读环境变量再导重库（E402 必然），
+# 指标结果表按列对齐写在一行便于与报告逐列比对（E702 必然），
+# 按预测长度截断 zip（strict 不适用），循环下标仅作计数（B007）
+"src/aesthetic_prism/bench/*" = ["E402", "E702", "B007", "B905", "SIM108"]
+
+# train.py 需在导入 torch 前设置线程数与确定性开关
+"src/aesthetic_prism/train.py" = ["E402"]
+
+# eval.py 的结果汇总表刻意逐行多列赋值，便于与 QA 报告逐列对照
+"src/aesthetic_prism/eval.py" = ["E702"]
+
+# src/eval.py 是 reproduce 直跑脚本：必须先 os.chdir(AP_ROOT) 再导 numpy/onnxruntime/PIL
+# （工作目录决定 index.json 与 artifacts/student.onnx 的相对路径解析），且必须先注入
+# src 到 sys.path 才能 from aesthetic_prism.* import；E402 是该导入序的设计结果，同 train.py
+"src/eval.py" = ["E402"]
+
+# tests 的 E402 来自 conftest 先注入 sys.path 再 import（pytest 标准做法）
+"tests/*" = ["E402", "SIM300", "RUF100"]
+
+[tool.coverage.run]
+source = ["src/aesthetic_prism"]
+branch = false
+# omit = 纯 CLI 入口 / 训练主线 / 合成数据生成（由 make demo / distill 流程覆盖），不在单测范围
+omit = [
+    "src/aesthetic_prism/__main__.py",
+    "src/aesthetic_prism/score.py",
+    "src/aesthetic_prism/distill.py",
+    "src/aesthetic_prism/train/*",
+    "src/aesthetic_prism/bench/*",
+    "src/aesthetic_prism/data/synthetic.py",
+    "src/aesthetic_prism/model/params.py",
+    "src/aesthetic_prism/model/hapnet.py",
+    "src/aesthetic_prism/export/onnx_export.py",
+]

@@ -1,0 +1,70 @@
+
+
+def api(path: str, timeout: float = 5.0):
+    cfg = load_cfg()
+    host = str(cfg.get("host") or "127.0.0.1")
+    port = int(cfg.get("port") or PORT)
+    url = "http://" + host + ":" + str(port) + path
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        return None
+
+
+def parse_val(raw: str):
+    s = str(raw).strip()
+    if s == "":
+        return ""
+    if s in ("true", "True", "on", "yes"):
+        return True
+    if s in ("false", "False", "off", "no"):
+        return False
+    if s.startswith("[") and s.endswith("]"):
+        inner = s[1:-1].strip()
+        if not inner:
+            return []
+        return [parse_val(p) for p in inner.split(",")]
+    try:
+        return int(s)
+    except ValueError:
+        pass
+    try:
+        return float(s)
+    except ValueError:
+        pass
+    return s
+
+
+def load_cfg() -> dict:
+    cfg = dict(CFG_DEFAULTS)
+    p = Path(CFG)
+    if p.is_file():
+        try:
+            data = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception:
+            data = {}
+        if isinstance(data, dict):
+            for k in CFG_DEFAULTS:
+                if k in data:
+                    cfg[k] = data[k]
+        cfg["cfg_exists"] = True
+    else:
+        cfg["cfg_exists"] = False
+    return cfg
+
+
+def save_cfg(cfg: dict) -> bool:
+    data = {k: v for k, v in cfg.items() if k in CFG_DEFAULTS}
+    try:
+        p = Path(CFG)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        bak = Path(str(CFG) + ".bak")
+        if p.is_file():
+            shutil.copy2(str(p), str(bak))
+        p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8")
+    except Exception as exc:
+        print(bad("save_cfg failed: " + repr(exc)))
+        return False
+    return True
+

@@ -1,0 +1,23 @@
+[data] real data/synthetic/index.json split=train labeled=165
+[smoke] step 1/20 loss=201.984497
+[smoke] step 2/20 loss=116.797256
+[smoke] step 3/20 loss=465.749939
+[smoke] step 4/20 loss=80.052322
+[smoke] step 5/20 loss=249.512573
+[smoke] step 6/20 loss=78.406700
+[smoke] step 7/20 loss=59.606548
+[smoke] step 8/20 loss=209.577927
+[smoke] step 9/20 loss=71.253304
+[smoke] step 10/20 loss=157.731430
+[smoke] step 11/20 loss=111.587631
+[smoke] step 12/20 loss=43.554657
+[smoke] step 13/20 loss=84.132713
+[smoke] step 14/20 loss=27.507057
+[smoke] step 15/20 loss=23.662209
+[smoke] step 16/20 loss=63.937950
+[smoke] step 17/20 loss=38.605183
+[smoke] step 18/20 loss=32.172329
+[smoke] step 19/20 loss=69.334221
+[smoke] step 20/20 loss=53.619289
+[smoke] done steps=20 head5_mean=222.819318 tail5_mean=51.533794
+[loss-log] 20 steps -> qa/evidence/S3/loss.json

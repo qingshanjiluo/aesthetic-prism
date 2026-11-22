@@ -1,0 +1,68 @@
+.github/workflows/:
+total 4
+drwxr-xr-x 1 Administrator 197121   0 Nov  8 15:25 .
+drwxr-xr-x 1 Administrator 197121   0 Nov  8 00:20 ..
+-rw-r--r-- 1 Administrator 197121 725 Nov  8 15:25 ci.yml
+
+configs/:
+total 4
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 00:20 .
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 17:47 ..
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 data
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 model
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 serve
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 train
+
+docs/:
+total 168
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 13:25 .
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 17:47 ..
+-rw-r--r-- 1 Administrator 197121 12166 Nov  8 10:38 00_PRD.md
+-rw-r--r-- 1 Administrator 197121  9555 Nov  8 08:20 01_ARCH.md
+-rw-r--r-- 1 Administrator 197121 13632 Nov  8 13:25 02_DATA.md
+-rw-r--r-- 1 Administrator 197121 20537 Nov  8 07:07 03_TRAINING.md
+-rw-r--r-- 1 Administrator 197121 14059 Nov  8 04:12 04_LABELING.md
+-rw-r--r-- 1 Administrator 197121 19433 Nov  8 11:00 05_DEPLOY.md
+-rw-r--r-- 1 Administrator 197121  8084 Nov  8 08:24 06_RISK.md
+-rw-r--r-- 1 Administrator 197121 17621 Nov  8 10:38 07_PLAN.md
+-rw-r--r-- 1 Administrator 197121 24934 Nov  8 09:06 08_ACCEPTANCE.md
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 10:38 contracts
+
+docs/contracts/:
+total 72
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 10:38 .
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 13:25 ..
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 02:02 assets
+-rw-r--r-- 1 Administrator 197121 14053 Nov  8 10:18 dataset_DatasetSample.md
+-rw-r--r-- 1 Administrator 197121 15830 Nov  8 04:16 model_branch_interfaces.md
+-rw-r--r-- 1 Administrator 197121 13056 Nov  8 08:22 onnx_io_names.md
+-rw-r--r-- 1 Administrator 197121 13826 Nov  8 10:38 score_api_request_response.md
+
+frontend/:
+total 20
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 15:42 .
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 17:47 ..
+-rw-r--r-- 1 Administrator 197121 4217 Nov  8 15:42 app.js
+-rw-r--r-- 1 Administrator 197121 4403 Nov  8 15:42 index.html
+
+src/:
+total 8
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 00:20 .
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 17:47 ..
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 12:16 aesthetic_prism
+
+tests/:
+total 36
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 14:01 .
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 17:47 ..
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 15:25 __pycache__
+-rw-r--r-- 1 Administrator 197121 1804 Nov  8 15:15 conftest.py
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 contract
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 integration
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 perf
+-rw-r--r-- 1 Administrator 197121 3614 Nov  8 13:41 test_error_413_429.py
+-rw-r--r-- 1 Administrator 197121 2156 Nov  8 12:38 test_error_4xx.py
+-rw-r--r-- 1 Administrator 197121  792 Nov  8 12:16 test_health.py
+-rw-r--r-- 1 Administrator 197121 2231 Nov  8 15:15 test_score_schema.py
+-rw-r--r-- 1 Administrator 197121 2080 Nov  8 14:01 test_static.py
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 unit

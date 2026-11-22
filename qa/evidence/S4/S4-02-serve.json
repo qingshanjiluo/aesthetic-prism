@@ -1,0 +1,17 @@
+{
+  "health": {
+    "status": "ok",
+    "ready": true,
+    "model": "hapnet-teacher-v1",
+    "device": "cpu",
+    "uptime_s": 123.8
+  },
+  "score": {
+    "total": 63.8,
+    "composition": 59.3,
+    "light": 63.2,
+    "creativity": 59.9,
+    "story": 73.7,
+    "model": "hapnet-teacher-v1"
+  }
+}

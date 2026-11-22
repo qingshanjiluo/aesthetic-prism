@@ -1,0 +1,23 @@
+F.......................                                                 [100%]
+================================== FAILURES ===================================
+____________________________ test_dataloader_shape ____________________________
+
+    def test_dataloader_shape() -> None:
+        """S3-01: dataloader shape contract (node id test_dataloader_shape per 00_PRD AC1/07_PLAN/08)."""
+        ds = AestheticDataset(INDEX, split="train")
+        x, y = ds[0]["image"], ds[0]["labels"]
+        assert x.shape == (3, 224, 224) and x.dtype == torch.float32
+        assert y.shape == (4,) and bool((y >= 0).all()) and bool((y <= 100).all())
+        loader = torch.utils.data.DataLoader(ds, batch_size=4)
+        batch = next(iter(loader))
+        bx, by = batch["image"], batch["labels"]
+        assert bx.shape == (4, 3, 224, 224) and by.shape == (4, 4)
+>       assert -2.1179 <= float(bx.min()) and float(bx.max()) <= 2.6400
+E       assert (-2.1179 <= -2.1179039478302)
+E        +  where -2.1179039478302 = float(tensor(-2.1179))
+E        +    where tensor(-2.1179) = <built-in method min of Tensor object at 0x00000220D2F4EDF0>()
+E        +      where <built-in method min of Tensor object at 0x00000220D2F4EDF0> = tensor([[[[-1.6727, -1.6898, -1.7240,  ...,  2.2489,  2.2489,  2.2489],\n          [-1.7412, -1.6213, -1.7412,  ...,  2...,  2.2217,  ..., -0.3230, -0.3927, -0.2532],\n          [ 2.2914,  2.1868,  2.2914,  ..., -0.5495, -0.4798, -0.2358]]]]).min
+
+tests\test_data.py:40: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_data.py::test_dataloader_shape - assert (-2.1179 <= -2.1179...

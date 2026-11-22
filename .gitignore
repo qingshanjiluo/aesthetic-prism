@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# 缓存与工具
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 运行时产物
+logs/
+loss.json
+data/uploads/
+data/assets_meta.json
+data/exports/
+data/annotations/
+data/raw/
+data/synthetic/*.png
+data/synthetic/index.json.bak_r11
+data/synthetic/index_200_backup.json
+data/synthetic/learnability_probe.json
+checkpoints/
+artifacts/
+models/*.onnx
+models/*.pt
+
+# 一次性脚本备份
+*.bak
+*.bak1
+*.baknew
+*.bakdal
+fix_*.py
+make_own_image.py
+
+# 临时报告
+reports/*.txt
+reports/*.json
+reports/*.log
+reports/*.py
+
+# 环境
+.env
+*.local
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

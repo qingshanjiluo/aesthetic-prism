@@ -1,0 +1,68 @@
+configs/:
+total 4
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 00:20 .
+drwxr-xr-x 1 Administrator 197121 0 Nov 11 07:55 ..
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 data
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 model
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 serve
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 10:01 train
+
+data/:
+total 72
+drwxr-xr-x 1 Administrator 197121 0 Nov  9 11:21 .
+drwxr-xr-x 1 Administrator 197121 0 Nov 11 07:55 ..
+drwxr-xr-x 1 Administrator 197121 0 Nov 10 18:39 annotations
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 00:20 checkpoints
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 00:20 exports
+drwxr-xr-x 1 Administrator 197121 0 Nov  8 01:39 labeled
+drwxr-xr-x 1 Administrator 197121 0 Nov  9 22:34 raw
+drwxr-xr-x 1 Administrator 197121 0 Nov 10 20:40 synthetic
+
+docs/:
+total 168
+drwxr-xr-x 1 Administrator 197121     0 Nov 10 07:19 .
+drwxr-xr-x 1 Administrator 197121     0 Nov 11 07:55 ..
+-rw-r--r-- 1 Administrator 197121 12166 Nov  8 10:38 00_PRD.md
+-rw-r--r-- 1 Administrator 197121  9555 Nov  8 08:20 01_ARCH.md
+-rw-r--r-- 1 Administrator 197121 13636 Nov  9 10:06 02_DATA.md
+-rw-r--r-- 1 Administrator 197121 20537 Nov  8 07:07 03_TRAINING.md
+-rw-r--r-- 1 Administrator 197121 14059 Nov  8 04:12 04_LABELING.md
+-rw-r--r-- 1 Administrator 197121 19433 Nov  8 11:00 05_DEPLOY.md
+-rw-r--r-- 1 Administrator 197121  8084 Nov  8 08:24 06_RISK.md
+-rw-r--r-- 1 Administrator 197121 17615 Nov  9 08:59 07_PLAN.md
+-rw-r--r-- 1 Administrator 197121 26807 Nov 10 07:19 08_ACCEPTANCE.md
+drwxr-xr-x 1 Administrator 197121     0 Nov  8 10:38 contracts
+
+reports/:
+total 14
+drwxr-xr-x 1 Administrator 197121    0 Nov 11 00:34 .
+drwxr-xr-x 1 Administrator 197121    0 Nov 11 07:55 ..
+-rw-r--r-- 1 Administrator 197121 1245 Nov 10 21:30 data_bias.json
+-rw-r--r-- 1 Administrator 197121  487 Nov 11 00:34 label_quality.json
+-rw-r--r-- 1 Administrator 197121   80 Nov 10 11:29 params.json
+
+src/:
+total 12
+drwxr-xr-x 1 Administrator 197121   0 Nov 10 11:24 .
+drwxr-xr-x 1 Administrator 197121   0 Nov 11 07:55 ..
+drwxr-xr-x 1 Administrator 197121   0 Nov 10 11:29 __pycache__
+drwxr-xr-x 1 Administrator 197121   0 Nov  8 12:16 aesthetic_prism
+-rw-r--r-- 1 Administrator 197121 726 Nov 10 11:24 train.py
+
+tests/:
+total 52
+drwxr-xr-x 1 Administrator 197121    0 Nov 11 01:17 .
+drwxr-xr-x 1 Administrator 197121    0 Nov 11 07:55 ..
+drwxr-xr-x 1 Administrator 197121    0 Nov 11 01:28 __pycache__
+-rw-r--r-- 1 Administrator 197121 1804 Nov  8 15:15 conftest.py
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 contract
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 integration
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 perf
+-rw-r--r-- 1 Administrator 197121 3696 Nov 11 01:17 test_data.py
+-rw-r--r-- 1 Administrator 197121 3614 Nov  8 13:41 test_error_413_429.py
+-rw-r--r-- 1 Administrator 197121 2156 Nov  8 12:38 test_error_4xx.py
+-rw-r--r-- 1 Administrator 197121  792 Nov  8 12:16 test_health.py
+-rw-r--r-- 1 Administrator 197121 8406 Nov 10 11:24 test_model.py
+-rw-r--r-- 1 Administrator 197121 2231 Nov  8 15:15 test_score_schema.py
+-rw-r--r-- 1 Administrator 197121 2080 Nov  8 14:01 test_static.py
+drwxr-xr-x 1 Administrator 197121    0 Nov  8 00:20 unit

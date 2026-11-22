@@ -1,0 +1,48 @@
+
+
+def _enable_vt() -> None:
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+
+        k = ctypes.windll.kernel32
+        h = k.GetStdHandle(-11)
+        mode = ctypes.c_uint32()
+        if not k.GetConsoleMode(h, ctypes.byref(mode)):
+            return
+        k.SetConsoleMode(h, mode.value | 4)
+    except Exception:
+        pass
+
+
+_enable_vt()
+
+
+def c(code: str, text: str) -> str:
+    return chr(27) + "[" + str(code) + "m" + str(text) + chr(27) + "[0m"
+
+
+def dim(text) -> str:
+    return c("2", text)
+
+
+def bold(text) -> str:
+    return c("1", text)
+
+
+def ok(text) -> str:
+    return c("32", text)
+
+
+def warn(text) -> str:
+    return c("33", text)
+
+
+def bad(text) -> str:
+    return c("31", text)
+
+
+def acc(text) -> str:
+    return c("36", text)
+

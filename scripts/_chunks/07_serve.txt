@@ -1,0 +1,68 @@
+
+
+def _env_mock(enable: bool) -> dict:
+    return {"AP_MODE": "mock"} if enable else {}
+
+
+def act_serve() -> int:
+    title("SERVE")
+    cfg = load_cfg()
+    port = int(cfg.get("port") or PORT)
+    host = str(cfg.get("host") or "127.0.0.1")
+    if port_up(port):
+        print(warn("already listening on " + host + ":" + str(port)))
+        if cfg.get("open_ui_after_serve"):
+            webbrowser.open("http://" + host + ":" + str(port) + "/")
+        return 0
+    print(dim("  starting uvicorn " + host + ":" + str(port)))
+    rc = run(
+        [PY, "-X", "utf8", "-m", "uvicorn",
+         "--app-dir", str(SRC),
+         "aesthetic_prism.serve.app:app",
+         "--host", host, "--port", str(port)],
+    )
+    return rc
+
+
+def act_stop() -> int:
+    title("STOP")
+    rows = stale_procs()
+    if not rows:
+        print(dim("  no uvicorn worker for aesthetic_prism.serve"))
+        return 0
+    for pid, name, cl in rows:
+        print(dpad("  " + str(pid), 8) + name)
+        rc = run(["taskkill", "/PID", str(pid), "/T", "/F"])
+        if rc != 0:
+            print(warn("  pid " + str(pid) + " rc=" + str(rc)))
+    left = stale_procs()
+    if not left:
+        print(ok("  stopped"))
+    else:
+        print(warn("  still alive: " + str(len(left))))
+    return 0 if not left else 1
+
+
+def act_open_ui() -> int:
+    cfg = load_cfg()
+    host = str(cfg.get("host") or "127.0.0.1")
+    port = int(cfg.get("port") or PORT)
+    url = "http://" + host + ":" + str(port) + "/"
+    print(acc(url))
+    webbrowser.open(url)
+    return 0
+
+
+def act_open_logs() -> int:
+    LOGS.mkdir(parents=True, exist_ok=True)
+    print(acc(str(LOGS)))
+    if os.name == "nt":
+        run(["explorer", str(LOGS)])
+    return 0
+
+
+def act_open_dir() -> int:
+    print(acc(str(ROOT)))
+    if os.name == "nt":
+        run(["explorer", str(ROOT)])
+    return 0

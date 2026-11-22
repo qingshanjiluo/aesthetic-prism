@@ -1,0 +1,44 @@
+
+
+def stale_procs() -> list:
+    rows = []
+    try:
+        import subprocess as sp
+
+        out = sp.run(
+            ["powershell", "-NoProfile", "-Command",
+             "Get-CimInstance Win32_Process | Select-Object ProcessId,Name,CommandLine | ConvertTo-Json -Compress"],
+            capture_output=True, text=True, timeout=20,
+        )
+        data = json.loads(out.stdout or "[]")
+        if isinstance(data, dict):
+            data = [data]
+    except Exception:
+        return rows
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        cl = item.get("CommandLine") or ""
+        if "aesthetic_prism.serve" not in cl:
+            continue
+        rows.append((int(item.get("ProcessId") or 0), str(item.get("Name") or ""), cl))
+    return rows
+
+
+def act_status() -> int:
+    title("STATUS")
+    snap = cfg_snapshot()
+    port = int(snap.get("port") or PORT)
+    up = port_up(port)
+    print(dpad("  service", 16) + (ok("up on port " + str(port)) if up else warn("down")))
+    print(dpad("  dataset", 16) + str(dataset_count()) + dim(" png"))
+    ncfg = len(list(CONFIG_DIR.glob("*.toml"))) if CONFIG_DIR.is_dir() else 0
+    print(dpad("  configs", 16) + str(ncfg))
+    print(dpad("  onnx", 16) + str(len(onnx_paths())))
+    print(dpad("  checkpoints", 16) + str(len(checkpoint_rows())))
+    nrep = len(list(REPORTS.glob("*.json"))) if REPORTS.is_dir() else 0
+    print(dpad("  reports", 16) + str(nrep))
+    sp = stale_procs()
+    print(dpad("  stale", 16) + (str(len(sp)) if sp else dim("none")))
+    print(dpad("  cfg file", 16) + (dim(str(CFG)) if snap.get("cfg_exists") else dim("absent -> defaults")))
+    return 0

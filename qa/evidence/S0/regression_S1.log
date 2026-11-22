@@ -1,0 +1,34 @@
+# regression batch=S1
+## a2 2026-11-09 07:57 (final; prior pass replaced after pwsh quote-mangling false-green)
+S0-01 true cmd: sh qa/evidence/S0/S0-01.sh -> docs count=9 (exit=0) PASS
+title-literal spot: sh -c "grep -L '<literal heading>' docs/*.md" -> lines=0 (exit=0) PASS
+  (9/9 docs contain the literal acceptance heading; leading ## not fed through pwsh->sh quoting)
+S0-01 recheck note: docs=9 >=9; heading literal present in all 9 incl. 05_DEPLOY/00_PRD/07_PLAN (segment-1 authorized edits left heading intact)
+
+## a3 2026-11-09 07:59 (rerun-by-name, no-quote 落盘法)
+S0-02: sh qa/evidence/S0/S0-02.sh (grep -L title-literal -> missing list) lines=0 exit=0 PASS
+S0-03: python qa/evidence/S0/S0-03.py -> indexed= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md', 'docs/contracts/onnx_io_names.md', 'docs/contracts/model_branch_interfaces.md'] checked= ['docs/00_PRD.md', 'docs/contracts/dataset_DatasetSample.md', 'docs/contracts/score_api_request_response.md'] missing= [] exit=0 PASS
+
+## a4 2026-11-09 08:02 (rerun-by-name)
+S0-04: bytes= 24934 lines= 155
+S0-04: badchars= []
+S0-04: total 46 {'0': 5, '1': 5, '2': 7, '3': 5, '4': 4, '5': 5, '6': 6, '7': 4, '8': 5} manual= 5
+S0-04: OK p50_150
+S0-04: OK p95_500
+S0-04: OK pa_068
+S0-04: OK mae_row
+S0-04: OK n_test_20
+S0-04: OK no_or_len_fallback
+S0-04: OK s2_07
+S0-04: OK s2_08
+S0-04: OK stats_seg2_7
+S0-04: OK stats_seg6_6
+S0-04: OK total_46
+S0-04: OK old_100_300_gone
+S0-04: OK old_pa_070_gone
+S0-04: OK heading_literal
+S0-04: OK sh_c
+S0-04: OK s701_ge4
+S0-04: SELF-CHECK PASS
+S0-04 exit=0 PASS
+a4b S0-05 段1 修订已对照：05_DEPLOY W11/CW-S1-01、00_PRD、07_PLAN 授权改动逐项对照，无新暂定值冲突；PASS

@@ -1,0 +1,1 @@
+python -c "import re,sys;t=open('docs/08_ACCEPTANCE.md',encoding='utf-8').read();ids=re.findall(r'^\| (S\d-\d+) \|',t,re.M);segs={s:sum(1 for i in ids if i.startswith('S'+s+'-')) for s in '012345678'};print('total',len(ids),segs);sys.exit(0 if len(ids)>=40 and all(v>=3 for v in segs.values()) else 1)" | tee qa/evidence/S0/S0-04.log
