@@ -21,6 +21,7 @@ var API = (function () {
     return fetch(url, opts).then(function (resp) {
       return resp.json().catch(function () { return null; }).then(function (body) {
         if (!resp.ok) {
+          if (resp.status === 401) { AUTH.clear(); try { var lv = document.getElementById("login-view"); if (lv) lv.hidden = false; } catch (e) {} }
           var err = body && body.error;
           var e = new Error((err && err.message) || (body && body.detail) || ("HTTP " + resp.status));
           e.code = (err && err.code) || ("http_" + resp.status);
