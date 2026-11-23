@@ -429,7 +429,9 @@
     API.shop().then(function (d) {
       var g = document.getElementById("shop-grid");
       g.innerHTML = "";
-      (d.items || []).forEach(function (it) {
+      var items = d.items || [];
+      if (!items.length) { g.innerHTML = '<div class="muted" style="padding:20px">暂无可用模型</div>'; return; }
+      items.forEach(function (it) {
         var c = document.createElement("div"); c.className = "card";
         var t = document.createElement("b"); t.textContent = it.model_id.split("/").pop(); t.style.display = "block";
         var p = document.createElement("div"); p.className = "meta"; p.textContent = it.model_id + " · " + it.price + " 积分";
@@ -456,7 +458,8 @@
     if (wr) wr.addEventListener("click", function () {
       var a = parseInt(document.getElementById("wal-recharge-amt").value, 10);
       if (!a || a <= 0) { toast("输入有效积分"); return; }
-      API.recharge(a).then(function (r) { toast("充值成功，余额 " + r.balance); renderWallet(); refreshBalance(); }).catch(function (e) { toast(e.message); });
+      var b = wr; b.disabled = true;
+      API.recharge(a).then(function (r) { toast("充值成功，余额 " + r.balance); renderWallet(); refreshBalance(); }).catch(function (e) { toast(e.message); }).then(function () { b.disabled = false; });
     });
     var se = document.getElementById("space-expand-btn");
     if (se) se.addEventListener("click", function () {
