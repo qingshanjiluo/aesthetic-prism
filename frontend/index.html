@@ -246,16 +246,16 @@ footer code{color:var(--txt2)}
 /* ---------- 登录视图 ---------- */
 #login-view{
   position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(1000px 600px at 60% 20%,rgba(108,140,255,.12),transparent 55%),var(--bg,#0a0c11);
+  background:var(--bg);
 }
 #login-view[hidden]{display:none}
-.login-box{width:min(360px,92vw);padding:30px 32px;border-radius:16px;background:var(--panel2,#171c27);border:1px solid var(--line2,#2d3549);box-shadow:0 26px 80px rgba(0,0,0,.6)}
-.login-box h2{margin:0 0 6px;font-size:20px;font-weight:700;color:var(--accent,#6c8cff)}
-.login-sub{margin:0 0 18px;font-size:12.5px;color:var(--muted,#6b7488)}
-#login-mode-tabs{display:flex;gap:8px;margin-bottom:16px}
-#login-mode-tabs .tab{padding:6px 16px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--txt2);cursor:pointer;font-size:13px}
-#login-mode-tabs .tab.active{background:var(--grad);border:0;color:#fff;font-weight:600}
-.login-box input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line2);background:var(--bg2,#0e1118);color:var(--txt);font:14px var(--sans);outline:none;margin-bottom:12px}
+.login-box{width:min(380px,92vw);padding:34px 36px;border-radius:var(--r-lg);background:var(--panel);border:1px solid var(--line2);box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.login-box h2{margin:0 0 8px;font-size:22px;font-weight:700;color:var(--txt)}
+.login-box .login-sub{margin:0 0 20px;font-size:13px;color:var(--muted)}
+#login-mode-tabs{display:flex;gap:8px;margin-bottom:18px}
+#login-mode-tabs .tab{padding:7px 18px;border-radius:var(--r-sm);border:1px solid var(--line2);background:transparent;color:var(--txt2);cursor:pointer;font-size:13.5px}
+#login-mode-tabs .tab.active{background:var(--accent);border:0;color:#fff;font-weight:600}
+.login-box input{width:100%;padding:12px 14px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--bg2);color:var(--txt);font:14px var(--sans);outline:none;margin-bottom:12px;transition:border-color .15s}
 .login-box input:focus{border-color:var(--accent)}
 .login-err{margin:0 0 14px;padding:9px 12px;border-radius:8px;background:rgba(255,93,108,.1);border:1px solid rgba(255,93,108,.4);color:#ffc2c8;font-size:13px;display:none}
 .login-err.show{display:block}
