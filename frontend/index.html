@@ -524,11 +524,21 @@ footer code{color:var(--txt2)}
       <option value="asc">升序</option>
     </select>
     <button id="lib-refresh" class="btn">刷新</button>
-    <button id="lib-del-sel" class="btn" style="border-color:rgba(255,93,108,.5);color:var(--red)">删除选中</button>
+    <button id="lib-del-sel" class="btn" style="border-color:rgba(164,69,63,.45);color:var(--red)">删除选中</button>
     <button id="lib-add-compare" class="btn ghost">加入比对</button>
     <span class="muted" id="lib-count"></span>
   </div>
+  <div class="toolbar">
+    <button id="lib-random" class="btn primary">随机抽 N 张 → 比对</button>
+    <input id="lib-random-n" class="inp" type="number" value="4" min="2" max="20" style="width:72px">
+    <span class="muted">从全库随机抽 N 张送入比对，用于素材筛选与训练数据评估</span>
+  </div>
   <div id="lib-grid" class="grid"></div>
+  <div class="toolbar" id="lib-pager" style="justify-content:center">
+    <button id="lib-prev" class="btn ghost">← 上一页</button>
+    <span class="muted" id="lib-page-info">第 1 页</span>
+    <button id="lib-next" class="btn ghost">下一页 →</button>
+  </div>
 </main>
 
 <!-- ===== 多图比对视图 ===== -->
@@ -536,12 +546,14 @@ footer code{color:var(--txt2)}
   <div class="toolbar">
     <input id="cmp-input" class="inp" type="file" multiple accept="image/*" style="flex:1">
     <button id="cmp-load" class="btn">载入选中</button>
+    <button id="cmp-random" class="btn">随机抽 N 张</button>
     <button id="cmp-clear" class="btn ghost">清空</button>
     <button id="cmp-score" class="btn primary">评分对比</button>
     <span class="muted" id="cmp-count"></span>
   </div>
   <div id="cmp-grid" class="compare-grid"></div>
   <div id="cmp-result"></div>
+  <div id="cmp-verdict" style="margin-top:20px"></div>
 </main>
 
 <!-- ===== 批量上传评分视图 ===== -->

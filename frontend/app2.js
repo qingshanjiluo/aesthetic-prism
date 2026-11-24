@@ -6,8 +6,12 @@
   var VIEWS = ["home", "library", "compare", "score", "wallet", "shop", "space", "compute"];
   var cmpPaths = [];      // 比对视图已载入路径
   var cmpPicked = [];     // 比对标记优的路径
-  var cmpScores = {};     // 比对评分缓存 {path: total}
+  var cmpScores = {};     // 比对评分缓存 {path: {total, composition, light, creativity, story}}
   var libSel = {};        // 素材库多选 {path:1}
+  var libPage = 0;       // 素材库当前页（0-based）
+  var libPageSize = 20;  // 每页张数
+  var libAllItems = [];   // 全量列表缓存（用于随机抽与分页）
+  var libAllTotal = 0;    // 全量 total
 
   function switchView(name) {
     VIEWS.forEach(function (v) {
@@ -33,29 +37,36 @@
     });
   }
 
-  /* ===== 素材库 ===== */
-  function loadLibrary() {
+  /* ===== 素材库（分页）===== */
+  function loadLibrary(page) {
+    if (page !== undefined) libPage = page;
     var q = document.getElementById("lib-search").value;
     var sort = document.getElementById("lib-sort").value;
     var order = document.getElementById("lib-order").value;
-    var params = { limit: 500, sort: sort, order: order };
+    var offset = libPage * libPageSize;
+    var params = { limit: libPageSize, offset: offset, sort: sort, order: order };
     if (q) params.q = q;
     API.assets(params).then(function (d) {
       var grid = document.getElementById("lib-grid");
       grid.innerHTML = "";
+      var totalPages = Math.max(1, Math.ceil(d.total / libPageSize));
+      if (libPage > totalPages - 1) { libPage = totalPages - 1; loadLibrary(libPage); return; }
       document.getElementById("lib-count").textContent = "共 " + d.total + " 个素材";
+      document.getElementById("lib-page-info").textContent = "第 " + (libPage + 1) + " / " + totalPages + " 页 · 本页 " + d.items.length + " 张";
+      document.getElementById("lib-prev").disabled = libPage <= 0;
+      document.getElementById("lib-next").disabled = libPage >= totalPages - 1;
       d.items.forEach(function (it) {
         var c = document.createElement("div");
         c.className = "card" + (libSel[it.path] ? " selected" : "");
         var img = document.createElement("img");
         img.src = assetUrl(it.path);
         img.loading = "lazy";
-        img.onerror = function () { this.style.background = "#222"; };
+        img.onerror = function () { this.style.background = "var(--bg2)"; };
         var m = document.createElement("div"); m.className = "meta";
         var b = document.createElement("b"); b.textContent = it.filename; b.title = it.path;
         var s = document.createElement("div"); s.textContent = fmtSize(it.bytes) + " · " + it.mime.split("/")[1];
         m.appendChild(b); m.appendChild(s);
-        if (it.tags && it.tags.length) { var tg = document.createElement("div"); tg.textContent = "#" + it.tags.join(" #"); tg.style.color = "var(--cyan)"; m.appendChild(tg); }
+        if (it.tags && it.tags.length) { var tg = document.createElement("div"); tg.textContent = "#" + it.tags.join(" #"); tg.style.color = "var(--accent)"; m.appendChild(tg); }
         c.appendChild(img); c.appendChild(m);
         c.addEventListener("click", function (e) {
           if (e.ctrlKey || e.metaKey) { libSel[it.path] = libSel[it.path] ? 0 : 1; c.classList.toggle("selected", !!libSel[it.path]); }
@@ -64,6 +75,42 @@
         grid.appendChild(c);
       });
     }).catch(function (e) { toast(e.code + ": " + e.message); });
+  }
+
+  function fetchAllAssets() {
+    var sort = document.getElementById("lib-sort").value;
+    var order = document.getElementById("lib-order").value;
+    var q = document.getElementById("lib-search").value;
+    var params = { limit: 5000, sort: sort, order: order };
+    if (q) params.q = q;
+    return API.assets(params).then(function (d) {
+      libAllItems = d.items;
+      libAllTotal = d.total;
+      return d;
+    });
+  }
+
+  /* ===== 随机抽取 N 张 → 比对 ===== */
+  function randomDrawToCompare(n) {
+    fetchAllAssets().then(function (d) {
+      var pool = d.items;
+      if (pool.length < 2) { toast("素材库不足 2 张，无法随机抽取"); return; }
+      // Fisher-Yates 部分洗牌取前 n
+      var arr = pool.slice();
+      var take = Math.min(n, arr.length);
+      for (var i = 0; i < take; i++) {
+        var j = i + Math.floor(Math.random() * (arr.length - i));
+        var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+      }
+      var picked = arr.slice(0, take);
+      var paths = picked.map(function (it) { return it.path; });
+      // 清掉旧的比对缓存再载入
+      cmpPaths = paths;
+      cmpPicked = [];
+      cmpScores = {};
+      switchView("compare");
+      toast("已从 " + libAllTotal + " 张中随机抽 " + take + " 张");
+    }).catch(function (e) { toast("抽取失败: " + e.message); });
   }
 
   function fmtSize(n) {
@@ -135,7 +182,7 @@
       var t = document.createElement("div"); t.className = "t"; t.textContent = (i + 1) + ". " + p.split("/").pop(); t.title = p;
       var rank = document.createElement("span"); rank.className = "rank"; rank.textContent = cmpPicked.indexOf(p) >= 0 ? (cmpPicked.indexOf(p) + 1) : (i + 1);
       var scBadge = document.createElement("span"); scBadge.className = "score";
-      if (cmpScores[p]) scBadge.textContent = cmpScores[p].toFixed(1);
+      if (cmpScores[p] && cmpScores[p].total != null) scBadge.textContent = cmpScores[p].total.toFixed(1);
       var rm = document.createElement("button");
       rm.textContent = "✕";
       rm.style.cssText = "position:absolute;top:4px;right:4px;z-index:3;width:22px;height:22px;border-radius:50%;border:1px solid var(--line2);background:rgba(0,0,0,.7);color:#fff;cursor:pointer;";
@@ -158,25 +205,92 @@
       r.innerHTML = "你标记的优先级：" + cmpPicked.map(function (p) { return "<code>" + p.split("/").pop() + "</code>"; }).join(" → ");
     } else { r.innerHTML = ""; }
   }
+  var DIM_LABELS = { composition: "构图", light: "光效", creativity: "创意", story: "叙事" };
   function scoreCompare() {
     if (cmpPaths.length < 2) { toast("比对需至少 2 图"); return; }
+    var btn = document.getElementById("cmp-score");
+    if (btn) { btn.disabled = true; btn.textContent = "评分中…"; }
     API.scoreBatch(cmpPaths).then(function (sc) {
+      if (btn) { btn.disabled = false; btn.textContent = "评分对比"; }
       cmpScores = {};
       sc.items.forEach(function (it) {
-        if (it.total != null) cmpScores[it.path] = it.total;
+        if (it.total != null) cmpScores[it.path] = it;
       });
-      // 排序标记优 = 按总分降序
+      // 排序 = 按总分降序
       var ranked = cmpPaths.slice().sort(function (a, b) {
-        return (cmpScores[b] || -1) - (cmpScores[a] || -1);
+        var sa = cmpScores[a], sb = cmpScores[b];
+        return (sb ? sb.total : -1) - (sa ? sa.total : -1);
       });
       cmpPicked = ranked;
       renderCompare();
+      // ---- 结果区：总分 + 维度明细表 ----
       var lines = sc.items.map(function (it) {
-        return "<div>" + (it.total != null ? it.total.toFixed(1) + "分" : it.error) + " · " + it.path.split("/").pop() + "</div>";
+        if (it.total != null) return "<div><b>" + it.total.toFixed(1) + "</b> · " + it.path.split("/").pop() + "</div>";
+        return "<div>" + (it.error || "err") + " · " + it.path.split("/").pop() + "</div>";
       }).join("");
-      document.getElementById("cmp-result").innerHTML = "<b>评分对比（按分排序）：</b>" + lines;
+      document.getElementById("cmp-result").innerHTML = "<b>评分对比（按总分排序）：</b><div style='margin-top:8px'>" + lines + "</div>";
+      // ---- 维度明细表 ----
+      var v = document.getElementById("cmp-verdict");
+      if (v) {
+        var scored = sc.items.filter(function (it) { return it.total != null; }).sort(function (a, b) { return b.total - a.total; });
+        if (scored.length >= 2) {
+          var winner = scored[0];
+          var runnerUp = scored[1];
+          // 维度表
+          var dimKeys = ["composition", "light", "creativity", "story"];
+          var tbl = "<table style='border-collapse:collapse;margin-top:10px;width:100%'>";
+          tbl += "<thead><tr style='border-bottom:2px solid var(--line)'><th style='text-align:left;padding:6px 8px;font-size:12px;color:var(--muted)'>维度</th>";
+          scored.forEach(function (it, i) {
+            var tag = i === 0 ? " <span style='color:var(--green);font-weight:600'>★优</span>" : (i === 1 ? " <span style='color:var(--yellow)'>次</span>" : "");
+            tbl += "<th style='padding:6px 8px;font-size:12px;text-align:right'>" + (i + 1) + ". " + it.path.split("/").pop() + tag + "</th>";
+          });
+          tbl += "</tr></thead><tbody>";
+          dimKeys.forEach(function (dk) {
+            tbl += "<tr style='border-bottom:1px solid var(--line)'><td style='padding:5px 8px;font-size:13px;color:var(--txt2)'>" + DIM_LABELS[dk] + "</td>";
+            scored.forEach(function (it) {
+              var val = it[dk] != null ? it[dk].toFixed(1) : "-";
+              var isMax = false;
+              var mx = -Infinity; scored.forEach(function (o) { if (o[dk] != null && o[dk] > mx) mx = o[dk]; });
+              if (it[dk] != null && it[dk] === mx) isMax = true;
+              tbl += "<td style='padding:5px 8px;font-size:13px;text-align:right;font-family:var(--mono)" + (isMax ? ";color:var(--green);font-weight:600" : "") + "'>" + val + "</td>";
+            });
+            tbl += "</tr>";
+          });
+          tbl += "</tbody></table>";
+          // 结论
+          var bestDim = dimKeys.reduce(function (acc, k) {
+            var diff = (winner[k] || 0) - (runnerUp[k] || 0);
+            if (diff > (acc.diff || -99)) return { key: k, diff: diff };
+            return acc;
+          }, { key: null, diff: 0 });
+          var gap = (winner.total - runnerUp.total).toFixed(1);
+          var verdict = "<div style='margin-top:16px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg2)'>";
+          verdict += "<b style='font-size:15px'>结论</b>";
+          verdict += "<p style='margin:8px 0;font-size:14px;color:var(--txt2)'>";
+          verdict += "<b style='color:var(--green)'>" + winner.path.split("/").pop() + "</b> 综合最优（" + winner.total.toFixed(1) + " 分），领先第二名 " + gap + " 分。";
+          verdict += "</p><ul style='margin:6px 0 0 18px;padding:0;font-size:13px;color:var(--txt2);line-height:1.9'>";
+          dimKeys.forEach(function (dk) {
+            var wv = winner[dk] != null ? winner[dk].toFixed(1) : "-";
+            var lv = runnerUp[dk] != null ? runnerUp[dk].toFixed(1) : "-";
+            var d = (winner[dk] != null && runnerUp[dk] != null) ? (winner[dk] - runnerUp[dk]).toFixed(1) : "";
+            var cls = (winner[dk] != null && runnerUp[dk] != null && winner[dk] > runnerUp[dk]) ? "color:var(--green)" : (winner[dk] != null && runnerUp[dk] != null && winner[dk] < runnerUp[dk] ? "color:var(--red)" : "");
+            verdict += "<li>" + DIM_LABELS[dk] + "：最优 " + wv + " vs 次优 " + lv + (d ? "（差 " + d + "）" : "") + "</li>";
+          });
+          if (bestDim.key) {
+            verdict += "<li style='margin-top:6px;padding:4px 0;border-top:1px solid var(--line)'><b style='color:var(--accent)'>训练建议</b>：" + DIM_LABELS[bestDim.key] + " 是最大优势维度（领先 " + bestDim.diff.toFixed(1) + " 分），可作为训练标注的正样本依据；" +
+              "建议对「" + DIM_LABELS[bestDim.key] + "」维度权重上调后重训，观察 val/test 指标变化。</li>";
+          }
+          verdict += "</ul></div>";
+          v.innerHTML = tbl + verdict;
+        } else {
+          v.innerHTML = "";
+        }
+      }
       toast("评分完成 平均 " + sc.avg_total);
-    }).catch(function (e) { toast("评分失败: " + e.message); });
+    }).catch(function (e) {
+      if (btn) { btn.disabled = false; btn.textContent = "评分对比"; }
+      toast("评分失败: " + e.message);
+    });
   }
 
   function genSamples() {
@@ -482,12 +596,18 @@
     var si = document.getElementById("lib-search");
     var ss = document.getElementById("lib-sort");
     var so = document.getElementById("lib-order");
-    if (si) si.addEventListener("input", debounce(loadLibrary, 300));
-    if (ss) ss.addEventListener("change", loadLibrary);
-    if (so) so.addEventListener("change", loadLibrary);
-    var rf = document.getElementById("lib-refresh"); if (rf) rf.addEventListener("click", loadLibrary);
+    if (si) si.addEventListener("input", debounce(function () { libPage = 0; loadLibrary(); }, 300));
+    if (ss) ss.addEventListener("change", function () { libPage = 0; loadLibrary(); });
+    if (so) so.addEventListener("change", function () { libPage = 0; loadLibrary(); });
+    var rf = document.getElementById("lib-refresh"); if (rf) rf.addEventListener("click", function () { libPage = 0; loadLibrary(); });
     var ds = document.getElementById("lib-del-sel"); if (ds) ds.addEventListener("click", delSelectedLibrary);
     var ac = document.getElementById("lib-add-compare"); if (ac) ac.addEventListener("click", addSelectedToCompare);
+    var lr = document.getElementById("lib-random"); if (lr) lr.addEventListener("click", function () {
+      var n = parseInt(document.getElementById("lib-random-n").value, 10) || 4;
+      randomDrawToCompare(n);
+    });
+    var lp = document.getElementById("lib-prev"); if (lp) lp.addEventListener("click", function () { if (libPage > 0) loadLibrary(libPage - 1); });
+    var ln = document.getElementById("lib-next"); if (ln) ln.addEventListener("click", function () { loadLibrary(libPage + 1); });
     var cl = document.getElementById("cmp-load"); if (cl) cl.addEventListener("click", function () {
       var inp = document.getElementById("cmp-input");
       if (!inp.files || !inp.files.length) { toast("请先选择要加入比对的图片"); return; }
@@ -501,6 +621,10 @@
       }).catch(function (e) { toast("上传失败: " + e.message); });
     });
     var cc = document.getElementById("cmp-clear"); if (cc) cc.addEventListener("click", function () { cmpPaths = []; cmpPicked = []; cmpScores = {}; renderCompare(); });
+    var cr = document.getElementById("cmp-random"); if (cr) cr.addEventListener("click", function () {
+      var n = 4;
+      randomDrawToCompare(n);
+    });
     var cs = document.getElementById("cmp-score"); if (cs) cs.addEventListener("click", scoreCompare);
     var sg = document.getElementById("sc-go"); if (sg) sg.addEventListener("click", function () { runBatch(document.getElementById("sc-dir").files); });
     var sc = document.getElementById("sc-clear"); if (sc) sc.addEventListener("click", function () { document.getElementById("sc-dir").value = ""; document.getElementById("sc-grid").innerHTML = ""; });
