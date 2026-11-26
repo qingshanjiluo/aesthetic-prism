@@ -268,11 +268,13 @@ footer code{color:var(--txt2)}
 .ann-card img{width:100%;height:240px;object-fit:cover;display:block;background:var(--bg2)}
 .ann-card .ann-body{padding:14px 16px}
 .ann-card .ann-title{font-size:13px;font-weight:650;margin:0 0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
-.ann-dims{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.ann-dim{display:flex;align-items:center;gap:8px;font-size:13px}
-.ann-dim label{width:52px;color:var(--txt2);font-size:12px;flex:none}
-.ann-dim input{width:54px;padding:5px 8px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--bg2);color:var(--txt);font:13px var(--mono);outline:none}
-.ann-dim input:focus{border-color:var(--accent)}
+.ann-dims{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:12px}
+.ann-dim{display:flex;align-items:center;gap:10px;font-size:13px}
+.ann-dim label{width:44px;color:var(--txt2);font-size:12px;flex:none}
+.ann-dim .ann-slider{flex:1;appearance:none;height:4px;border-radius:999px;background:var(--line);outline:none}
+.ann-dim .ann-slider::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 3px rgba(28,27,24,.2)}
+.ann-dim .ann-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff}
+.ann-dim .ann-val{width:30px;text-align:right;font:600 12px var(--mono);color:var(--accent);flex:none}
 .ann-quality{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .ann-quality button{padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--txt2);font-size:11.5px;cursor:pointer}
 .ann-quality button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}

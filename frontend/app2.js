@@ -197,13 +197,31 @@
     if (ej) ej.addEventListener("click", function () { annExport("jsonl"); });
     var tr = document.getElementById("ann-train");
     if (tr) tr.addEventListener("click", annImportToTrain);
+    document.addEventListener("keydown", function (e) {
+      var view = document.getElementById("view-annotate");
+      if (!view || view.hidden) return;
+      if (document.activeElement && (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA")) return;
+      var cards = document.querySelectorAll("#ann-work .ann-card");
+      if (!cards.length) return;
+      var cur = document.querySelector("#ann-work .ann-card.focus") || cards[0];
+      if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
+        var it = annPending[Array.from(cards).indexOf(cur)];
+        if (it) annSave(it, cur);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        var idx = Array.from(cards).indexOf(cur);
+        if (idx >= 0) { annPending.splice(idx, 1); renderAnnWork(); }
+      }
+    });
   }
 
   function annRandomPending(n) {
     API.assets({ limit: 5000, sort: "mtime", order: "desc" }).then(function (d) {
       var ann = new Set();
+      var prefill = {};
       API.annotations({ limit: 5000 }).then(function (ad) {
-        (ad.items || []).forEach(function (a) { ann.add(a.path); });
+        (ad.items || []).forEach(function (a) { ann.add(a.path); prefill[a.path] = a; });
         var unannotated = d.items.filter(function (it) { return !ann.has(it.path); });
         if (unannotated.length === 0) { toast("全部素材已标注"); return; }
         var pool = unannotated.slice();
@@ -212,7 +230,11 @@
           var j = i + Math.floor(Math.random() * (pool.length - i));
           var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
         }
-        annPending = pool.slice(0, take).map(function (it) { return { path: it.path, name: it.filename }; });
+        annPending = pool.slice(0, take).map(function (it) {
+          var obj = { path: it.path, name: it.filename };
+          if (prefill[it.path]) obj.existing = prefill[it.path];
+          return obj;
+        });
         renderAnnWork();
         toast("已抽 " + take + " 张待标注");
       });
@@ -246,16 +268,25 @@
         row.className = "ann-dim";
         var lb = document.createElement("label");
         lb.textContent = dm.label;
-        var inp = document.createElement("input");
-        inp.type = "number";
-        inp.min = "0";
-        inp.max = "10";
-        inp.step = "0.5";
-        inp.value = "0";
-        inp.dataset.dim = dm.key;
-        inp.addEventListener("input", function () { annRecalcTotal(card); });
+        var slider = document.createElement("input");
+        slider.type = "range";
+        slider.className = "ann-slider";
+        slider.min = "0";
+        slider.max = "10";
+        slider.step = "0.5";
+        var initVal = it.existing ? (it.existing[dm.key] || 0) : 0;
+        slider.value = String(initVal);
+        slider.dataset.dim = dm.key;
+        var val = document.createElement("span");
+        val.className = "ann-val";
+        val.textContent = Number(initVal).toFixed(1);
+        slider.addEventListener("input", function () {
+          val.textContent = Number(slider.value).toFixed(1);
+          annRecalcTotal(card);
+        });
         row.appendChild(lb);
-        row.appendChild(inp);
+        row.appendChild(slider);
+        row.appendChild(val);
         dims.appendChild(row);
       });
       body.appendChild(dims);
@@ -265,6 +296,7 @@
       ANN_QUALITY.forEach(function (ql) {
         var b = document.createElement("button");
         b.textContent = ql;
+        if (it.existing && it.existing.quality === ql) b.classList.add("on");
         b.addEventListener("click", function () {
           q.querySelectorAll("button").forEach(function (x) { x.classList.remove("on"); });
           b.classList.add("on");
@@ -276,6 +308,7 @@
       var note = document.createElement("textarea");
       note.className = "ann-note";
       note.placeholder = "备注（可选）";
+      if (it.existing && it.existing.note) note.value = it.existing.note;
       body.appendChild(note);
 
       var acts = document.createElement("div");
@@ -305,10 +338,10 @@
   }
 
   function annRecalcTotal(card) {
-    var inputs = card.querySelectorAll("input[data-dim]");
+    var sliders = card.querySelectorAll(".ann-slider");
     var sum = 0, cnt = 0;
-    inputs.forEach(function (i) {
-      var v = parseFloat(i.value);
+    sliders.forEach(function (s) {
+      var v = parseFloat(s.value);
       if (!isNaN(v)) { sum += v; cnt++; }
     });
     var total = cnt ? (sum / cnt) : 0;
@@ -319,8 +352,8 @@
   function annSave(it, card) {
     var body = {};
     ANN_DIMS.forEach(function (dm) {
-      var i = card.querySelector('input[data-dim="' + dm.key + '"]');
-      body[dm.key] = parseFloat(i.value) || 0;
+      var s = card.querySelector('.ann-slider[data-dim="' + dm.key + '"]');
+      body[dm.key] = parseFloat(s.value) || 0;
     });
     body.total = ((body.composition + body.light + body.creativity + body.story) / 4);
     body.path = it.path;
