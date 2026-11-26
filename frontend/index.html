@@ -261,6 +261,38 @@ footer code{color:var(--txt2)}
 .login-err.show{display:block}
 .login-go{width:100%;padding:11px;font-size:15px}
 .login-hint{margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
+
+/* ---------- 数据标注 ---------- */
+.ann-work{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.ann-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 1px 2px rgba(28,27,24,.04)}
+.ann-card img{width:100%;height:240px;object-fit:cover;display:block;background:var(--bg2)}
+.ann-card .ann-body{padding:14px 16px}
+.ann-card .ann-title{font-size:13px;font-weight:650;margin:0 0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
+.ann-dims{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ann-dim{display:flex;align-items:center;gap:8px;font-size:13px}
+.ann-dim label{width:52px;color:var(--txt2);font-size:12px;flex:none}
+.ann-dim input{width:54px;padding:5px 8px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--bg2);color:var(--txt);font:13px var(--mono);outline:none}
+.ann-dim input:focus{border-color:var(--accent)}
+.ann-quality{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ann-quality button{padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--txt2);font-size:11.5px;cursor:pointer}
+.ann-quality button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ann-note{width:100%;min-height:44px;padding:8px 10px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--bg2);color:var(--txt);font:13px var(--sans);outline:none;resize:vertical;margin-bottom:10px}
+.ann-note:focus{border-color:var(--accent)}
+.ann-actions{display:flex;gap:8px;align-items:center}
+.ann-total{margin-left:auto;font:600 14px var(--mono);color:var(--accent)}
+.ann-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto}
+.ann-row{display:grid;grid-template-columns:1fr 72px 72px 44px 40px;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg2);font-size:12.5px}
+.ann-row .p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--mono);color:var(--txt)}
+.ann-row .n{font-family:var(--mono);text-align:right;color:var(--txt2)}
+.ann-row .q{text-align:center}
+.ann-row .q .chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line2);color:var(--txt2)}
+.ann-row .q .chip.可用{border-color:var(--green);color:var(--green)}
+.ann-row .q .chip.不可用{border-color:var(--red);color:var(--red)}
+.ann-row .q .chip.模糊{border-color:var(--yellow);color:var(--yellow)}
+.ann-row .q .chip.水印{border-color:var(--yellow);color:var(--yellow)}
+.ann-row button{width:32px;height:26px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--panel);color:var(--txt2);cursor:pointer;font-size:12px}
+.ann-row button:hover{border-color:var(--red);color:var(--red)}
+.ann-empty{color:var(--muted);font-size:13px;text-align:center;padding:24px 0}
 </style>
 </head>
 <body>
@@ -319,6 +351,7 @@ footer code{color:var(--txt2)}
   <button class="tab" data-view="shop">模型商城</button>
   <button class="tab" data-view="space">云端空间</button>
   <button class="tab" data-view="compute">云端算力</button>
+  <button class="tab" data-view="annotate">数据标注</button>
 </nav>
 
 <main id="view-home">
@@ -554,6 +587,25 @@ footer code{color:var(--txt2)}
   <div id="cmp-grid" class="compare-grid"></div>
   <div id="cmp-result"></div>
   <div id="cmp-verdict" style="margin-top:20px"></div>
+</main>
+
+<!-- ===== 数据标注视图 ===== -->
+<main id="view-annotate" class="view" hidden>
+  <div class="toolbar">
+    <button id="ann-random" class="btn primary">随机抽 N 张待标注</button>
+    <input id="ann-random-n" class="inp" type="number" value="4" min="1" max="20" style="width:72px">
+    <button id="ann-export" class="btn">导出 CSV</button>
+    <button id="ann-export-jsonl" class="btn">导出 JSONL</button>
+    <button id="ann-train" class="btn">导入训练集</button>
+    <span class="muted" id="ann-count"></span>
+  </div>
+  <div id="ann-work" class="ann-work"></div>
+  <div class="card" style="margin-top:24px">
+    <div class="card-head"><h2>已存标注</h2><span class="hint">按总分降序</span></div>
+    <div style="padding:16px 20px">
+      <div id="ann-list" class="ann-list"></div>
+    </div>
+  </div>
 </main>
 
 <!-- ===== 批量上传评分视图 ===== -->

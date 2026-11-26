@@ -838,3 +838,171 @@ if _FRONTEND.is_dir():
 _DATA_DIR = _ROOT / "data"
 if _DATA_DIR.is_dir():
     app.mount("/data", StaticFiles(directory=str(_DATA_DIR)), name="data")
+
+
+# ============================================================
+# 数据标注 annotations API
+# ============================================================
+import csv as _csv
+import io as _io
+import threading as _threading
+
+_ANNOTATIONS_DB = _ROOT / "data" / "annotations.db"
+
+
+def _ann_connect():
+    _ANNOTATIONS_DB.parent.mkdir(parents=True, exist_ok=True)
+    import sqlite3 as _s3
+    conn = _s3.connect(str(_ANNOTATIONS_DB), check_same_thread=False, timeout=10)
+    conn.row_factory = _s3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
+
+
+def _ann_init():
+    conn = _ann_connect()
+    conn.executescript("""
+    CREATE TABLE IF NOT EXISTS annotations (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        path        TEXT NOT NULL,
+        composition REAL DEFAULT 0,
+        light       REAL DEFAULT 0,
+        creativity  REAL DEFAULT 0,
+        story       REAL DEFAULT 0,
+        total       REAL DEFAULT 0,
+        quality     TEXT DEFAULT '',
+        note        TEXT DEFAULT '',
+        annotator   TEXT DEFAULT '',
+        created_at  TEXT NOT NULL,
+        updated_at  TEXT NOT NULL
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_ann_path ON annotations(path);
+    CREATE TABLE IF NOT EXISTS ann_export_log (
+        id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        fmt      TEXT NOT NULL,
+        count    INTEGER,
+        created_at TEXT NOT NULL
+    );
+    """)
+    conn.commit()
+    conn.close()
+
+
+_ANN_LOCK = _threading.Lock()
+_ann_init()
+
+
+@app.get("/annotations")
+async def annotations_list(
+    q: str = "",
+    quality: str = "",
+    min_total: float = 0,
+    limit: int = 200,
+    offset: int = 0,
+) -> dict[str, Any]:
+    """GET /annotations 标注列表；q=path 子串；quality=模糊/水印/可用/不可用；min_total 过滤；offset/limit 分页。"""
+    with _ANN_LOCK:
+        conn = _ann_connect()
+        where = []
+        args: list[Any] = []
+        if q:
+            where.append("path LIKE ?")
+            args.append(f"%{q}%")
+        if quality:
+            where.append("quality = ?")
+            args.append(quality)
+        if min_total > 0:
+            where.append("total >= ?")
+            args.append(min_total)
+        w = (" WHERE " + " AND ".join(where)) if where else ""
+        total = conn.execute(f"SELECT COUNT(*) c FROM annotations{w}", args).fetchone()["c"]
+        rows = conn.execute(
+            f"SELECT * FROM annotations{w} ORDER BY total DESC LIMIT ? OFFSET ?",
+            args + [limit, offset],
+        ).fetchall()
+        items = [dict(r) for r in rows]
+        conn.close()
+    return {"total": total, "limit": limit, "offset": offset, "items": items}
+
+
+@app.post("/annotations")
+async def annotations_upsert(request: Request) -> dict[str, Any]:
+    """POST /annotations 写入/更新单条标注。body: {path, composition?, light?, creativity?, story?, quality?, note?, annotator?}。
+    total 自动=四维均分（或 body 显式 total）。"""
+    body = await request.json()
+    path = str(body.get("path", "")).strip()
+    if not path:
+        return _err(400, "invalid_request", "path is required")
+    c = float(body.get("composition", 0) or 0)
+    l = float(body.get("light", 0) or 0)
+    cr = float(body.get("creativity", 0) or 0)
+    st = float(body.get("story", 0) or 0)
+    total = float(body.get("total", 0) or ((c + l + cr + st) / 4))
+    quality = str(body.get("quality", "")).strip()
+    note = str(body.get("note", "")).strip()
+    annotator = str(body.get("annotator", "local")).strip()
+    now = _dt.datetime.now(_dt.UTC).isoformat()
+    with _ANN_LOCK:
+        conn = _ann_connect()
+        conn.execute(
+            """
+            INSERT INTO annotations (path, composition, light, creativity, story, total, quality, note, annotator, created_at, updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(path) DO UPDATE SET
+                composition=excluded.composition, light=excluded.light,
+                creativity=excluded.creativity, story=excluded.story,
+                total=excluded.total, quality=excluded.quality,
+                note=excluded.note, annotator=excluded.annotator,
+                updated_at=excluded.updated_at
+            """,
+            (path, c, l, cr, st, total, quality, note, annotator, now, now),
+        )
+        conn.commit()
+        row = conn.execute("SELECT * FROM annotations WHERE path=?", (path,)).fetchone()
+        conn.close()
+    return dict(row)
+
+
+@app.delete("/annotations")
+async def annotations_delete(path: str = "") -> dict[str, Any]:
+    """DELETE /annotations?path=uploads/xxx.jpg 删除单条。"""
+    if not path:
+        return _err(400, "invalid_request", "path query param required")
+    with _ANN_LOCK:
+        conn = _ann_connect()
+        cur = conn.execute("DELETE FROM annotations WHERE path=?", (path,))
+        conn.commit()
+        deleted = cur.rowcount
+        conn.close()
+    return {"deleted": deleted}
+
+
+@app.get("/annotations/export")
+async def annotations_export(fmt: str = "jsonl", quality: str = "", min_total: float = 0) -> dict[str, Any]:
+    """GET /annotations/export?fmt=jsonl|csv 导出；jsonl 返回 {count, lines:[...]}；csv 返回 {count, text}。"""
+    with _ANN_LOCK:
+        conn = _ann_connect()
+        where = []
+        args: list[Any] = []
+        if quality:
+            where.append("quality = ?")
+            args.append(quality)
+        if min_total > 0:
+            where.append("total >= ?")
+            args.append(min_total)
+        w = (" WHERE " + " AND ".join(where)) if where else ""
+        rows = conn.execute(f"SELECT * FROM annotations{w} ORDER BY total DESC", args).fetchall()
+        conn.close()
+        import json as _json
+        items = [dict(r) for r in rows]
+        if fmt == "csv":
+            buf = _io.StringIO()
+            fields = ["path", "composition", "light", "creativity", "story", "total", "quality", "note", "annotator", "created_at", "updated_at"]
+            wr = _csv.DictWriter(buf, fieldnames=fields)
+            wr.writeheader()
+            for r in items:
+                wr.writerow({k: r.get(k, "") for k in fields})
+            return {"count": len(items), "text": buf.getvalue()}
+        lines = [_json.dumps(r, ensure_ascii=False) for r in items]
+        return {"count": len(items), "lines": lines}
+

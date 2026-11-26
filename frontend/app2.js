@@ -3,7 +3,7 @@
 "use strict";
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var VIEWS = ["home", "library", "compare", "score", "wallet", "shop", "space", "compute"];
+  var VIEWS = ["home", "library", "compare", "score", "wallet", "shop", "space", "compute", "annotate"];
   var cmpPaths = [];      // 比对视图已载入路径
   var cmpPicked = [];     // 比对标记优的路径
   var cmpScores = {};     // 比对评分缓存 {path: {total, composition, light, creativity, story}}
@@ -12,6 +12,9 @@
   var libPageSize = 20;  // 每页张数
   var libAllItems = [];   // 全量列表缓存（用于随机抽与分页）
   var libAllTotal = 0;    // 全量 total
+  var annMap = {};         // 素材库标注状态 {path: {total,...}}
+  var annPending = [];     // 标注工作台当前待标注图 [{path,name}]
+  var annBound = false;    // 标注页按钮是否已绑定
 
   function switchView(name) {
     VIEWS.forEach(function (v) {
@@ -24,6 +27,7 @@
     });
     if (name === "library") loadLibrary();
     if (name === "compare") renderCompare();
+    if (name === "annotate") initAnnotate();
     if (name === "wallet") renderWallet();
     if (name === "shop") renderShop();
     if (name === "space") renderSpace();
@@ -46,7 +50,13 @@
     var offset = libPage * libPageSize;
     var params = { limit: libPageSize, offset: offset, sort: sort, order: order };
     if (q) params.q = q;
-    API.assets(params).then(function (d) {
+    // 加载素材 + 已标注 path 集合（并行）
+    var pAssets = API.assets(params);
+    var pAnn = API.annotations({ limit: 5000 });
+    Promise.all([pAssets, pAnn]).then(function (res) {
+      var d = res[0], ad = res[1];
+      annMap = {};
+      (ad.items || []).forEach(function (a) { annMap[a.path] = a; });
       var grid = document.getElementById("lib-grid");
       grid.innerHTML = "";
       var totalPages = Math.max(1, Math.ceil(d.total / libPageSize));
@@ -67,6 +77,8 @@
         var s = document.createElement("div"); s.textContent = fmtSize(it.bytes) + " · " + it.mime.split("/")[1];
         m.appendChild(b); m.appendChild(s);
         if (it.tags && it.tags.length) { var tg = document.createElement("div"); tg.textContent = "#" + it.tags.join(" #"); tg.style.color = "var(--accent)"; m.appendChild(tg); }
+        if (annMap[it.path]) { var am = document.createElement("div"); am.textContent = "✓ 已标注 " + annMap[it.path].total.toFixed(1); am.style.cssText = "font-size:10.5px;color:var(--green);margin-top:3px"; m.appendChild(am); }
+        else { var pm = document.createElement("div"); pm.textContent = "待标注"; pm.style.cssText = "font-size:10.5px;color:var(--muted);margin-top:3px"; m.appendChild(pm); }
         c.appendChild(img); c.appendChild(m);
         c.addEventListener("click", function (e) {
           if (e.ctrlKey || e.metaKey) { libSel[it.path] = libSel[it.path] ? 0 : 1; c.classList.toggle("selected", !!libSel[it.path]); }
@@ -157,6 +169,250 @@
     addComparePaths(paths);
     switchView("compare");
     toast("已加入 " + paths.length + " 图到比对");
+  }
+
+   /* ===== 数据标注 ===== */
+  var ANN_DIMS = [
+    { key: "composition", label: "构图" },
+    { key: "light", label: "光效" },
+    { key: "creativity", label: "创意" },
+    { key: "story", label: "叙事" }
+  ];
+  var ANN_QUALITY = ["可用", "不可用", "模糊", "水印"];
+
+  function initAnnotate() {
+    if (!annBound) { bindAnnotate(); annBound = true; }
+    renderAnnList();
+  }
+
+  function bindAnnotate() {
+    var rn = document.getElementById("ann-random");
+    if (rn) rn.addEventListener("click", function () {
+      var n = parseInt(document.getElementById("ann-random-n").value, 10) || 4;
+      annRandomPending(n);
+    });
+    var ec = document.getElementById("ann-export");
+    if (ec) ec.addEventListener("click", function () { annExport("csv"); });
+    var ej = document.getElementById("ann-export-jsonl");
+    if (ej) ej.addEventListener("click", function () { annExport("jsonl"); });
+    var tr = document.getElementById("ann-train");
+    if (tr) tr.addEventListener("click", annImportToTrain);
+  }
+
+  function annRandomPending(n) {
+    API.assets({ limit: 5000, sort: "mtime", order: "desc" }).then(function (d) {
+      var ann = new Set();
+      API.annotations({ limit: 5000 }).then(function (ad) {
+        (ad.items || []).forEach(function (a) { ann.add(a.path); });
+        var unannotated = d.items.filter(function (it) { return !ann.has(it.path); });
+        if (unannotated.length === 0) { toast("全部素材已标注"); return; }
+        var pool = unannotated.slice();
+        var take = Math.min(n, pool.length);
+        for (var i = 0; i < take; i++) {
+          var j = i + Math.floor(Math.random() * (pool.length - i));
+          var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+        }
+        annPending = pool.slice(0, take).map(function (it) { return { path: it.path, name: it.filename }; });
+        renderAnnWork();
+        toast("已抽 " + take + " 张待标注");
+      });
+    }).catch(function (e) { toast("抽取失败: " + e.message); });
+  }
+
+  function renderAnnWork() {
+    var w = document.getElementById("ann-work");
+    w.innerHTML = "";
+    if (!annPending.length) { w.innerHTML = '<div class="ann-empty">暂无待标注图，点「随机抽 N 张待标注」开始</div>'; return; }
+    annPending.forEach(function (it, idx) {
+      var card = document.createElement("div");
+      card.className = "ann-card";
+      var img = document.createElement("img");
+      img.src = assetUrl(it.path);
+      img.loading = "lazy";
+      img.onerror = function () { this.style.background = "var(--bg2)"; };
+      card.appendChild(img);
+      var body = document.createElement("div");
+      body.className = "ann-body";
+      var title = document.createElement("div");
+      title.className = "ann-title";
+      title.textContent = it.name;
+      title.title = it.path;
+      body.appendChild(title);
+
+      var dims = document.createElement("div");
+      dims.className = "ann-dims";
+      ANN_DIMS.forEach(function (dm) {
+        var row = document.createElement("div");
+        row.className = "ann-dim";
+        var lb = document.createElement("label");
+        lb.textContent = dm.label;
+        var inp = document.createElement("input");
+        inp.type = "number";
+        inp.min = "0";
+        inp.max = "10";
+        inp.step = "0.5";
+        inp.value = "0";
+        inp.dataset.dim = dm.key;
+        inp.addEventListener("input", function () { annRecalcTotal(card); });
+        row.appendChild(lb);
+        row.appendChild(inp);
+        dims.appendChild(row);
+      });
+      body.appendChild(dims);
+
+      var q = document.createElement("div");
+      q.className = "ann-quality";
+      ANN_QUALITY.forEach(function (ql) {
+        var b = document.createElement("button");
+        b.textContent = ql;
+        b.addEventListener("click", function () {
+          q.querySelectorAll("button").forEach(function (x) { x.classList.remove("on"); });
+          b.classList.add("on");
+        });
+        q.appendChild(b);
+      });
+      body.appendChild(q);
+
+      var note = document.createElement("textarea");
+      note.className = "ann-note";
+      note.placeholder = "备注（可选）";
+      body.appendChild(note);
+
+      var acts = document.createElement("div");
+      acts.className = "ann-actions";
+      var save = document.createElement("button");
+      save.className = "btn primary";
+      save.textContent = "保存标注";
+      save.addEventListener("click", function () { annSave(it, card); });
+      var skip = document.createElement("button");
+      skip.className = "btn ghost";
+      skip.textContent = "跳过";
+      skip.addEventListener("click", function () {
+        annPending.splice(idx, 1);
+        renderAnnWork();
+      });
+      var totalEl = document.createElement("span");
+      totalEl.className = "ann-total";
+      totalEl.textContent = "总分 0.0";
+      acts.appendChild(save);
+      acts.appendChild(skip);
+      acts.appendChild(totalEl);
+      body.appendChild(acts);
+      card.appendChild(body);
+      w.appendChild(card);
+      annRecalcTotal(card);
+    });
+  }
+
+  function annRecalcTotal(card) {
+    var inputs = card.querySelectorAll("input[data-dim]");
+    var sum = 0, cnt = 0;
+    inputs.forEach(function (i) {
+      var v = parseFloat(i.value);
+      if (!isNaN(v)) { sum += v; cnt++; }
+    });
+    var total = cnt ? (sum / cnt) : 0;
+    var el = card.querySelector(".ann-total");
+    if (el) el.textContent = "总分 " + total.toFixed(1);
+  }
+
+  function annSave(it, card) {
+    var body = {};
+    ANN_DIMS.forEach(function (dm) {
+      var i = card.querySelector('input[data-dim="' + dm.key + '"]');
+      body[dm.key] = parseFloat(i.value) || 0;
+    });
+    body.total = ((body.composition + body.light + body.creativity + body.story) / 4);
+    body.path = it.path;
+    var qsel = card.querySelector(".ann-quality button.on");
+    body.quality = qsel ? qsel.textContent : "";
+    body.note = card.querySelector(".ann-note").value || "";
+    body.annotator = "web";
+    API.annotationSave(body).then(function (r) {
+      toast("已保存 " + it.name + " 总分 " + r.total.toFixed(1));
+      var idx = annPending.findIndex(function (p) { return p.path === it.path; });
+      if (idx >= 0) annPending.splice(idx, 1);
+      renderAnnWork();
+      renderAnnList();
+    }).catch(function (e) { toast("保存失败: " + e.message); });
+  }
+
+  function annExport(fmt) {
+    API.annotationExport(fmt).then(function (d) {
+      if (fmt === "csv") {
+        var blob = new Blob([d.text], { type: "text/csv" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "annotations.csv";
+        a.click();
+      } else {
+        var text = d.lines.join("\n");
+        var blob = new Blob([text], { type: "application/jsonl" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "annotations.jsonl";
+        a.click();
+      }
+      toast("已导出 " + d.count + " 条 " + fmt.toUpperCase());
+    }).catch(function (e) { toast("导出失败: " + e.message); });
+  }
+
+  function annImportToTrain() {
+    API.annotationExport("jsonl").then(function (d) {
+      if (d.count < 2) { toast("至少 2 条标注才可导入训练"); return; }
+      var paths = d.lines.map(function (l) { return JSON.parse(l).path; });
+      toast("正在用 " + paths.length + " 张已标注图启动批量训练…");
+      API.trainBatch(200, paths).then(function (r) {
+        toast("训练任务已启动 " + (r.job_id || "ok"));
+      }).catch(function (e) {
+        toast("训练启动失败: " + e.message);
+      });
+    }).catch(function (e) { toast("导出失败: " + e.message); });
+  }
+
+  function renderAnnList() {
+    API.annotations({ limit: 200 }).then(function (d) {
+      document.getElementById("ann-count").textContent = "已标 " + d.total + " 条";
+      var list = document.getElementById("ann-list");
+      list.innerHTML = "";
+      if (!d.items.length) { list.innerHTML = '<div class="ann-empty">暂无标注</div>'; return; }
+      d.items.forEach(function (a) {
+        var row = document.createElement("div");
+        row.className = "ann-row";
+        var p = document.createElement("div");
+        p.className = "p";
+        p.textContent = a.path;
+        p.title = a.note || "";
+        var ct = document.createElement("div");
+        ct.className = "n";
+        ct.textContent = a.composition.toFixed(1);
+        var lt = document.createElement("div");
+        lt.className = "n";
+        lt.textContent = a.light.toFixed(1);
+        var qt = document.createElement("div");
+        qt.className = "q";
+        var chip = document.createElement("span");
+        chip.className = "chip" + (a.quality ? " " + a.quality : "");
+        chip.textContent = a.quality || "—";
+        qt.appendChild(chip);
+        var del = document.createElement("button");
+        del.textContent = "✕";
+        del.title = "删除";
+        del.addEventListener("click", function () {
+          API.annotationDelete(a.path).then(function () {
+            toast("已删除 " + a.path);
+            renderAnnList();
+            if (typeof loadLibrary === "function") loadLibrary(libPage);
+          }).catch(function (e) { toast("删除失败: " + e.message); });
+        });
+        row.appendChild(p);
+        row.appendChild(ct);
+        row.appendChild(lt);
+        row.appendChild(qt);
+        row.appendChild(del);
+        list.appendChild(row);
+      });
+    }).catch(function (e) { toast(e.message); });
   }
 
   /* ===== 多图比对 ===== */

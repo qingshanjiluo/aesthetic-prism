@@ -67,7 +67,12 @@ var API = (function () {
     assetsExists: function (paths) { return json("POST", "/assets/exists", { paths: paths }); },
     models: function () { return http("/models"); },
     modelsMeta: function (path, data) { var b = { path: path }; if (data.name !== undefined) b.name = data.name; if (data.category !== undefined) b.category = data.category; if (data.tags) b.tags = data.tags; if (data.note !== undefined) b.note = data.note; return json("POST", "/models/meta", b); },
-    samplesGenerate: function (n) { return json("POST", "/samples/generate", { n: n }); }
+    samplesGenerate: function (n) { return json("POST", "/samples/generate", { n: n }); },
+    // ---- 数据标注 ----
+    annotations: function (params) { var q = new URLSearchParams(params || {}).toString(); return http("/annotations" + (q ? "?" + q : "")); },
+    annotationSave: function (body) { return json("POST", "/annotations", body); },
+    annotationDelete: function (path) { return http("/annotations?path=" + encodeURIComponent(path), { method: "DELETE" }); },
+    annotationExport: function (fmt, quality, minTotal) { var q = "fmt=" + (fmt || "jsonl"); if (quality) q += "&quality=" + encodeURIComponent(quality); if (minTotal) q += "&min_total=" + minTotal; return http("/annotations/export?" + q); }
   };
 })();
 function assetUrl(path) { return "/" + path; }
