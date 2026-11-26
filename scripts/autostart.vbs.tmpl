@@ -1,0 +1,16 @@
+# 开机自启（Windows）：把本脚本内容存为 .vbs，丢进
+# %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\ 即可开机静默起服务。
+# 生成方法（在项目根目录跑一次）：
+#   powershell -NoProfile -Command "
+#     $root = (Get-Location).Path;
+#     $py = (Get-Command python).Source;
+#     $startup = [Environment]::GetFolderPath('Startup');
+#     $vbs = @'
+# Set ws = CreateObject("Wscript.Shell")
+# ws.CurrentDirectory = "<ROOT>"
+# ws.Run ""<PY>" ""<ROOT>\serve_entry.py"", 0, False
+# '
+#   把 <ROOT>/<PY> 替换成实际路径
+# "
+# 注意：.vbs 按 ANSI(CP936) 解析，注释与路径必须纯 ASCII，中文路径会乱码起不来。
+# 中文路径兜底：COM ShortPath 或建 C:\ProgramData\aesthetic-prism-link junction。

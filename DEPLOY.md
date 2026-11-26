@@ -61,8 +61,21 @@ AP_PORT=8001 python scripts/_smoke_deploy.py
 ## 6. 多用户数据隔离
 
 - `annotations` 表：`user_id` 字段（0=单机），UNIQUE(user_id, path)
-- 素材/训练任务：当前为共享目录（单机定位），如需租户隔离后续加 owner 字段
+- 训练任务：`_jobs` 内 `owner` 字段（user_id），`/train/status` 按当前 token 用户过滤
+- 素材：当前为共享目录（单机定位），如需租户隔离后续加 owner 字段
 - 认证：`auth.db`（users/wallets/ledger/purchases），JWT 7 天
+
+## 6.5. 开机自启（Windows 可选）
+
+```powershell
+# 1) 生成 vbs（纯 ASCII 路径，中文路径用 ShortPath/junction 兜底）
+#    参考 scripts/autostart.vbs.tmpl
+# 2) 丢进 Startup 目录
+$startup = [Environment]::GetFolderPath('Startup')
+Copy-Item .\start-ap.vbs $startup\
+```
+
+服务静默后台起（窗口隐藏），日志进 `data/serve.log`。
 
 ## 7. 回归
 

@@ -287,6 +287,7 @@ async def train_route(request: Request) -> dict[str, Any]:
             steps = raw
     job_id = uuid.uuid4().hex[:12]
     loss_rel = f"data/uploads/train-{job_id}.json"
+    owner = _ann_user_id(request)
     job: dict[str, Any] = {
         "id": job_id,
         "kind": "train",
@@ -300,6 +301,7 @@ async def train_route(request: Request) -> dict[str, Any]:
         "timeout_s": max(600, steps * 30),  # 30s/step 宽松上限，超时归 failed
         "stdout_tail": "",
         "stderr_tail": "",
+        "owner": owner,
     }
     _jobs[job_id] = job
     import threading
@@ -310,10 +312,12 @@ async def train_route(request: Request) -> dict[str, Any]:
 
 
 @app.get("/train/status")
-async def train_status_route() -> dict[str, Any]:
-    """GET /train/status：读 loss.json 进度 + 最近一次训练作业状态。"""
-    running = [j for j in _jobs.values() if j["kind"] == "train" and j["state"] == "running"]
-    latest = max(_jobs.values(), key=lambda j: j["created_at"]) if _jobs else None
+async def train_status_route(request: Request) -> dict[str, Any]:
+    """GET /train/status：读 loss.json 进度 + 当前用户最近一次训练作业状态（owner 隔离）。"""
+    owner = _ann_user_id(request)
+    owned = [j for j in _jobs.values() if j.get("owner", 0) == owner]
+    running = [j for j in owned if j["kind"] == "train" and j["state"] == "running"]
+    latest = max(owned, key=lambda j: j["created_at"]) if owned else None
     view: dict[str, Any] = {
         "running": bool(running),
         "jobs_running": len(running),
