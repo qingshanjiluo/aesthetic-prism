@@ -864,6 +864,7 @@ def _ann_init():
     conn.executescript("""
     CREATE TABLE IF NOT EXISTS annotations (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id     INTEGER NOT NULL DEFAULT 0,
         path        TEXT NOT NULL,
         composition REAL DEFAULT 0,
         light       REAL DEFAULT 0,
@@ -876,7 +877,8 @@ def _ann_init():
         created_at  TEXT NOT NULL,
         updated_at  TEXT NOT NULL
     );
-    CREATE UNIQUE INDEX IF NOT EXISTS idx_ann_path ON annotations(path);
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_ann_user_path ON annotations(user_id, path);
+    CREATE INDEX IF NOT EXISTS idx_ann_user ON annotations(user_id);
     CREATE TABLE IF NOT EXISTS ann_export_log (
         id       INTEGER PRIMARY KEY AUTOINCREMENT,
         fmt      TEXT NOT NULL,
@@ -884,8 +886,27 @@ def _ann_init():
         created_at TEXT NOT NULL
     );
     """)
+    # 旧库迁移：加 user_id 列（已有单列 UNIQUE(path) 的库）
+    try:
+        conn.execute("ALTER TABLE annotations ADD COLUMN user_id INTEGER NOT NULL DEFAULT 0")
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_ann_user_path ON annotations(user_id, path)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_ann_user ON annotations(user_id)")
+        # 旧 UNIQUE(path) 索引若存在则保留（user_id=0 单机数据不冲突）
+        conn.commit()
+    except Exception:
+        pass
     conn.commit()
     conn.close()
+
+
+def _ann_user_id(request: Request) -> int:
+    """从 Bearer token 解析 user_id；无 token / 无效 = 0（单机模式）。"""
+    h = request.headers.get("authorization", "")
+    if h.startswith("Bearer "):
+        u = auth.verify_token(h[7:].strip())
+        if u:
+            return u["id"]
+    return 0
 
 
 _ANN_LOCK = _threading.Lock()
@@ -894,17 +915,19 @@ _ann_init()
 
 @app.get("/annotations")
 async def annotations_list(
+    request: Request,
     q: str = "",
     quality: str = "",
     min_total: float = 0,
     limit: int = 200,
     offset: int = 0,
 ) -> dict[str, Any]:
-    """GET /annotations 标注列表；q=path 子串；quality=模糊/水印/可用/不可用；min_total 过滤；offset/limit 分页。"""
+    """GET /annotations 标注列表；按 token 用户隔离（无 token=单机全量）；q=path 子串；quality/min_total/offset/limit。"""
+    uid = _ann_user_id(request)
     with _ANN_LOCK:
         conn = _ann_connect()
-        where = []
-        args: list[Any] = []
+        where = ["user_id = ?"]
+        args: list[Any] = [uid]
         if q:
             where.append("path LIKE ?")
             args.append(f"%{q}%")
@@ -914,7 +937,7 @@ async def annotations_list(
         if min_total > 0:
             where.append("total >= ?")
             args.append(min_total)
-        w = (" WHERE " + " AND ".join(where)) if where else ""
+        w = " WHERE " + " AND ".join(where)
         total = conn.execute(f"SELECT COUNT(*) c FROM annotations{w}", args).fetchone()["c"]
         rows = conn.execute(
             f"SELECT * FROM annotations{w} ORDER BY total DESC LIMIT ? OFFSET ?",
@@ -922,13 +945,14 @@ async def annotations_list(
         ).fetchall()
         items = [dict(r) for r in rows]
         conn.close()
-    return {"total": total, "limit": limit, "offset": offset, "items": items}
+    return {"total": total, "limit": limit, "offset": offset, "user_id": uid, "items": items}
 
 
 @app.post("/annotations")
 async def annotations_upsert(request: Request) -> dict[str, Any]:
-    """POST /annotations 写入/更新单条标注。body: {path, composition?, light?, creativity?, story?, quality?, note?, annotator?}。
-    total 自动=四维均分（或 body 显式 total）。"""
+    """POST /annotations 写入/更新单条标注（按用户隔离）。计费 1 积分（带 token 时）。"""
+    _maybe_charge(request, 1, "消费", "标注保存")
+    uid = _ann_user_id(request)
     body = await request.json()
     path = str(body.get("path", "")).strip()
     if not path:
@@ -946,31 +970,32 @@ async def annotations_upsert(request: Request) -> dict[str, Any]:
         conn = _ann_connect()
         conn.execute(
             """
-            INSERT INTO annotations (path, composition, light, creativity, story, total, quality, note, annotator, created_at, updated_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)
-            ON CONFLICT(path) DO UPDATE SET
+            INSERT INTO annotations (user_id, path, composition, light, creativity, story, total, quality, note, annotator, created_at, updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(user_id, path) DO UPDATE SET
                 composition=excluded.composition, light=excluded.light,
                 creativity=excluded.creativity, story=excluded.story,
                 total=excluded.total, quality=excluded.quality,
                 note=excluded.note, annotator=excluded.annotator,
                 updated_at=excluded.updated_at
             """,
-            (path, c, l, cr, st, total, quality, note, annotator, now, now),
+            (uid, path, c, l, cr, st, total, quality, note, annotator, now, now),
         )
         conn.commit()
-        row = conn.execute("SELECT * FROM annotations WHERE path=?", (path,)).fetchone()
+        row = conn.execute("SELECT * FROM annotations WHERE user_id=? AND path=?", (uid, path)).fetchone()
         conn.close()
     return dict(row)
 
 
 @app.delete("/annotations")
-async def annotations_delete(path: str = "") -> dict[str, Any]:
-    """DELETE /annotations?path=uploads/xxx.jpg 删除单条。"""
+async def annotations_delete(request: Request, path: str = "") -> dict[str, Any]:
+    """DELETE /annotations?path= 删除单条（按用户隔离）。"""
     if not path:
         return _err(400, "invalid_request", "path query param required")
+    uid = _ann_user_id(request)
     with _ANN_LOCK:
         conn = _ann_connect()
-        cur = conn.execute("DELETE FROM annotations WHERE path=?", (path,))
+        cur = conn.execute("DELETE FROM annotations WHERE user_id=? AND path=?", (uid, path))
         conn.commit()
         deleted = cur.rowcount
         conn.close()
@@ -978,31 +1003,33 @@ async def annotations_delete(path: str = "") -> dict[str, Any]:
 
 
 @app.get("/annotations/export")
-async def annotations_export(fmt: str = "jsonl", quality: str = "", min_total: float = 0) -> dict[str, Any]:
-    """GET /annotations/export?fmt=jsonl|csv 导出；jsonl 返回 {count, lines:[...]}；csv 返回 {count, text}。"""
+async def annotations_export(request: Request, fmt: str = "jsonl", quality: str = "", min_total: float = 0) -> dict[str, Any]:
+    """GET /annotations/export?fmt=jsonl|csv 导出（按用户隔离）。计费 2 积分（带 token 时）。"""
+    _maybe_charge(request, 2, "消费", "标注导出")
+    uid = _ann_user_id(request)
     with _ANN_LOCK:
         conn = _ann_connect()
-        where = []
-        args: list[Any] = []
+        where = ["user_id = ?"]
+        args: list[Any] = [uid]
         if quality:
             where.append("quality = ?")
             args.append(quality)
         if min_total > 0:
             where.append("total >= ?")
             args.append(min_total)
-        w = (" WHERE " + " AND ".join(where)) if where else ""
+        w = " WHERE " + " AND ".join(where)
         rows = conn.execute(f"SELECT * FROM annotations{w} ORDER BY total DESC", args).fetchall()
         conn.close()
         import json as _json
         items = [dict(r) for r in rows]
         if fmt == "csv":
             buf = _io.StringIO()
-            fields = ["path", "composition", "light", "creativity", "story", "total", "quality", "note", "annotator", "created_at", "updated_at"]
+            fields = ["user_id", "path", "composition", "light", "creativity", "story", "total", "quality", "note", "annotator", "created_at", "updated_at"]
             wr = _csv.DictWriter(buf, fieldnames=fields)
             wr.writeheader()
             for r in items:
                 wr.writerow({k: r.get(k, "") for k in fields})
-            return {"count": len(items), "text": buf.getvalue()}
+            return {"count": len(items), "user_id": uid, "text": buf.getvalue()}
         lines = [_json.dumps(r, ensure_ascii=False) for r in items]
-        return {"count": len(items), "lines": lines}
+        return {"count": len(items), "user_id": uid, "lines": lines}
 
