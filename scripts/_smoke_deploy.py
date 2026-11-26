@@ -3,6 +3,7 @@ import os, socket, subprocess, sys, time, json, urllib.request
 
 PORT = int(os.environ.get("AP_PORT", "8001"))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, "src")
 os.chdir(ROOT)
 
 def port_free(p):
@@ -16,9 +17,9 @@ def port_free(p):
 if not port_free(PORT):
     print(f"FAIL: port {PORT} busy"); sys.exit(1)
 
-env = dict(os.environ, PYTHONPATH=str(ROOT / "src"))
+env = dict(os.environ, PYTHONPATH=SRC)
 p = subprocess.Popen([sys.executable, "-m", "uvicorn", "aesthetic_prism.serve.app:app",
-                      "--host", "127.0.0.1", "--port", str(PORT), "--app-dir", str(ROOT / "src")],
+                      "--host", "127.0.0.1", "--port", str(PORT), "--app-dir", SRC],
                      env=env, cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 try:
     for _ in range(40):
