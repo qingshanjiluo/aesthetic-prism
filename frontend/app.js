@@ -162,15 +162,22 @@ $("score-btn").addEventListener("click", async () => {
 });
 
 function render(d) {
-  $("score-empty").style.display = "none";
-  $("score-board").classList.add("show");
-  $("total-score").textContent = Number(d.total).toFixed(1);
-  $("model-badge").textContent = "model: " + (d.model != null ? d.model : "-");
-  for (const k of DIMS) {
-    const v = Number(d[k]);
-    const ok = Number.isFinite(v);
-    $("fill-" + k).style.width = (ok ? Math.max(0, Math.min(100, v)) : 0) + "%";
-    $("value-" + k).textContent = ok ? v.toFixed(1) : "--";
+  var apply = function () {
+    $("score-empty").style.display = "none";
+    $("score-board").classList.add("show");
+    $("total-score").textContent = Number(d.total).toFixed(1);
+    $("model-badge").textContent = "model: " + (d.model != null ? d.model : "-");
+    for (const k of DIMS) {
+      const v = Number(d[k]);
+      const ok = Number.isFinite(v);
+      $("fill-" + k).style.width = (ok ? Math.max(0, Math.min(100, v)) : 0) + "%";
+      $("value-" + k).textContent = ok ? v.toFixed(1) : "--";
+    }
+  };
+  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
+    document.startViewTransition(apply);
+  } else {
+    apply();
   }
 }
 

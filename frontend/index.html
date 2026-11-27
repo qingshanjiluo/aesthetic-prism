@@ -9,11 +9,11 @@
   /* 瑞典主义：米白暖灰底 · 深炭文字 · 单一萨普蓝强调 · 大留白 · 细边框 · 收敛圆角 */
   --bg:#f6f5f1; --bg2:#fbfaf7; --panel:#ffffff; --panel2:#f2f0ea;
   --line:#e2dfd6; --line2:#d3cfc3;
-  --txt:#1c1b18; --txt2:#56534c; --muted:#8a867b;
+  --txt:#1c1b18; --txt2:#56534c; --muted:#6b6860;
   --accent:#2a5f8a; --accent-soft:#e5edf4;
   --green:#3f6d4a; --yellow:#8a6d2f; --red:#a4453f;
-  --mono:"Cascadia Code",Consolas,"JetBrains Mono",monospace;
-  --sans:"Inter","Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"Cascadia Code",Consolas,monospace;
+  --sans:"Inter",system-ui,sans-serif;
   --r-sm:8px; --r-md:10px; --r-lg:14px;
   --gap:16px; --pad:24px;
 }
@@ -193,11 +193,14 @@ footer code{color:var(--txt2)}
 /* ---------- 增强：标签栏 + 新视图 ---------- */
 #app-tabs{
   display:flex;gap:4px;padding:10px 32px;border-bottom:1px solid var(--line);
-  background:var(--bg);position:sticky;top:69px;z-index:9;flex-wrap:wrap;
+  background:var(--bg);position:sticky;top:69px;z-index:9;
+  overflow-x:auto;overflow-y:hidden;white-space:nowrap;scroll-snap-type:x proximity;
+  scrollbar-width:thin;scrollbar-color:var(--line2) transparent;
 }
 #app-tabs .tab{
   padding:6px 15px;border-radius:var(--r-sm);border:1px solid transparent;
-  background:transparent;color:var(--txt2);cursor:pointer;font-size:13.5px;transition:background .15s,color .15s;
+  background:transparent;color:var(--txt2);cursor:pointer;font-size:13.5px;
+  transition:background .15s,color .15s;scroll-snap-align:start;flex:none;
 }
 #app-tabs .tab:hover{background:var(--panel);color:var(--txt)}
 #app-tabs .tab.active{background:var(--accent);border:1px solid var(--accent);color:#fff;font-weight:600}
@@ -292,9 +295,27 @@ footer code{color:var(--txt2)}
 .ann-row .q .chip.不可用{border-color:var(--red);color:var(--red)}
 .ann-row .q .chip.模糊{border-color:var(--yellow);color:var(--yellow)}
 .ann-row .q .chip.水印{border-color:var(--yellow);color:var(--yellow)}
-.ann-row button{width:32px;height:26px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--panel);color:var(--txt2);cursor:pointer;font-size:12px}
+.ann-row button{width:44px;height:44px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--panel);color:var(--txt2);cursor:pointer;font-size:14px}
 .ann-row button:hover{border-color:var(--red);color:var(--red)}
 .ann-empty{color:var(--muted);font-size:13px;text-align:center;padding:24px 0}
+
+/* ---------- view-transition：评分结果数字滚动 ---------- */
+#score-board{view-transition-name:score-board}
+#score-board .bar-fill{transition-property:width}
+#total-score{view-transition-name:total-score}
+::view-transition-old(score-board),
+::view-transition-new(score-board){animation-duration:.35s}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+/* ---------- reduced-motion 全局降级 ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;
+  }
+}
 </style>
 </head>
 <body>
