@@ -33,10 +33,17 @@ async function parseBody(resp) {
 }
 
 function bodyError(resp, body) {
-  // 契约错误体优先；解析失败给 http_<status> 兜底
+  // 契约错误体优先；FastAPI 默认 detail（字符串或数组）兜底；最后 http_<status>
   const err = body && body.error;
   if (err && typeof err.code === "string" && typeof err.message === "string") {
     return [err.code, err.message];
+  }
+  if (body && typeof body.detail !== "undefined") {
+    let msg = body.detail;
+    if (Array.isArray(msg)) {
+      msg = msg.map((d) => (typeof d === "object" ? JSON.stringify(d) : String(d))).join("; ");
+    }
+    return ["http_" + resp.status, String(msg)];
   }
   return ["http_" + resp.status, "响应无法解析为契约错误体"];
 }
@@ -339,4 +346,13 @@ async function pollHealth() {
 
 $("check-btn").addEventListener("click", () => pollHealth());
 pollHealth();
-setInterval(pollHealth, 5000);
+// 健康轮询：固定 5s 会在线服务故障时打满；改指数退避 5→10→20→40 cap 60s，成功恢复回 5s
+let _healthDelay = 5000;
+function scheduleHealth() {
+  setTimeout(async () => {
+    const ok = await pollHealth();
+    _healthDelay = ok ? 5000 : Math.min(60000, _healthDelay * 2);
+    scheduleHealth();
+  }, _healthDelay);
+}
+scheduleHealth();

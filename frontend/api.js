@@ -23,7 +23,11 @@ var API = (function () {
         if (!resp.ok) {
           if (resp.status === 401) { AUTH.clear(); try { var lv = document.getElementById("login-view"); if (lv) lv.hidden = false; } catch (e) {} }
           var err = body && body.error;
-          var e = new Error((err && err.message) || (body && body.detail) || ("HTTP " + resp.status));
+          var detail = body && body.detail;
+          if (Array.isArray(detail)) {
+            detail = detail.map(function (d) { return typeof d === "object" ? JSON.stringify(d) : String(d); }).join("; ");
+          }
+          var e = new Error((err && err.message) || detail || ("HTTP " + resp.status));
           e.code = (err && err.code) || ("http_" + resp.status);
           e.status = resp.status;
           throw e;

@@ -3,9 +3,10 @@
 "use strict";
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  // XSS 转义：innerHTML 拼接用户数据（path/item/kind/note）前必须过这个
+  // XSS 转义 + 纯函数：优先用 util.js 的 AP_UTIL（可单测）；未加载时 fallback 内联
+  var _U = (typeof window !== "undefined" && window.AP_UTIL) ? window.AP_UTIL : null;
   function escHtml(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return _U ? _U.escHtml(s) : String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
@@ -505,7 +506,7 @@
       var c = document.createElement("div");
       c.className = "cmp" + (cmpPicked.indexOf(p) >= 0 ? " pick" : "");
       c.style.position = "relative";
-      var img = document.createElement("img"); img.src = assetUrl(p);
+      var img = document.createElement("img"); img.src = assetUrl(p); img.loading = "lazy";
       img.style.height = "220px";
       img.style.cursor = "zoom-in";
       img.addEventListener("click", function (e) {
@@ -535,7 +536,7 @@
     });
     var r = document.getElementById("cmp-result");
     if (cmpPicked.length >= 2) {
-      r.innerHTML = "你标记的优先级：" + cmpPicked.map(function (p) { return "<code>" + p.split("/").pop() + "</code>"; }).join(" → ");
+      r.innerHTML = "你标记的优先级：" + cmpPicked.map(function (p) { return "<code>" + escHtml(p.split("/").pop()) + "</code>"; }).join(" → ");
     } else { r.innerHTML = ""; }
   }
   var DIM_LABELS = { composition: "构图", light: "光效", creativity: "创意", story: "叙事" };
@@ -558,8 +559,9 @@
       renderCompare();
       // ---- 结果区：总分 + 维度明细表 ----
       var lines = sc.items.map(function (it) {
-        if (it.total != null) return "<div><b>" + it.total.toFixed(1) + "</b> · " + it.path.split("/").pop() + "</div>";
-        return "<div>" + (it.error || "err") + " · " + it.path.split("/").pop() + "</div>";
+        var fn = escHtml(it.path.split("/").pop());
+        if (it.total != null) return "<div><b>" + it.total.toFixed(1) + "</b> · " + fn + "</div>";
+        return "<div>" + escHtml(it.error || "err") + " · " + fn + "</div>";
       }).join("");
       document.getElementById("cmp-result").innerHTML = "<b>评分对比（按总分排序）：</b><div style='margin-top:8px'>" + lines + "</div>";
       // ---- 维度明细表 ----
@@ -600,7 +602,7 @@
           var verdict = "<div style='margin-top:16px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg2)'>";
           verdict += "<b style='font-size:15px'>结论</b>";
           verdict += "<p style='margin:8px 0;font-size:14px;color:var(--txt2)'>";
-          verdict += "<b style='color:var(--green)'>" + winner.path.split("/").pop() + "</b> 综合最优（" + winner.total.toFixed(1) + " 分），领先第二名 " + gap + " 分。";
+          verdict += "<b style='color:var(--green)'>" + escHtml(winner.path.split("/").pop()) + "</b> 综合最优（" + winner.total.toFixed(1) + " 分），领先第二名 " + gap + " 分。";
           verdict += "</p><ul style='margin:6px 0 0 18px;padding:0;font-size:13px;color:var(--txt2);line-height:1.9'>";
           dimKeys.forEach(function (dk) {
             var wv = winner[dk] != null ? winner[dk].toFixed(1) : "-";
@@ -668,7 +670,7 @@
       st.textContent = "评分完成 平均 " + sc.avg_total;
       sc.items.forEach(function (it) {
         var c = document.createElement("div"); c.className = "card";
-        var img = document.createElement("img"); img.src = assetUrl(it.path);
+        var img = document.createElement("img"); img.src = assetUrl(it.path); img.loading = "lazy";
         var m = document.createElement("div"); m.className = "meta";
         var b = document.createElement("b"); b.textContent = it.path.split("/").pop();
         var sc2 = document.createElement("span"); sc2.className = "score";
