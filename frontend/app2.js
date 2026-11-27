@@ -25,6 +25,7 @@
     Array.prototype.forEach.call(tabs, function (t) {
       t.classList.toggle("active", t.getAttribute("data-view") === name);
     });
+    window.scrollTo({ top: 0, behavior: "instant" });
     if (name === "library") loadLibrary();
     if (name === "compare") renderCompare();
     if (name === "annotate") initAnnotate();
