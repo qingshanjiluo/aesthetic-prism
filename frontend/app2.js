@@ -3,6 +3,12 @@
 "use strict";
 (function () {
   var $ = function (id) { return document.getElementById(id); };
+  // XSS 转义：innerHTML 拼接用户数据（path/item/kind/note）前必须过这个
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
   var VIEWS = ["home", "library", "compare", "score", "wallet", "shop", "space", "compute", "annotate"];
   var cmpPaths = [];      // 比对视图已载入路径
   var cmpPicked = [];     // 比对标记优的路径
@@ -172,6 +178,22 @@
     toast("已加入 " + paths.length + " 图到比对");
   }
 
+  function downloadSelectedLibrary() {
+    var paths = selPaths();
+    if (!paths.length) { toast("请先用 Ctrl+点击 选择要下载的素材"); return; }
+    toast("开始下载 " + paths.length + " 张…");
+    paths.forEach(function (p, i) {
+      setTimeout(function () {
+        var a = document.createElement("a");
+        a.href = assetUrl(p);
+        a.download = p.split("/").pop();
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, i * 250);
+    });
+  }
+
    /* ===== 数据标注 ===== */
   var ANN_DIMS = [
     { key: "composition", label: "构图" },
@@ -180,6 +202,12 @@
     { key: "story", label: "叙事" }
   ];
   var ANN_QUALITY = ["可用", "不可用", "模糊", "水印"];
+  var ANN_Q_ICON = {
+    "可用": '<svg class="qi" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-6"/></svg>',
+    "不可用": '<svg class="qi" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2l8 8M10 2l-8 8"/></svg>',
+    "模糊": '<svg class="qi" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v2l1.5 1.5"/></svg>',
+    "水印": '<svg class="qi" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="10" height="10" rx="1"/><path d="M1 9l4-4 3 3 3-3"/></svg>'
+  };
 
   function initAnnotate() {
     if (!annBound) { bindAnnotate(); annBound = true; }
@@ -296,7 +324,7 @@
       q.className = "ann-quality";
       ANN_QUALITY.forEach(function (ql) {
         var b = document.createElement("button");
-        b.textContent = ql;
+        b.innerHTML = ANN_Q_ICON[ql] + " " + ql;
         if (it.existing && it.existing.quality === ql) b.classList.add("on");
         b.addEventListener("click", function () {
           q.querySelectorAll("button").forEach(function (x) { x.classList.remove("on"); });
@@ -406,7 +434,22 @@
 
   function renderAnnList() {
     API.annotations({ limit: 200 }).then(function (d) {
-      document.getElementById("ann-count").textContent = "已标 " + d.total + " 条";
+      var annotated = d.total;
+      document.getElementById("ann-count").textContent = "已标 " + annotated + " 条";
+      // 总数（素材库）→ 进度条
+      API.assets({ limit: 1 }).then(function (ad) {
+        var totalAssets = ad.total;
+        var wrap = document.getElementById("ann-progress-wrap");
+        if (wrap) {
+          if (totalAssets > 0) {
+            wrap.style.display = "";
+            var pct = Math.min(100, Math.round(annotated / totalAssets * 100));
+            document.getElementById("ann-progress-label").textContent = "标注进度 " + annotated + " / " + totalAssets;
+            document.getElementById("ann-progress-pct").textContent = pct + "%";
+            document.getElementById("ann-progress-fill").style.width = pct + "%";
+          }
+        }
+      }).catch(function () {});
       var list = document.getElementById("ann-list");
       list.innerHTML = "";
       if (!d.items.length) { list.innerHTML = '<div class="ann-empty">暂无标注</div>'; return; }
@@ -823,9 +866,13 @@
     }).catch(function (e) { toast(e.message); });
     API.ledger(30).then(function (d) {
       var el = document.getElementById("wal-ledger-list");
-      el.innerHTML = (d.items || []).map(function (r) {
-        return "<div>" + (r.amount > 0 ? "+" : "") + r.amount + " · " + r.kind + " · " + r.item + " · " + r.ts + "</div>";
-      }).join("") || "暂无流水";
+      var filter = (document.getElementById("wal-ledger-filter") || {}).value || "";
+      var items = (d.items || []).filter(function (r) { return !filter || r.kind === filter; });
+      el.innerHTML = items.length
+        ? items.map(function (r) {
+            return "<div>" + (r.amount > 0 ? "+" : "") + r.amount + " · " + escHtml(r.kind) + " · " + escHtml(r.item) + " · " + escHtml(String(r.ts)) + "</div>";
+          }).join("")
+        : "暂无流水";
     }).catch(function () {});
   }
   function renderShop() {
@@ -846,6 +893,19 @@
           API.buy(it.model_id).then(function (r) { toast(r.already ? "已拥有" : "购买成功，扣 " + it.price + " 积分"); renderShop(); refreshBalance(); }).catch(function (e) { toast(e.message); });
         });
         c.appendChild(t); c.appendChild(p); c.appendChild(b);
+        if (it.owned) {
+          var dl = document.createElement("button");
+          dl.className = "btn"; dl.style.cssText = "margin:0 10px 10px;width:calc(100% - 20px)";
+          dl.textContent = "下载模型";
+          dl.addEventListener("click", function () {
+            var a = document.createElement("a");
+            a.href = assetUrl(it.model_id);
+            a.download = it.model_id.split("/").pop();
+            a.click();
+            toast("开始下载 " + it.model_id.split("/").pop());
+          });
+          c.appendChild(dl);
+        }
         g.appendChild(c);
       });
     }).catch(function (e) { toast(e.message); });
@@ -874,7 +934,18 @@
     var cg = document.getElementById("compute-go");
     if (cg) cg.addEventListener("click", function () {
       var tier = parseInt(document.getElementById("compute-tier").value, 10);
-      API.compute(tier).then(function (r) { document.getElementById("compute-result").textContent = JSON.stringify(r, null, 2); refreshBalance(); }).catch(function (e) { document.getElementById("compute-result").textContent = "错误: " + e.message; });
+      var res = document.getElementById("compute-result");
+      var cp = document.getElementById("compute-copy");
+      API.compute(tier).then(function (r) {
+        res.textContent = JSON.stringify(r, null, 2);
+        if (cp) cp.style.display = "";
+        refreshBalance();
+      }).catch(function (e) { res.textContent = "错误: " + e.message; if (cp) cp.style.display = "none"; });
+    });
+    var cc2 = document.getElementById("compute-copy");
+    if (cc2) cc2.addEventListener("click", function () {
+      var txt = document.getElementById("compute-result").textContent;
+      navigator.clipboard.writeText(txt).then(function () { toast("已复制 JSON"); }).catch(function () { toast("复制失败"); });
     });
   }
 
@@ -883,6 +954,8 @@
     bindCommercial();
     bindTabs();
     initModels();
+    var wlf = document.getElementById("wal-ledger-filter");
+    if (wlf) wlf.addEventListener("change", renderWallet);
     var si = document.getElementById("lib-search");
     var ss = document.getElementById("lib-sort");
     var so = document.getElementById("lib-order");
@@ -892,6 +965,7 @@
     var rf = document.getElementById("lib-refresh"); if (rf) rf.addEventListener("click", function () { libPage = 0; loadLibrary(); });
     var ds = document.getElementById("lib-del-sel"); if (ds) ds.addEventListener("click", delSelectedLibrary);
     var ac = document.getElementById("lib-add-compare"); if (ac) ac.addEventListener("click", addSelectedToCompare);
+    var dls = document.getElementById("lib-dl-sel"); if (dls) dls.addEventListener("click", downloadSelectedLibrary);
     var lr = document.getElementById("lib-random"); if (lr) lr.addEventListener("click", function () {
       var n = parseInt(document.getElementById("lib-random-n").value, 10) || 4;
       randomDrawToCompare(n);
@@ -912,7 +986,8 @@
     });
     var cc = document.getElementById("cmp-clear"); if (cc) cc.addEventListener("click", function () { cmpPaths = []; cmpPicked = []; cmpScores = {}; renderCompare(); });
     var cr = document.getElementById("cmp-random"); if (cr) cr.addEventListener("click", function () {
-      var n = 4;
+      var inp = document.getElementById("lib-random-n");
+      var n = inp ? (parseInt(inp.value, 10) || 4) : 4;
       randomDrawToCompare(n);
     });
     var cs = document.getElementById("cmp-score"); if (cs) cs.addEventListener("click", scoreCompare);

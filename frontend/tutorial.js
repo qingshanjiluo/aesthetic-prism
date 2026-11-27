@@ -1,4 +1,4 @@
-﻿// Aesthetic Prism 全流程可视化教程（原生 JS 零依赖零构建）
+// Aesthetic Prism 全流程可视化教程（原生 JS 零依赖零构建）
 // 分步遮罩引导：clip-path 镂空高亮目标卡片 + 讲解气泡。
 "use strict";
 (function () {
@@ -8,7 +8,11 @@
     { title: "2. 运行评分", body: "点「运行评分」，服务端用模型打分，右侧出五维条与总分。", note: "POST /score", card: 1 },
     { title: "3. 触发训练", body: "填步数(1-10000)点「触发训练」，进度条实时刷新。", note: "POST /train", card: 2 },
     { title: "4. 服务状态", body: "看就绪/模型/设备/运行时长，右上灯绿=就绪 黄=降级 红=异常。", note: "GET /health", card: 3 },
-    { title: "5. 接口速查", body: "前端所有操作都走这些接口，字段见契约文档。", note: "C-SERVE-01", card: 5 }
+    { title: "5. 接口速查", body: "前端所有操作都走这些接口，字段见契约文档。", note: "C-SERVE-01", card: 5 },
+    { title: "6. 多图比对", body: "切「多图比对」tab，随机抽 N 张或自选，点「评分对比」看四维度明细表与「哪张更好 + 训练建议」结论。", note: "POST /score-batch", card: 0 },
+    { title: "7. 数据标注", body: "切「数据标注」tab，随机抽 N 张待标注，拖滑块打 4 维分 + 选质量标签，保存入库。", note: "POST /annotations", card: 0 },
+    { title: "8. 导出与训练", body: "标注页点「导出 CSV/JSONL」下载标注集；「导入训练集」用已标注图启动批量训练。", note: "GET /annotations/export", card: 0 },
+    { title: "9. 素材库", body: "切「素材库」tab 浏览全量素材，Ctrl+点击多选，加入比对或批量删除；卡片显示「✓已标注/待标注」。", note: "GET /assets", card: 0 }
   ];
   var idx = 0;
   var ov = null, pop = null, mask = null;

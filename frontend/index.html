@@ -298,6 +298,10 @@ footer code{color:var(--txt2)}
 .ann-row button{width:44px;height:44px;border-radius:var(--r-sm);border:1px solid var(--line2);background:var(--panel);color:var(--txt2);cursor:pointer;font-size:14px}
 .ann-row button:hover{border-color:var(--red);color:var(--red)}
 .ann-empty{color:var(--muted);font-size:13px;text-align:center;padding:24px 0}
+.ann-progress{margin:0 0 16px}
+.ann-progress-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.ann-progress-fill{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .4s}
+.ann-quality button .qi{margin-right:4px;vertical-align:-2px}
 
 /* ---------- view-transition：评分结果数字滚动 ---------- */
 #score-board{view-transition-name:score-board}
@@ -582,6 +586,7 @@ footer code{color:var(--txt2)}
     <button id="lib-refresh" class="btn">刷新</button>
     <button id="lib-del-sel" class="btn" style="border-color:rgba(164,69,63,.45);color:var(--red)">删除选中</button>
     <button id="lib-add-compare" class="btn ghost">加入比对</button>
+    <button id="lib-dl-sel" class="btn ghost">下载选中</button>
     <span class="muted" id="lib-count"></span>
   </div>
   <div class="toolbar">
@@ -622,6 +627,13 @@ footer code{color:var(--txt2)}
     <button id="ann-train" class="btn">导入训练集</button>
     <span class="muted" id="ann-count"></span>
   </div>
+  <div class="ann-progress" id="ann-progress-wrap" style="display:none">
+    <div class="ann-progress-head">
+      <span class="muted" id="ann-progress-label">标注进度</span>
+      <span class="mono" id="ann-progress-pct">0%</span>
+    </div>
+    <div class="p-track"><i id="ann-progress-fill" class="ann-progress-fill"></i></div>
+  </div>
   <div id="ann-work" class="ann-work"></div>
   <div class="card" style="margin-top:24px">
     <div class="card-head"><h2>已存标注</h2><span class="hint">按总分降序</span></div>
@@ -654,7 +666,14 @@ footer code{color:var(--txt2)}
     <button id="wal-recharge-btn" class="btn primary">充值</button>
   </div>
   <div id="wal-ledger" class="card" style="padding:14px">
-    <h3 style="margin:0 0 10px">消费流水</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">消费流水</h3>
+      <select id="wal-ledger-filter" class="inp" style="width:auto;font-size:12px;padding:4px 8px">
+        <option value="">全部</option>
+        <option value="充值">充值</option>
+        <option value="消费">消费</option>
+      </select>
+    </div>
     <div id="wal-ledger-list" class="mono" style="font-size:12.5px"></div>
   </div>
 </main>
@@ -692,6 +711,7 @@ footer code{color:var(--txt2)}
       <button id="compute-go" class="btn primary">调用算力</button>
     </div>
     <pre id="compute-result" class="mono" style="font-size:12.5px;margin-top:10px"></pre>
+    <button id="compute-copy" class="btn ghost" style="margin-top:6px;display:none">复制 JSON</button>
   </div>
 </main>
 
