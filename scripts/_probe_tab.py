@@ -3,7 +3,7 @@ import json, urllib.request
 import websocket
 
 d = json.load(urllib.request.urlopen("http://127.0.0.1:9333/json"))
-pg = next(t for t in d if t.get("type") == "page" and "8004" in (t.get("url") or ""))
+pg = next(t for t in d if t.get("type") == "page" and "8005" in (t.get("url") or ""))
 c = websocket.create_connection(pg["webSocketDebuggerUrl"], timeout=30)
 mid = [0]
 

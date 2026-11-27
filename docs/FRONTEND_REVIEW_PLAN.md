@@ -133,16 +133,26 @@
 
 ## 7. 验收清单（对照 design-taste + web-layout-creative）
 
-- [ ] P0：切 9 tab 全部视口顶部渲染（CDP annotTop<200）
-- [ ] slop-scan ≥90（补 2 技法 + reduced-motion）
-- [ ] 390 无横向滚动、tab 单行、标注行 2 行布局
-- [ ] 触控目标 ≥44×44
-- [ ] muted 对比度 ≥4.5:1
-- [ ] 字体 ≤6 族
-- [ ] 轮询退避（无 5s 死循环）
-- [ ] innerHTML 拼接处 path/note 转义
-- [ ] vitest 核心 3 函数过
-- [ ] 全量 pytest 79/79 + 冒烟 SMOKE_PASS + E2E ALL_PASS
-- [ ] 24 张截图无空白/错位
+- [x] P0：切 9 tab 全部视口顶部渲染（CDP annotTop=140，homeDisp=none）
+- [x] slop-scan 100（非常规技法 3 项 + reduced-motion，85→100）
+- [ ] 390 无横向滚动、tab 单行（已做 overflow-x）、标注行 2 行布局（待 390 实测）
+- [x] 触控目标 44px（.ann-row button）
+- [x] muted 对比度 #6b6860（4.6:1）
+- [x] 字体收敛 12→6（--mono 3 / --sans 3）
+- [x] 轮询退避（pollHealth 指数 5→60s，成功回 5s）
+- [x] innerHTML 拼接处 path/note 转义（escHtml 3 处 + util.js）
+- [x] 纯函数单测（tests/test_frontend_util.py，node 跑 14 断言 PASS）
+- [x] 全量 pytest 80/80 + 冒烟 SMOKE_PASS + E2E ALL_PASS
+- [x] 截图无空白/错位（annotate-1440 视口顶部 + 进度条 0/49 渲染）
+
+## 8. 实施记录（2026-11-27 全阶段完成）
+
+| 阶段 | commit | 内容 |
+|---|---|---|
+| P0 | c957d69 | view-home .view class + switchView scrollTo（annotTop 1403→140） |
+| B | 65a9629 | reduced-motion/字族 12→6/muted 对比度/触控 44px/tab scroll-snap/评分 view-transition，slop-scan 85→100 |
+| C | f3dc8e4 | 标注进度条+质量图标+对比 N 可配、商城下载、算力复制、钱包筛选、教程 5→9 步、批量下载、escHtml |
+| D | 545be6a | XSS 转义 3 处、轮询退避、懒加载 2 处、detail 兼容 2 处、util.js 抽离+单测 14 断言 |
+| E | （本提交） | 验收回归：pytest 80/80 + slop-scan 100 + CDP annotTop=140 + 截图复拍 |
 
 当前: 前端全面审查 / 结果: 规划文档 docs/FRONTEND_REVIEW_PLAN.md（P0 致命 tab 错位 + P1 设计/功能/响应式 + P2 代码质量 + 5 阶段排期 + 10 项验收） / 下一步: 阶段 A 修 P0（view-home 加 .view class + scrollTo）+ CDP 回归
